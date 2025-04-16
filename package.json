@@ -1,187 +1,109 @@
 {
-  "name": "victory-vendor",
-  "version": "36.9.2",
-  "description": "Vendored dependencies for Victory",
-  "keywords": [
-    "data visualization",
-    "React",
-    "d3",
-    "charting"
+  "name": "@typescript-eslint/eslint-plugin",
+  "version": "8.30.1",
+  "description": "TypeScript plugin for ESLint",
+  "files": [
+    "dist",
+    "!*.tsbuildinfo",
+    "docs",
+    "index.d.ts",
+    "raw-plugin.d.ts",
+    "rules.d.ts",
+    "package.json",
+    "README.md",
+    "LICENSE"
   ],
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./use-at-your-own-risk/rules": {
+      "types": "./rules.d.ts",
+      "default": "./dist/rules/index.js"
+    },
+    "./use-at-your-own-risk/raw-plugin": {
+      "types": "./raw-plugin.d.ts",
+      "default": "./dist/raw-plugin.js"
+    }
+  },
+  "engines": {
+    "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/FormidableLabs/victory"
+    "url": "https://github.com/typescript-eslint/typescript-eslint.git",
+    "directory": "packages/eslint-plugin"
   },
-  "homepage": "https://commerce.nearform.com/open-source/victory",
-  "author": "Formidable",
-  "license": "MIT AND ISC",
-  "exports": {
-    "./package.json": "./package.json",
-    "./d3-*": {
-      "types": "./d3-*.d.ts",
-      "import": "./es/d3-*.js",
-      "default": "./lib/d3-*.js"
-    }
+  "bugs": {
+    "url": "https://github.com/typescript-eslint/typescript-eslint/issues"
+  },
+  "homepage": "https://typescript-eslint.io/packages/eslint-plugin",
+  "license": "MIT",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "typescript"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "clean": "tsc -b tsconfig.build.json --clean",
+    "postclean": "rimraf dist && rimraf coverage",
+    "format": "prettier --write \"./**/*.{ts,mts,cts,tsx,js,mjs,cjs,jsx,json,md,css}\" --ignore-path ../../.prettierignore",
+    "generate:breaking-changes": "tsx tools/generate-breaking-changes.mts",
+    "generate:configs": "npx nx generate-configs repo",
+    "lint": "npx nx lint",
+    "test": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --logHeapUsage",
+    "test-single": "cross-env NODE_OPTIONS=\"--experimental-vm-modules\" jest --no-coverage",
+    "check-types": "npx nx typecheck"
   },
   "dependencies": {
-    "@types/d3-array": "^3.0.3",
-    "@types/d3-ease": "^3.0.0",
-    "@types/d3-interpolate": "^3.0.1",
-    "@types/d3-scale": "^4.0.2",
-    "@types/d3-shape": "^3.1.0",
-    "@types/d3-time": "^3.0.0",
-    "@types/d3-timer": "^3.0.0",
-    "d3-array": "^3.1.6",
-    "d3-ease": "^3.0.1",
-    "d3-interpolate": "^3.0.1",
-    "d3-scale": "^4.0.2",
-    "d3-shape": "^3.1.0",
-    "d3-time": "^3.0.0",
-    "d3-timer": "^3.0.1"
+    "@eslint-community/regexpp": "^4.10.0",
+    "@typescript-eslint/scope-manager": "8.30.1",
+    "@typescript-eslint/type-utils": "8.30.1",
+    "@typescript-eslint/utils": "8.30.1",
+    "@typescript-eslint/visitor-keys": "8.30.1",
+    "graphemer": "^1.4.0",
+    "ignore": "^5.3.1",
+    "natural-compare": "^1.4.0",
+    "ts-api-utils": "^2.0.1"
   },
   "devDependencies": {
-    "d3-color": "^3.1.0",
-    "d3-format": "^3.1.0",
-    "d3-path": "^3.0.1",
-    "d3-time-format": "^4.1.0",
-    "d3-voronoi": "^1.1.4",
-    "internmap": "^2.0.3",
-    "execa": "^6.1.0",
-    "rimraf": "^3.0.2"
+    "@jest/types": "29.6.3",
+    "@types/marked": "^5.0.2",
+    "@types/mdast": "^4.0.3",
+    "@types/natural-compare": "*",
+    "@typescript-eslint/rule-schema-to-typescript-types": "8.30.1",
+    "@typescript-eslint/rule-tester": "8.30.1",
+    "ajv": "^6.12.6",
+    "cross-env": "^7.0.3",
+    "cross-fetch": "*",
+    "eslint": "*",
+    "jest": "29.7.0",
+    "jest-specific-snapshot": "^8.0.0",
+    "json-schema": "*",
+    "markdown-table": "^3.0.3",
+    "marked": "^5.1.2",
+    "mdast-util-from-markdown": "^2.0.0",
+    "mdast-util-mdx": "^3.0.0",
+    "micromark-extension-mdxjs": "^3.0.0",
+    "prettier": "^3.2.5",
+    "rimraf": "*",
+    "title-case": "^3.0.3",
+    "tsx": "*",
+    "typescript": "*",
+    "unist-util-visit": "^5.0.0"
   },
-  "publishConfig": {
-    "provenance": true
+  "peerDependencies": {
+    "@typescript-eslint/parser": "^8.0.0 || ^8.0.0-alpha.0",
+    "eslint": "^8.57.0 || ^9.0.0",
+    "typescript": ">=4.8.4 <5.9.0"
   },
-  "wireit": {
-    "build": {
-      "command": "node ./scripts/build.js",
-      "files": [
-        ".babelrc.js",
-        "scripts/build.js",
-        "node_modules/**"
-      ],
-      "output": [
-        "es/**",
-        "lib/**",
-        "lib-vendor/**",
-        "d3-*"
-      ],
-      "packageLocks": [
-        "pnpm-lock.yaml"
-      ]
-    },
-    "build:lib:esm": {
-      "dependencies": [
-        "build"
-      ]
-    },
-    "build:lib:cjs": {
-      "dependencies": [
-        "build"
-      ]
-    },
-    "build:dist": {
-      "dependencies": [
-        "build"
-      ]
-    },
-    "build:dist:dev": {
-      "dependencies": [
-        "build"
-      ]
-    },
-    "build:dist:min": {
-      "dependencies": [
-        "build"
-      ]
-    },
-    "check": {
-      "dependencies": [
-        "types:check",
-        "jest",
-        "format",
-        "lint"
-      ]
-    },
-    "types:check": {
-      "command": "echo \"No types to check here\"",
-      "files": [],
-      "output": []
-    },
-    "types:create": {
-      "dependencies": [
-        "build"
-      ]
-    },
-    "format": {
-      "command": "nps format:pkg",
-      "files": [
-        "scripts/**",
-        "*.json",
-        "../../.prettierignore",
-        "../../.prettierrc.json"
-      ],
-      "output": [],
-      "packageLocks": [
-        "pnpm-lock.yaml"
-      ]
-    },
-    "format:fix": {
-      "command": "pnpm run format || nps format:pkg:fix",
-      "files": [
-        "scripts/**",
-        "*.json",
-        "../../.prettierignore",
-        "../../.prettierrc.json"
-      ],
-      "output": [],
-      "packageLocks": [
-        "pnpm-lock.yaml"
-      ]
-    },
-    "lint": {
-      "command": "nps \"lint:base scripts\"",
-      "files": [
-        "scripts/**",
-        "../../.eslintrc.js"
-      ],
-      "output": [],
-      "packageLocks": [
-        "pnpm-lock.yaml"
-      ]
-    },
-    "lint:fix": {
-      "command": "pnpm run lint || nps \"lint:base --fix scripts\"",
-      "files": [
-        "scripts/**",
-        "../../.eslintrc.js"
-      ],
-      "output": [],
-      "packageLocks": [
-        "pnpm-lock.yaml"
-      ]
-    },
-    "jest": {
-      "command": "echo victory-vendor has no tests",
-      "files": [],
-      "output": []
-    }
-  },
-  "scripts": {
-    "build": "wireit",
-    "build:lib": "wireit",
-    "build:lib:esm": "wireit",
-    "build:lib:cjs": "wireit",
-    "build:dist": "wireit",
-    "build:dist:dev": "wireit",
-    "build:dist:min": "wireit",
-    "check": "wireit",
-    "types:check": "wireit",
-    "types:create": "wireit",
-    "format": "wireit",
-    "format:fix": "wireit",
-    "lint": "wireit",
-    "lint:fix": "wireit",
-    "jest": "wireit"
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/typescript-eslint"
   }
 }
