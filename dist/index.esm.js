@@ -1,9 +1,7 @@
-'use strict';
-
-var jsxRuntime = require('react/jsx-runtime');
-var react = require('react');
-var dateFns = require('date-fns');
-var locale = require('date-fns/locale');
+import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
+import { createContext, useContext, useState, forwardRef, useEffect, useRef, useLayoutEffect } from 'react';
+import { format, startOfMonth, endOfMonth, startOfDay, isSameYear, setMonth, setYear, startOfYear, differenceInCalendarMonths, addMonths, isSameMonth, isBefore, startOfISOWeek, startOfWeek, addDays, isSameDay, isAfter, subDays, differenceInCalendarDays, isDate, max, min, addWeeks, addYears, endOfISOWeek, endOfWeek, getUnixTime, getISOWeek, getWeek, getWeeksInMonth, parse } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -126,21 +124,21 @@ var defaultClassNames = {
  * The default formatter for the caption.
  */
 function formatCaption(month, options) {
-    return dateFns.format(month, 'LLLL y', options);
+    return format(month, 'LLLL y', options);
 }
 
 /**
  * The default formatter for the Day button.
  */
 function formatDay(day, options) {
-    return dateFns.format(day, 'd', options);
+    return format(day, 'd', options);
 }
 
 /**
  * The default formatter for the Month caption.
  */
 function formatMonthCaption(month, options) {
-    return dateFns.format(month, 'LLLL', options);
+    return format(month, 'LLLL', options);
 }
 
 /**
@@ -154,14 +152,14 @@ function formatWeekNumber(weekNumber) {
  * The default formatter for the name of the weekday.
  */
 function formatWeekdayName(weekday, options) {
-    return dateFns.format(weekday, 'cccccc', options);
+    return format(weekday, 'cccccc', options);
 }
 
 /**
  * The default formatter for the Year caption.
  */
 function formatYearCaption(year, options) {
-    return dateFns.format(year, 'yyyy', options);
+    return format(year, 'yyyy', options);
 }
 
 var formatters = /*#__PURE__*/Object.freeze({
@@ -178,7 +176,7 @@ var formatters = /*#__PURE__*/Object.freeze({
  * The default ARIA label for the day button.
  */
 var labelDay = function (day, activeModifiers, options) {
-    return dateFns.format(day, 'do MMMM (EEEE)', options);
+    return format(day, 'do MMMM (EEEE)', options);
 };
 
 /**
@@ -206,7 +204,7 @@ var labelPrevious = function () {
  * The default ARIA label for the Weekday element.
  */
 var labelWeekday = function (day, options) {
-    return dateFns.format(day, 'cccc', options);
+    return format(day, 'cccc', options);
 };
 
 /**
@@ -241,7 +239,7 @@ var labels = /*#__PURE__*/Object.freeze({
 function getDefaultContextValues() {
     var captionLayout = 'buttons';
     var classNames = defaultClassNames;
-    var locale$1 = locale.enUS;
+    var locale = enUS;
     var modifiersClassNames = {};
     var modifiers = {};
     var numberOfMonths = 1;
@@ -252,7 +250,7 @@ function getDefaultContextValues() {
         classNames: classNames,
         formatters: formatters,
         labels: labels,
-        locale: locale$1,
+        locale: locale,
         modifiersClassNames: modifiersClassNames,
         modifiers: modifiers,
         numberOfMonths: numberOfMonths,
@@ -267,20 +265,20 @@ function parseFromToProps(props) {
     var fromYear = props.fromYear, toYear = props.toYear, fromMonth = props.fromMonth, toMonth = props.toMonth;
     var fromDate = props.fromDate, toDate = props.toDate;
     if (fromMonth) {
-        fromDate = dateFns.startOfMonth(fromMonth);
+        fromDate = startOfMonth(fromMonth);
     }
     else if (fromYear) {
         fromDate = new Date(fromYear, 0, 1);
     }
     if (toMonth) {
-        toDate = dateFns.endOfMonth(toMonth);
+        toDate = endOfMonth(toMonth);
     }
     else if (toYear) {
         toDate = new Date(toYear, 11, 31);
     }
     return {
-        fromDate: fromDate ? dateFns.startOfDay(fromDate) : undefined,
-        toDate: toDate ? dateFns.startOfDay(toDate) : undefined
+        fromDate: fromDate ? startOfDay(fromDate) : undefined,
+        toDate: toDate ? startOfDay(toDate) : undefined
     };
 }
 
@@ -291,7 +289,7 @@ function parseFromToProps(props) {
  *
  * Access to this context from the {@link useDayPicker} hook.
  */
-var DayPickerContext = react.createContext(undefined);
+var DayPickerContext = createContext(undefined);
 /**
  * The provider for the {@link DayPickerContext}, assigning the defaults from the
  * initial DayPicker props.
@@ -313,7 +311,7 @@ function DayPickerProvider(props) {
         onSelect = initialProps.onSelect;
     }
     var value = __assign(__assign(__assign({}, defaultContextValues), initialProps), { captionLayout: captionLayout, classNames: __assign(__assign({}, defaultContextValues.classNames), initialProps.classNames), components: __assign({}, initialProps.components), formatters: __assign(__assign({}, defaultContextValues.formatters), initialProps.formatters), fromDate: fromDate, labels: __assign(__assign({}, defaultContextValues.labels), initialProps.labels), mode: initialProps.mode || defaultContextValues.mode, modifiers: __assign(__assign({}, defaultContextValues.modifiers), initialProps.modifiers), modifiersClassNames: __assign(__assign({}, defaultContextValues.modifiersClassNames), initialProps.modifiersClassNames), onSelect: onSelect, styles: __assign(__assign({}, defaultContextValues.styles), initialProps.styles), toDate: toDate });
-    return (jsxRuntime.jsx(DayPickerContext.Provider, { value: value, children: props.children }));
+    return (jsx(DayPickerContext.Provider, { value: value, children: props.children }));
 }
 /**
  * Hook to access the {@link DayPickerContextValue}.
@@ -322,7 +320,7 @@ function DayPickerProvider(props) {
  * internal or custom components.
  */
 function useDayPicker() {
-    var context = react.useContext(DayPickerContext);
+    var context = useContext(DayPickerContext);
     if (!context) {
         throw new Error("useDayPicker must be used within a DayPickerProvider.");
     }
@@ -332,14 +330,14 @@ function useDayPicker() {
 /** Render the caption for the displayed month. This component is used when `captionLayout="buttons"`. */
 function CaptionLabel(props) {
     var _a = useDayPicker(), locale = _a.locale, classNames = _a.classNames, styles = _a.styles, formatCaption = _a.formatters.formatCaption;
-    return (jsxRuntime.jsx("div", { className: classNames.caption_label, style: styles.caption_label, "aria-live": "polite", role: "presentation", id: props.id, children: formatCaption(props.displayMonth, { locale: locale }) }));
+    return (jsx("div", { className: classNames.caption_label, style: styles.caption_label, "aria-live": "polite", role: "presentation", id: props.id, children: formatCaption(props.displayMonth, { locale: locale }) }));
 }
 
 /**
  * Render the icon in the styled drop-down.
  */
 function IconDropdown(props) {
-    return (jsxRuntime.jsx("svg", __assign({ width: "8px", height: "8px", viewBox: "0 0 120 120", "data-testid": "iconDropdown" }, props, { children: jsxRuntime.jsx("path", { d: "M4.22182541,48.2218254 C8.44222828,44.0014225 15.2388494,43.9273804 19.5496459,47.9996989 L19.7781746,48.2218254 L60,88.443 L100.221825,48.2218254 C104.442228,44.0014225 111.238849,43.9273804 115.549646,47.9996989 L115.778175,48.2218254 C119.998577,52.4422283 120.07262,59.2388494 116.000301,63.5496459 L115.778175,63.7781746 L67.7781746,111.778175 C63.5577717,115.998577 56.7611506,116.07262 52.4503541,112.000301 L52.2218254,111.778175 L4.22182541,63.7781746 C-0.0739418023,59.4824074 -0.0739418023,52.5175926 4.22182541,48.2218254 Z", fill: "currentColor", fillRule: "nonzero" }) })));
+    return (jsx("svg", __assign({ width: "8px", height: "8px", viewBox: "0 0 120 120", "data-testid": "iconDropdown" }, props, { children: jsx("path", { d: "M4.22182541,48.2218254 C8.44222828,44.0014225 15.2388494,43.9273804 19.5496459,47.9996989 L19.7781746,48.2218254 L60,88.443 L100.221825,48.2218254 C104.442228,44.0014225 111.238849,43.9273804 115.549646,47.9996989 L115.778175,48.2218254 C119.998577,52.4422283 120.07262,59.2388494 116.000301,63.5496459 L115.778175,63.7781746 L67.7781746,111.778175 C63.5577717,115.998577 56.7611506,116.07262 52.4503541,112.000301 L52.2218254,111.778175 L4.22182541,63.7781746 C-0.0739418023,59.4824074 -0.0739418023,52.5175926 4.22182541,48.2218254 Z", fill: "currentColor", fillRule: "nonzero" }) })));
 }
 
 /**
@@ -351,7 +349,7 @@ function Dropdown(props) {
     var onChange = props.onChange, value = props.value, children = props.children, caption = props.caption, className = props.className, style = props.style;
     var dayPicker = useDayPicker();
     var IconDropdownComponent = (_b = (_a = dayPicker.components) === null || _a === void 0 ? void 0 : _a.IconDropdown) !== null && _b !== void 0 ? _b : IconDropdown;
-    return (jsxRuntime.jsxs("div", { className: className, style: style, children: [jsxRuntime.jsx("span", { className: dayPicker.classNames.vhidden, children: props['aria-label'] }), jsxRuntime.jsx("select", { name: props.name, "aria-label": props['aria-label'], className: dayPicker.classNames.dropdown, style: dayPicker.styles.dropdown, value: value, onChange: onChange, children: children }), jsxRuntime.jsxs("div", { className: dayPicker.classNames.caption_label, style: dayPicker.styles.caption_label, "aria-hidden": "true", children: [caption, jsxRuntime.jsx(IconDropdownComponent, { className: dayPicker.classNames.dropdown_icon, style: dayPicker.styles.dropdown_icon })] })] }));
+    return (jsxs("div", { className: className, style: style, children: [jsx("span", { className: dayPicker.classNames.vhidden, children: props['aria-label'] }), jsx("select", { name: props.name, "aria-label": props['aria-label'], className: dayPicker.classNames.dropdown, style: dayPicker.styles.dropdown, value: value, onChange: onChange, children: children }), jsxs("div", { className: dayPicker.classNames.caption_label, style: dayPicker.styles.caption_label, "aria-hidden": "true", children: [caption, jsx(IconDropdownComponent, { className: dayPicker.classNames.dropdown_icon, style: dayPicker.styles.dropdown_icon })] })] }));
 }
 
 /** Render the dropdown to navigate between months. */
@@ -360,31 +358,31 @@ function MonthsDropdown(props) {
     var _b = useDayPicker(), fromDate = _b.fromDate, toDate = _b.toDate, styles = _b.styles, locale = _b.locale, formatMonthCaption = _b.formatters.formatMonthCaption, classNames = _b.classNames, components = _b.components, labelMonthDropdown = _b.labels.labelMonthDropdown;
     // Dropdown should appear only when both from/toDate is set
     if (!fromDate)
-        return jsxRuntime.jsx(jsxRuntime.Fragment, {});
+        return jsx(Fragment, {});
     if (!toDate)
-        return jsxRuntime.jsx(jsxRuntime.Fragment, {});
+        return jsx(Fragment, {});
     var dropdownMonths = [];
-    if (dateFns.isSameYear(fromDate, toDate)) {
+    if (isSameYear(fromDate, toDate)) {
         // only display the months included in the range
-        var date = dateFns.startOfMonth(fromDate);
+        var date = startOfMonth(fromDate);
         for (var month = fromDate.getMonth(); month <= toDate.getMonth(); month++) {
-            dropdownMonths.push(dateFns.setMonth(date, month));
+            dropdownMonths.push(setMonth(date, month));
         }
     }
     else {
         // display all the 12 months
-        var date = dateFns.startOfMonth(new Date()); // Any date should be OK, as we just need the year
+        var date = startOfMonth(new Date()); // Any date should be OK, as we just need the year
         for (var month = 0; month <= 11; month++) {
-            dropdownMonths.push(dateFns.setMonth(date, month));
+            dropdownMonths.push(setMonth(date, month));
         }
     }
     var handleChange = function (e) {
         var selectedMonth = Number(e.target.value);
-        var newMonth = dateFns.setMonth(dateFns.startOfMonth(props.displayMonth), selectedMonth);
+        var newMonth = setMonth(startOfMonth(props.displayMonth), selectedMonth);
         props.onChange(newMonth);
     };
     var DropdownComponent = (_a = components === null || components === void 0 ? void 0 : components.Dropdown) !== null && _a !== void 0 ? _a : Dropdown;
-    return (jsxRuntime.jsx(DropdownComponent, { name: "months", "aria-label": labelMonthDropdown(), className: classNames.dropdown_month, style: styles.dropdown_month, onChange: handleChange, value: props.displayMonth.getMonth(), caption: formatMonthCaption(props.displayMonth, { locale: locale }), children: dropdownMonths.map(function (m) { return (jsxRuntime.jsx("option", { value: m.getMonth(), children: formatMonthCaption(m, { locale: locale }) }, m.getMonth())); }) }));
+    return (jsx(DropdownComponent, { name: "months", "aria-label": labelMonthDropdown(), className: classNames.dropdown_month, style: styles.dropdown_month, onChange: handleChange, value: props.displayMonth.getMonth(), caption: formatMonthCaption(props.displayMonth, { locale: locale }), children: dropdownMonths.map(function (m) { return (jsx("option", { value: m.getMonth(), children: formatMonthCaption(m, { locale: locale }) }, m.getMonth())); }) }));
 }
 
 /**
@@ -398,20 +396,20 @@ function YearsDropdown(props) {
     var years = [];
     // Dropdown should appear only when both from/toDate is set
     if (!fromDate)
-        return jsxRuntime.jsx(jsxRuntime.Fragment, {});
+        return jsx(Fragment, {});
     if (!toDate)
-        return jsxRuntime.jsx(jsxRuntime.Fragment, {});
+        return jsx(Fragment, {});
     var fromYear = fromDate.getFullYear();
     var toYear = toDate.getFullYear();
     for (var year = fromYear; year <= toYear; year++) {
-        years.push(dateFns.setYear(dateFns.startOfYear(new Date()), year));
+        years.push(setYear(startOfYear(new Date()), year));
     }
     var handleChange = function (e) {
-        var newMonth = dateFns.setYear(dateFns.startOfMonth(displayMonth), Number(e.target.value));
+        var newMonth = setYear(startOfMonth(displayMonth), Number(e.target.value));
         props.onChange(newMonth);
     };
     var DropdownComponent = (_a = components === null || components === void 0 ? void 0 : components.Dropdown) !== null && _a !== void 0 ? _a : Dropdown;
-    return (jsxRuntime.jsx(DropdownComponent, { name: "years", "aria-label": labelYearDropdown(), className: classNames.dropdown_year, style: styles.dropdown_year, onChange: handleChange, value: displayMonth.getFullYear(), caption: formatYearCaption(displayMonth, { locale: locale }), children: years.map(function (year) { return (jsxRuntime.jsx("option", { value: year.getFullYear(), children: formatYearCaption(year, { locale: locale }) }, year.getFullYear())); }) }));
+    return (jsx(DropdownComponent, { name: "years", "aria-label": labelYearDropdown(), className: classNames.dropdown_year, style: styles.dropdown_year, onChange: handleChange, value: displayMonth.getFullYear(), caption: formatYearCaption(displayMonth, { locale: locale }), children: years.map(function (year) { return (jsx("option", { value: year.getFullYear(), children: formatYearCaption(year, { locale: locale }) }, year.getFullYear())); }) }));
 }
 
 /**
@@ -424,7 +422,7 @@ function YearsDropdown(props) {
  * argument, which will be always returned as `value`.
  */
 function useControlledValue(defaultValue, controlledValue) {
-    var _a = react.useState(defaultValue), uncontrolledValue = _a[0], setValue = _a[1];
+    var _a = useState(defaultValue), uncontrolledValue = _a[0], setValue = _a[1];
     var value = controlledValue === undefined ? uncontrolledValue : controlledValue;
     return [value, setValue];
 }
@@ -435,15 +433,15 @@ function getInitialMonth(context) {
     var initialMonth = month || defaultMonth || today || new Date();
     var toDate = context.toDate, fromDate = context.fromDate, _a = context.numberOfMonths, numberOfMonths = _a === void 0 ? 1 : _a;
     // Fix the initialMonth if is after the to-date
-    if (toDate && dateFns.differenceInCalendarMonths(toDate, initialMonth) < 0) {
+    if (toDate && differenceInCalendarMonths(toDate, initialMonth) < 0) {
         var offset = -1 * (numberOfMonths - 1);
-        initialMonth = dateFns.addMonths(toDate, offset);
+        initialMonth = addMonths(toDate, offset);
     }
     // Fix the initialMonth if is before the from-date
-    if (fromDate && dateFns.differenceInCalendarMonths(initialMonth, fromDate) < 0) {
+    if (fromDate && differenceInCalendarMonths(initialMonth, fromDate) < 0) {
         initialMonth = fromDate;
     }
-    return dateFns.startOfMonth(initialMonth);
+    return startOfMonth(initialMonth);
 }
 
 /** Controls the navigation state. */
@@ -455,7 +453,7 @@ function useNavigationState() {
         var _a;
         if (context.disableNavigation)
             return;
-        var month = dateFns.startOfMonth(date);
+        var month = startOfMonth(date);
         setMonth(month);
         (_a = context.onMonthChange) === null || _a === void 0 ? void 0 : _a.call(context, month);
     };
@@ -468,12 +466,12 @@ function useNavigationState() {
  */
 function getDisplayMonths(month, _a) {
     var reverseMonths = _a.reverseMonths, numberOfMonths = _a.numberOfMonths;
-    var start = dateFns.startOfMonth(month);
-    var end = dateFns.startOfMonth(dateFns.addMonths(start, numberOfMonths));
-    var monthsDiff = dateFns.differenceInCalendarMonths(end, start);
+    var start = startOfMonth(month);
+    var end = startOfMonth(addMonths(start, numberOfMonths));
+    var monthsDiff = differenceInCalendarMonths(end, start);
     var months = [];
     for (var i = 0; i < monthsDiff; i++) {
-        var nextMonth = dateFns.addMonths(start, i);
+        var nextMonth = addMonths(start, i);
         months.push(nextMonth);
     }
     if (reverseMonths)
@@ -497,16 +495,16 @@ function getNextMonth(startingMonth, options) {
     }
     var toDate = options.toDate, pagedNavigation = options.pagedNavigation, _a = options.numberOfMonths, numberOfMonths = _a === void 0 ? 1 : _a;
     var offset = pagedNavigation ? numberOfMonths : 1;
-    var month = dateFns.startOfMonth(startingMonth);
+    var month = startOfMonth(startingMonth);
     if (!toDate) {
-        return dateFns.addMonths(month, offset);
+        return addMonths(month, offset);
     }
-    var monthsDiff = dateFns.differenceInCalendarMonths(toDate, startingMonth);
+    var monthsDiff = differenceInCalendarMonths(toDate, startingMonth);
     if (monthsDiff < numberOfMonths) {
         return undefined;
     }
     // Jump forward as the number of months when paged navigation
-    return dateFns.addMonths(month, offset);
+    return addMonths(month, offset);
 }
 
 /**
@@ -526,23 +524,23 @@ function getPreviousMonth(startingMonth, options) {
     }
     var fromDate = options.fromDate, pagedNavigation = options.pagedNavigation, _a = options.numberOfMonths, numberOfMonths = _a === void 0 ? 1 : _a;
     var offset = pagedNavigation ? numberOfMonths : 1;
-    var month = dateFns.startOfMonth(startingMonth);
+    var month = startOfMonth(startingMonth);
     if (!fromDate) {
-        return dateFns.addMonths(month, -offset);
+        return addMonths(month, -offset);
     }
-    var monthsDiff = dateFns.differenceInCalendarMonths(month, fromDate);
+    var monthsDiff = differenceInCalendarMonths(month, fromDate);
     if (monthsDiff <= 0) {
         return undefined;
     }
     // Jump back as the number of months when paged navigation
-    return dateFns.addMonths(month, -offset);
+    return addMonths(month, -offset);
 }
 
 /**
  * The Navigation context shares details and methods to navigate the months in DayPicker.
  * Access this context from the {@link useNavigation} hook.
  */
-var NavigationContext = react.createContext(undefined);
+var NavigationContext = createContext(undefined);
 /** Provides the values for the {@link NavigationContext}. */
 function NavigationProvider(props) {
     var dayPicker = useDayPicker();
@@ -552,15 +550,15 @@ function NavigationProvider(props) {
     var previousMonth = getPreviousMonth(currentMonth, dayPicker);
     var isDateDisplayed = function (date) {
         return displayMonths.some(function (displayMonth) {
-            return dateFns.isSameMonth(date, displayMonth);
+            return isSameMonth(date, displayMonth);
         });
     };
     var goToDate = function (date, refDate) {
         if (isDateDisplayed(date)) {
             return;
         }
-        if (refDate && dateFns.isBefore(date, refDate)) {
-            goToMonth(dateFns.addMonths(date, 1 + dayPicker.numberOfMonths * -1));
+        if (refDate && isBefore(date, refDate)) {
+            goToMonth(addMonths(date, 1 + dayPicker.numberOfMonths * -1));
         }
         else {
             goToMonth(date);
@@ -575,7 +573,7 @@ function NavigationProvider(props) {
         nextMonth: nextMonth,
         isDateDisplayed: isDateDisplayed
     };
-    return (jsxRuntime.jsx(NavigationContext.Provider, { value: value, children: props.children }));
+    return (jsx(NavigationContext.Provider, { value: value, children: props.children }));
 }
 /**
  * Hook to access the {@link NavigationContextValue}. Use this hook to navigate
@@ -584,7 +582,7 @@ function NavigationProvider(props) {
  * This hook is meant to be used inside internal or custom components.
  */
 function useNavigation() {
-    var context = react.useContext(NavigationContext);
+    var context = useContext(NavigationContext);
     if (!context) {
         throw new Error('useNavigation must be used within a NavigationProvider');
     }
@@ -599,29 +597,29 @@ function CaptionDropdowns(props) {
     var _b = useDayPicker(), classNames = _b.classNames, styles = _b.styles, components = _b.components;
     var goToMonth = useNavigation().goToMonth;
     var handleMonthChange = function (newMonth) {
-        goToMonth(dateFns.addMonths(newMonth, props.displayIndex ? -props.displayIndex : 0));
+        goToMonth(addMonths(newMonth, props.displayIndex ? -props.displayIndex : 0));
     };
     var CaptionLabelComponent = (_a = components === null || components === void 0 ? void 0 : components.CaptionLabel) !== null && _a !== void 0 ? _a : CaptionLabel;
-    var captionLabel = (jsxRuntime.jsx(CaptionLabelComponent, { id: props.id, displayMonth: props.displayMonth }));
-    return (jsxRuntime.jsxs("div", { className: classNames.caption_dropdowns, style: styles.caption_dropdowns, children: [jsxRuntime.jsx("div", { className: classNames.vhidden, children: captionLabel }), jsxRuntime.jsx(MonthsDropdown, { onChange: handleMonthChange, displayMonth: props.displayMonth }), jsxRuntime.jsx(YearsDropdown, { onChange: handleMonthChange, displayMonth: props.displayMonth })] }));
+    var captionLabel = (jsx(CaptionLabelComponent, { id: props.id, displayMonth: props.displayMonth }));
+    return (jsxs("div", { className: classNames.caption_dropdowns, style: styles.caption_dropdowns, children: [jsx("div", { className: classNames.vhidden, children: captionLabel }), jsx(MonthsDropdown, { onChange: handleMonthChange, displayMonth: props.displayMonth }), jsx(YearsDropdown, { onChange: handleMonthChange, displayMonth: props.displayMonth })] }));
 }
 
 /**
  * Render the "previous month" button in the navigation.
  */
 function IconLeft(props) {
-    return (jsxRuntime.jsx("svg", __assign({ width: "16px", height: "16px", viewBox: "0 0 120 120" }, props, { children: jsxRuntime.jsx("path", { d: "M69.490332,3.34314575 C72.6145263,0.218951416 77.6798462,0.218951416 80.8040405,3.34314575 C83.8617626,6.40086786 83.9268205,11.3179931 80.9992143,14.4548388 L80.8040405,14.6568542 L35.461,60 L80.8040405,105.343146 C83.8617626,108.400868 83.9268205,113.317993 80.9992143,116.454839 L80.8040405,116.656854 C77.7463184,119.714576 72.8291931,119.779634 69.6923475,116.852028 L69.490332,116.656854 L18.490332,65.6568542 C15.4326099,62.5991321 15.367552,57.6820069 18.2951583,54.5451612 L18.490332,54.3431458 L69.490332,3.34314575 Z", fill: "currentColor", fillRule: "nonzero" }) })));
+    return (jsx("svg", __assign({ width: "16px", height: "16px", viewBox: "0 0 120 120" }, props, { children: jsx("path", { d: "M69.490332,3.34314575 C72.6145263,0.218951416 77.6798462,0.218951416 80.8040405,3.34314575 C83.8617626,6.40086786 83.9268205,11.3179931 80.9992143,14.4548388 L80.8040405,14.6568542 L35.461,60 L80.8040405,105.343146 C83.8617626,108.400868 83.9268205,113.317993 80.9992143,116.454839 L80.8040405,116.656854 C77.7463184,119.714576 72.8291931,119.779634 69.6923475,116.852028 L69.490332,116.656854 L18.490332,65.6568542 C15.4326099,62.5991321 15.367552,57.6820069 18.2951583,54.5451612 L18.490332,54.3431458 L69.490332,3.34314575 Z", fill: "currentColor", fillRule: "nonzero" }) })));
 }
 
 /**
  * Render the "next month" button in the navigation.
  */
 function IconRight(props) {
-    return (jsxRuntime.jsx("svg", __assign({ width: "16px", height: "16px", viewBox: "0 0 120 120" }, props, { children: jsxRuntime.jsx("path", { d: "M49.8040405,3.34314575 C46.6798462,0.218951416 41.6145263,0.218951416 38.490332,3.34314575 C35.4326099,6.40086786 35.367552,11.3179931 38.2951583,14.4548388 L38.490332,14.6568542 L83.8333725,60 L38.490332,105.343146 C35.4326099,108.400868 35.367552,113.317993 38.2951583,116.454839 L38.490332,116.656854 C41.5480541,119.714576 46.4651794,119.779634 49.602025,116.852028 L49.8040405,116.656854 L100.804041,65.6568542 C103.861763,62.5991321 103.926821,57.6820069 100.999214,54.5451612 L100.804041,54.3431458 L49.8040405,3.34314575 Z", fill: "currentColor" }) })));
+    return (jsx("svg", __assign({ width: "16px", height: "16px", viewBox: "0 0 120 120" }, props, { children: jsx("path", { d: "M49.8040405,3.34314575 C46.6798462,0.218951416 41.6145263,0.218951416 38.490332,3.34314575 C35.4326099,6.40086786 35.367552,11.3179931 38.2951583,14.4548388 L38.490332,14.6568542 L83.8333725,60 L38.490332,105.343146 C35.4326099,108.400868 35.367552,113.317993 38.2951583,116.454839 L38.490332,116.656854 C41.5480541,119.714576 46.4651794,119.779634 49.602025,116.852028 L49.8040405,116.656854 L100.804041,65.6568542 C103.861763,62.5991321 103.926821,57.6820069 100.999214,54.5451612 L100.804041,54.3431458 L49.8040405,3.34314575 Z", fill: "currentColor" }) })));
 }
 
 /** Render a button HTML element applying the reset class name. */
-var Button = react.forwardRef(function (props, ref) {
+var Button = forwardRef(function (props, ref) {
     var _a = useDayPicker(), classNames = _a.classNames, styles = _a.styles;
     var classNamesArr = [classNames.button_reset, classNames.button];
     if (props.className) {
@@ -632,7 +630,7 @@ var Button = react.forwardRef(function (props, ref) {
     if (props.style) {
         Object.assign(style, props.style);
     }
-    return (jsxRuntime.jsx("button", __assign({}, props, { ref: ref, type: "button", className: className, style: style })));
+    return (jsx("button", __assign({}, props, { ref: ref, type: "button", className: className, style: style })));
 });
 
 /** A component rendering the navigation buttons or the drop-downs. */
@@ -640,7 +638,7 @@ function Navigation(props) {
     var _a, _b;
     var _c = useDayPicker(), dir = _c.dir, locale = _c.locale, classNames = _c.classNames, styles = _c.styles, _d = _c.labels, labelPrevious = _d.labelPrevious, labelNext = _d.labelNext, components = _c.components;
     if (!props.nextMonth && !props.previousMonth) {
-        return jsxRuntime.jsx(jsxRuntime.Fragment, {});
+        return jsx(Fragment, {});
     }
     var previousLabel = labelPrevious(props.previousMonth, { locale: locale });
     var previousClassName = [
@@ -654,7 +652,7 @@ function Navigation(props) {
     ].join(' ');
     var IconRightComponent = (_a = components === null || components === void 0 ? void 0 : components.IconRight) !== null && _a !== void 0 ? _a : IconRight;
     var IconLeftComponent = (_b = components === null || components === void 0 ? void 0 : components.IconLeft) !== null && _b !== void 0 ? _b : IconLeft;
-    return (jsxRuntime.jsxs("div", { className: classNames.nav, style: styles.nav, children: [!props.hidePrevious && (jsxRuntime.jsx(Button, { name: "previous-month", "aria-label": previousLabel, className: previousClassName, style: styles.nav_button_previous, disabled: !props.previousMonth, onClick: props.onPreviousClick, children: dir === 'rtl' ? (jsxRuntime.jsx(IconRightComponent, { className: classNames.nav_icon, style: styles.nav_icon })) : (jsxRuntime.jsx(IconLeftComponent, { className: classNames.nav_icon, style: styles.nav_icon })) })), !props.hideNext && (jsxRuntime.jsx(Button, { name: "next-month", "aria-label": nextLabel, className: nextClassName, style: styles.nav_button_next, disabled: !props.nextMonth, onClick: props.onNextClick, children: dir === 'rtl' ? (jsxRuntime.jsx(IconLeftComponent, { className: classNames.nav_icon, style: styles.nav_icon })) : (jsxRuntime.jsx(IconRightComponent, { className: classNames.nav_icon, style: styles.nav_icon })) }))] }));
+    return (jsxs("div", { className: classNames.nav, style: styles.nav, children: [!props.hidePrevious && (jsx(Button, { name: "previous-month", "aria-label": previousLabel, className: previousClassName, style: styles.nav_button_previous, disabled: !props.previousMonth, onClick: props.onPreviousClick, children: dir === 'rtl' ? (jsx(IconRightComponent, { className: classNames.nav_icon, style: styles.nav_icon })) : (jsx(IconLeftComponent, { className: classNames.nav_icon, style: styles.nav_icon })) })), !props.hideNext && (jsx(Button, { name: "next-month", "aria-label": nextLabel, className: nextClassName, style: styles.nav_button_next, disabled: !props.nextMonth, onClick: props.onNextClick, children: dir === 'rtl' ? (jsx(IconLeftComponent, { className: classNames.nav_icon, style: styles.nav_icon })) : (jsx(IconRightComponent, { className: classNames.nav_icon, style: styles.nav_icon })) }))] }));
 }
 
 /**
@@ -664,7 +662,7 @@ function CaptionNavigation(props) {
     var numberOfMonths = useDayPicker().numberOfMonths;
     var _a = useNavigation(), previousMonth = _a.previousMonth, nextMonth = _a.nextMonth, goToMonth = _a.goToMonth, displayMonths = _a.displayMonths;
     var displayIndex = displayMonths.findIndex(function (month) {
-        return dateFns.isSameMonth(props.displayMonth, month);
+        return isSameMonth(props.displayMonth, month);
     });
     var isFirst = displayIndex === 0;
     var isLast = displayIndex === displayMonths.length - 1;
@@ -680,7 +678,7 @@ function CaptionNavigation(props) {
             return;
         goToMonth(nextMonth);
     };
-    return (jsxRuntime.jsx(Navigation, { displayMonth: props.displayMonth, hideNext: hideNext, hidePrevious: hidePrevious, nextMonth: nextMonth, previousMonth: previousMonth, onPreviousClick: handlePreviousClick, onNextClick: handleNextClick }));
+    return (jsx(Navigation, { displayMonth: props.displayMonth, hideNext: hideNext, hidePrevious: hidePrevious, nextMonth: nextMonth, previousMonth: previousMonth, onPreviousClick: handlePreviousClick, onNextClick: handleNextClick }));
 }
 
 /**
@@ -693,18 +691,18 @@ function Caption(props) {
     var CaptionLabelComponent = (_a = components === null || components === void 0 ? void 0 : components.CaptionLabel) !== null && _a !== void 0 ? _a : CaptionLabel;
     var caption;
     if (disableNavigation) {
-        caption = (jsxRuntime.jsx(CaptionLabelComponent, { id: props.id, displayMonth: props.displayMonth }));
+        caption = (jsx(CaptionLabelComponent, { id: props.id, displayMonth: props.displayMonth }));
     }
     else if (captionLayout === 'dropdown') {
-        caption = (jsxRuntime.jsx(CaptionDropdowns, { displayMonth: props.displayMonth, id: props.id }));
+        caption = (jsx(CaptionDropdowns, { displayMonth: props.displayMonth, id: props.id }));
     }
     else if (captionLayout === 'dropdown-buttons') {
-        caption = (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [jsxRuntime.jsx(CaptionDropdowns, { displayMonth: props.displayMonth, displayIndex: props.displayIndex, id: props.id }), jsxRuntime.jsx(CaptionNavigation, { displayMonth: props.displayMonth, displayIndex: props.displayIndex, id: props.id })] }));
+        caption = (jsxs(Fragment, { children: [jsx(CaptionDropdowns, { displayMonth: props.displayMonth, displayIndex: props.displayIndex, id: props.id }), jsx(CaptionNavigation, { displayMonth: props.displayMonth, displayIndex: props.displayIndex, id: props.id })] }));
     }
     else {
-        caption = (jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [jsxRuntime.jsx(CaptionLabelComponent, { id: props.id, displayMonth: props.displayMonth, displayIndex: props.displayIndex }), jsxRuntime.jsx(CaptionNavigation, { displayMonth: props.displayMonth, id: props.id })] }));
+        caption = (jsxs(Fragment, { children: [jsx(CaptionLabelComponent, { id: props.id, displayMonth: props.displayMonth, displayIndex: props.displayIndex }), jsx(CaptionNavigation, { displayMonth: props.displayMonth, id: props.id })] }));
     }
-    return (jsxRuntime.jsx("div", { className: classNames.caption, style: styles.caption, children: caption }));
+    return (jsx("div", { className: classNames.caption, style: styles.caption, children: caption }));
 }
 
 /** Render the Footer component (empty as default).*/
@@ -712,8 +710,8 @@ function Caption(props) {
 function Footer(props) {
     var _a = useDayPicker(), footer = _a.footer, styles = _a.styles, tfoot = _a.classNames.tfoot;
     if (!footer)
-        return jsxRuntime.jsx(jsxRuntime.Fragment, {});
-    return (jsxRuntime.jsx("tfoot", { className: tfoot, style: styles.tfoot, children: jsxRuntime.jsx("tr", { children: jsxRuntime.jsx("td", { colSpan: 8, children: footer }) }) }));
+        return jsx(Fragment, {});
+    return (jsx("tfoot", { className: tfoot, style: styles.tfoot, children: jsx("tr", { children: jsx("td", { colSpan: 8, children: footer }) }) }));
 }
 
 /**
@@ -726,11 +724,11 @@ weekStartsOn,
 /** Use ISOWeek instead of locale/ */
 ISOWeek) {
     var start = ISOWeek
-        ? dateFns.startOfISOWeek(new Date())
-        : dateFns.startOfWeek(new Date(), { locale: locale, weekStartsOn: weekStartsOn });
+        ? startOfISOWeek(new Date())
+        : startOfWeek(new Date(), { locale: locale, weekStartsOn: weekStartsOn });
     var days = [];
     for (var i = 0; i < 7; i++) {
-        var day = dateFns.addDays(start, i);
+        var day = addDays(start, i);
         days.push(day);
     }
     return days;
@@ -742,7 +740,7 @@ ISOWeek) {
 function HeadRow() {
     var _a = useDayPicker(), classNames = _a.classNames, styles = _a.styles, showWeekNumber = _a.showWeekNumber, locale = _a.locale, weekStartsOn = _a.weekStartsOn, ISOWeek = _a.ISOWeek, formatWeekdayName = _a.formatters.formatWeekdayName, labelWeekday = _a.labels.labelWeekday;
     var weekdays = getWeekdays(locale, weekStartsOn, ISOWeek);
-    return (jsxRuntime.jsxs("tr", { style: styles.head_row, className: classNames.head_row, children: [showWeekNumber && (jsxRuntime.jsx("td", { style: styles.head_cell, className: classNames.head_cell })), weekdays.map(function (weekday, i) { return (jsxRuntime.jsx("th", { scope: "col", className: classNames.head_cell, style: styles.head_cell, "aria-label": labelWeekday(weekday, { locale: locale }), children: formatWeekdayName(weekday, { locale: locale }) }, i)); })] }));
+    return (jsxs("tr", { style: styles.head_row, className: classNames.head_row, children: [showWeekNumber && (jsx("td", { style: styles.head_cell, className: classNames.head_cell })), weekdays.map(function (weekday, i) { return (jsx("th", { scope: "col", className: classNames.head_cell, style: styles.head_cell, "aria-label": labelWeekday(weekday, { locale: locale }), children: formatWeekdayName(weekday, { locale: locale }) }, i)); })] }));
 }
 
 /** Render the table head. */
@@ -750,13 +748,13 @@ function Head() {
     var _a;
     var _b = useDayPicker(), classNames = _b.classNames, styles = _b.styles, components = _b.components;
     var HeadRowComponent = (_a = components === null || components === void 0 ? void 0 : components.HeadRow) !== null && _a !== void 0 ? _a : HeadRow;
-    return (jsxRuntime.jsx("thead", { style: styles.head, className: classNames.head, children: jsxRuntime.jsx(HeadRowComponent, {}) }));
+    return (jsx("thead", { style: styles.head, className: classNames.head, children: jsx(HeadRowComponent, {}) }));
 }
 
 /** Render the content of the day cell. */
 function DayContent(props) {
     var _a = useDayPicker(), locale = _a.locale, formatDay = _a.formatters.formatDay;
-    return jsxRuntime.jsx(jsxRuntime.Fragment, { children: formatDay(props.date, { locale: locale }) });
+    return jsx(Fragment, { children: formatDay(props.date, { locale: locale }) });
 }
 
 /**
@@ -765,7 +763,7 @@ function DayContent(props) {
  *
  * Access this context from the {@link useSelectMultiple} hook.
  */
-var SelectMultipleContext = react.createContext(undefined);
+var SelectMultipleContext = createContext(undefined);
 /** Provides the values for the {@link SelectMultipleContext}. */
 function SelectMultipleProvider(props) {
     if (!isDayPickerMultiple(props.initialProps)) {
@@ -775,9 +773,9 @@ function SelectMultipleProvider(props) {
                 disabled: []
             }
         };
-        return (jsxRuntime.jsx(SelectMultipleContext.Provider, { value: emptyContextValue, children: props.children }));
+        return (jsx(SelectMultipleContext.Provider, { value: emptyContextValue, children: props.children }));
     }
-    return (jsxRuntime.jsx(SelectMultipleProviderInternal, { initialProps: props.initialProps, children: props.children }));
+    return (jsx(SelectMultipleProviderInternal, { initialProps: props.initialProps, children: props.children }));
 }
 function SelectMultipleProviderInternal(_a) {
     var initialProps = _a.initialProps, children = _a.children;
@@ -796,7 +794,7 @@ function SelectMultipleProviderInternal(_a) {
         var selectedDays = selected ? __spreadArray([], selected, true) : [];
         if (activeModifiers.selected) {
             var index = selectedDays.findIndex(function (selectedDay) {
-                return dateFns.isSameDay(day, selectedDay);
+                return isSameDay(day, selectedDay);
             });
             selectedDays.splice(index, 1);
         }
@@ -812,7 +810,7 @@ function SelectMultipleProviderInternal(_a) {
         modifiers.disabled.push(function (day) {
             var isMaxSelected = max && selected.length > max - 1;
             var isSelected = selected.some(function (selectedDay) {
-                return dateFns.isSameDay(selectedDay, day);
+                return isSameDay(selectedDay, day);
             });
             return Boolean(isMaxSelected && !isSelected);
         });
@@ -822,7 +820,7 @@ function SelectMultipleProviderInternal(_a) {
         onDayClick: onDayClick,
         modifiers: modifiers
     };
-    return (jsxRuntime.jsx(SelectMultipleContext.Provider, { value: contextValue, children: children }));
+    return (jsx(SelectMultipleContext.Provider, { value: contextValue, children: children }));
 }
 /**
  * Hook to access the {@link SelectMultipleContextValue}.
@@ -830,7 +828,7 @@ function SelectMultipleProviderInternal(_a) {
  * This hook is meant to be used inside internal or custom components.
  */
 function useSelectMultiple() {
-    var context = react.useContext(SelectMultipleContext);
+    var context = useContext(SelectMultipleContext);
     if (!context) {
         throw new Error('useSelectMultiple must be used within a SelectMultipleProvider');
     }
@@ -846,28 +844,28 @@ function useSelectMultiple() {
 function addToRange(day, range) {
     var _a = range || {}, from = _a.from, to = _a.to;
     if (from && to) {
-        if (dateFns.isSameDay(to, day) && dateFns.isSameDay(from, day)) {
+        if (isSameDay(to, day) && isSameDay(from, day)) {
             return undefined;
         }
-        if (dateFns.isSameDay(to, day)) {
+        if (isSameDay(to, day)) {
             return { from: to, to: undefined };
         }
-        if (dateFns.isSameDay(from, day)) {
+        if (isSameDay(from, day)) {
             return undefined;
         }
-        if (dateFns.isAfter(from, day)) {
+        if (isAfter(from, day)) {
             return { from: day, to: to };
         }
         return { from: from, to: day };
     }
     if (to) {
-        if (dateFns.isAfter(day, to)) {
+        if (isAfter(day, to)) {
             return { from: to, to: day };
         }
         return { from: day, to: to };
     }
     if (from) {
-        if (dateFns.isBefore(day, from)) {
+        if (isBefore(day, from)) {
             return { from: day, to: from };
         }
         return { from: from, to: day };
@@ -881,7 +879,7 @@ function addToRange(day, range) {
  *
  * Access this context from the {@link useSelectRange} hook.
  */
-var SelectRangeContext = react.createContext(undefined);
+var SelectRangeContext = createContext(undefined);
 /** Provides the values for the {@link SelectRangeProvider}. */
 function SelectRangeProvider(props) {
     if (!isDayPickerRange(props.initialProps)) {
@@ -894,9 +892,9 @@ function SelectRangeProvider(props) {
                 disabled: []
             }
         };
-        return (jsxRuntime.jsx(SelectRangeContext.Provider, { value: emptyContextValue, children: props.children }));
+        return (jsx(SelectRangeContext.Provider, { value: emptyContextValue, children: props.children }));
     }
-    return (jsxRuntime.jsx(SelectRangeProviderInternal, { initialProps: props.initialProps, children: props.children }));
+    return (jsx(SelectRangeProviderInternal, { initialProps: props.initialProps, children: props.children }));
 }
 function SelectRangeProviderInternal(_a) {
     var initialProps = _a.initialProps, children = _a.children;
@@ -923,7 +921,7 @@ function SelectRangeProviderInternal(_a) {
         }
         else {
             modifiers.range_end = [selectedTo];
-            if (!dateFns.isSameDay(selectedFrom, selectedTo)) {
+            if (!isSameDay(selectedFrom, selectedTo)) {
                 modifiers.range_middle = [
                     {
                         after: selectedFrom,
@@ -940,52 +938,52 @@ function SelectRangeProviderInternal(_a) {
     if (min) {
         if (selectedFrom && !selectedTo) {
             modifiers.disabled.push({
-                after: dateFns.subDays(selectedFrom, min - 1),
-                before: dateFns.addDays(selectedFrom, min - 1)
+                after: subDays(selectedFrom, min - 1),
+                before: addDays(selectedFrom, min - 1)
             });
         }
         if (selectedFrom && selectedTo) {
             modifiers.disabled.push({
                 after: selectedFrom,
-                before: dateFns.addDays(selectedFrom, min - 1)
+                before: addDays(selectedFrom, min - 1)
             });
         }
         if (!selectedFrom && selectedTo) {
             modifiers.disabled.push({
-                after: dateFns.subDays(selectedTo, min - 1),
-                before: dateFns.addDays(selectedTo, min - 1)
+                after: subDays(selectedTo, min - 1),
+                before: addDays(selectedTo, min - 1)
             });
         }
     }
     if (max) {
         if (selectedFrom && !selectedTo) {
             modifiers.disabled.push({
-                before: dateFns.addDays(selectedFrom, -max + 1)
+                before: addDays(selectedFrom, -max + 1)
             });
             modifiers.disabled.push({
-                after: dateFns.addDays(selectedFrom, max - 1)
+                after: addDays(selectedFrom, max - 1)
             });
         }
         if (selectedFrom && selectedTo) {
-            var selectedCount = dateFns.differenceInCalendarDays(selectedTo, selectedFrom) + 1;
+            var selectedCount = differenceInCalendarDays(selectedTo, selectedFrom) + 1;
             var offset = max - selectedCount;
             modifiers.disabled.push({
-                before: dateFns.subDays(selectedFrom, offset)
+                before: subDays(selectedFrom, offset)
             });
             modifiers.disabled.push({
-                after: dateFns.addDays(selectedTo, offset)
+                after: addDays(selectedTo, offset)
             });
         }
         if (!selectedFrom && selectedTo) {
             modifiers.disabled.push({
-                before: dateFns.addDays(selectedTo, -max + 1)
+                before: addDays(selectedTo, -max + 1)
             });
             modifiers.disabled.push({
-                after: dateFns.addDays(selectedTo, max - 1)
+                after: addDays(selectedTo, max - 1)
             });
         }
     }
-    return (jsxRuntime.jsx(SelectRangeContext.Provider, { value: { selected: selected, onDayClick: onDayClick, modifiers: modifiers }, children: children }));
+    return (jsx(SelectRangeContext.Provider, { value: { selected: selected, onDayClick: onDayClick, modifiers: modifiers }, children: children }));
 }
 /**
  * Hook to access the {@link SelectRangeContextValue}.
@@ -993,7 +991,7 @@ function SelectRangeProviderInternal(_a) {
  * This hook is meant to be used inside internal or custom components.
  */
 function useSelectRange() {
-    var context = react.useContext(SelectRangeContext);
+    var context = useContext(SelectRangeContext);
     if (!context) {
         throw new Error('useSelectRange must be used within a SelectRangeProvider');
     }
@@ -1024,7 +1022,7 @@ function getCustomModifiers(dayModifiers) {
 }
 
 /** The name of the modifiers that are used internally by DayPicker. */
-exports.InternalModifier = void 0;
+var InternalModifier;
 (function (InternalModifier) {
     InternalModifier["Outside"] = "outside";
     /** Name of the modifier applied to the disabled days, using the `disabled` prop. */
@@ -1041,9 +1039,9 @@ exports.InternalModifier = void 0;
     InternalModifier["RangeEnd"] = "range_end";
     /** The modifier applied to the days between the start and the end of a selected range, when in range selection mode.  */
     InternalModifier["RangeMiddle"] = "range_middle";
-})(exports.InternalModifier || (exports.InternalModifier = {}));
+})(InternalModifier || (InternalModifier = {}));
 
-var Selected = exports.InternalModifier.Selected, Disabled = exports.InternalModifier.Disabled, Hidden = exports.InternalModifier.Hidden, Today = exports.InternalModifier.Today, RangeEnd = exports.InternalModifier.RangeEnd, RangeMiddle = exports.InternalModifier.RangeMiddle, RangeStart = exports.InternalModifier.RangeStart, Outside = exports.InternalModifier.Outside;
+var Selected = InternalModifier.Selected, Disabled = InternalModifier.Disabled, Hidden = InternalModifier.Hidden, Today = InternalModifier.Today, RangeEnd = InternalModifier.RangeEnd, RangeMiddle = InternalModifier.RangeMiddle, RangeStart = InternalModifier.RangeStart, Outside = InternalModifier.Outside;
 /** Return the {@link InternalModifiers} from the DayPicker and select contexts. */
 function getInternalModifiers(dayPicker, selectMultiple, selectRange) {
     var _a;
@@ -1076,7 +1074,7 @@ function getInternalModifiers(dayPicker, selectMultiple, selectRange) {
 }
 
 /** The Modifiers context store the modifiers used in DayPicker. To access the value of this context, use {@link useModifiers}. */
-var ModifiersContext = react.createContext(undefined);
+var ModifiersContext = createContext(undefined);
 /** Provide the value for the {@link ModifiersContext}. */
 function ModifiersProvider(props) {
     var dayPicker = useDayPicker();
@@ -1085,7 +1083,7 @@ function ModifiersProvider(props) {
     var internalModifiers = getInternalModifiers(dayPicker, selectMultiple, selectRange);
     var customModifiers = getCustomModifiers(dayPicker.modifiers);
     var modifiers = __assign(__assign({}, internalModifiers), customModifiers);
-    return (jsxRuntime.jsx(ModifiersContext.Provider, { value: modifiers, children: props.children }));
+    return (jsx(ModifiersContext.Provider, { value: modifiers, children: props.children }));
 }
 /**
  * Return the modifiers used by DayPicker.
@@ -1095,7 +1093,7 @@ function ModifiersProvider(props) {
  *
  */
 function useModifiers() {
-    var context = react.useContext(ModifiersContext);
+    var context = useContext(ModifiersContext);
     if (!context) {
         throw new Error('useModifiers must be used within a ModifiersProvider');
     }
@@ -1131,30 +1129,30 @@ function isDateInRange(date, range) {
     var _a;
     var from = range.from, to = range.to;
     if (from && to) {
-        var isRangeInverted = dateFns.differenceInCalendarDays(to, from) < 0;
+        var isRangeInverted = differenceInCalendarDays(to, from) < 0;
         if (isRangeInverted) {
             _a = [to, from], from = _a[0], to = _a[1];
         }
-        var isInRange = dateFns.differenceInCalendarDays(date, from) >= 0 &&
-            dateFns.differenceInCalendarDays(to, date) >= 0;
+        var isInRange = differenceInCalendarDays(date, from) >= 0 &&
+            differenceInCalendarDays(to, date) >= 0;
         return isInRange;
     }
     if (to) {
-        return dateFns.isSameDay(to, date);
+        return isSameDay(to, date);
     }
     if (from) {
-        return dateFns.isSameDay(from, date);
+        return isSameDay(from, date);
     }
     return false;
 }
 
 /** Returns true if `value` is a Date type. */
 function isDateType(value) {
-    return dateFns.isDate(value);
+    return isDate(value);
 }
 /** Returns true if `value` is an array of valid dates. */
 function isArrayOfDates(value) {
-    return Array.isArray(value) && value.every(dateFns.isDate);
+    return Array.isArray(value) && value.every(isDate);
 }
 /**
  * Returns whether a day matches against at least one of the given Matchers.
@@ -1179,7 +1177,7 @@ function isMatch(day, matchers) {
             return matcher;
         }
         if (isDateType(matcher)) {
-            return dateFns.isSameDay(day, matcher);
+            return isSameDay(day, matcher);
         }
         if (isArrayOfDates(matcher)) {
             return matcher.includes(day);
@@ -1191,11 +1189,11 @@ function isMatch(day, matchers) {
             return matcher.dayOfWeek.includes(day.getDay());
         }
         if (isDateInterval(matcher)) {
-            var diffBefore = dateFns.differenceInCalendarDays(matcher.before, day);
-            var diffAfter = dateFns.differenceInCalendarDays(matcher.after, day);
+            var diffBefore = differenceInCalendarDays(matcher.before, day);
+            var diffAfter = differenceInCalendarDays(matcher.after, day);
             var isDayBefore = diffBefore > 0;
             var isDayAfter = diffAfter < 0;
-            var isClosedInterval = dateFns.isAfter(matcher.before, matcher.after);
+            var isClosedInterval = isAfter(matcher.before, matcher.after);
             if (isClosedInterval) {
                 return isDayAfter && isDayBefore;
             }
@@ -1204,10 +1202,10 @@ function isMatch(day, matchers) {
             }
         }
         if (isDateAfterType(matcher)) {
-            return dateFns.differenceInCalendarDays(day, matcher.after) > 0;
+            return differenceInCalendarDays(day, matcher.after) > 0;
         }
         if (isDateBeforeType(matcher)) {
-            return dateFns.differenceInCalendarDays(matcher.before, day) > 0;
+            return differenceInCalendarDays(matcher.before, day) > 0;
         }
         if (typeof matcher === 'function') {
             return matcher(day);
@@ -1231,7 +1229,7 @@ displayMonth) {
     }, []);
     var activeModifiers = {};
     matchedModifiers.forEach(function (modifier) { return (activeModifiers[modifier] = true); });
-    if (displayMonth && !dateFns.isSameMonth(day, displayMonth)) {
+    if (displayMonth && !isSameMonth(day, displayMonth)) {
         activeModifiers.outside = true;
     }
     return activeModifiers;
@@ -1246,8 +1244,8 @@ displayMonth) {
  * https://github.com/gpbl/react-day-picker/pull/1576
  */
 function getInitialFocusTarget(displayMonths, modifiers) {
-    var firstDayInMonth = dateFns.startOfMonth(displayMonths[0]);
-    var lastDayInMonth = dateFns.endOfMonth(displayMonths[displayMonths.length - 1]);
+    var firstDayInMonth = startOfMonth(displayMonths[0]);
+    var lastDayInMonth = endOfMonth(displayMonths[displayMonths.length - 1]);
     // TODO: cleanup code
     var firstFocusableDay;
     var today;
@@ -1256,7 +1254,7 @@ function getInitialFocusTarget(displayMonths, modifiers) {
         var activeModifiers = getActiveModifiers(date, modifiers);
         var isFocusable = !activeModifiers.disabled && !activeModifiers.hidden;
         if (!isFocusable) {
-            date = dateFns.addDays(date, 1);
+            date = addDays(date, 1);
             continue;
         }
         if (activeModifiers.selected) {
@@ -1268,7 +1266,7 @@ function getInitialFocusTarget(displayMonths, modifiers) {
         if (!firstFocusableDay) {
             firstFocusableDay = date;
         }
-        date = dateFns.addDays(date, 1);
+        date = addDays(date, 1);
     }
     if (today) {
         return today;
@@ -1284,27 +1282,27 @@ function getNextFocus(focusedDay, options) {
     var moveBy = options.moveBy, direction = options.direction, context = options.context, modifiers = options.modifiers, _a = options.retry, retry = _a === void 0 ? { count: 0, lastFocused: focusedDay } : _a;
     var weekStartsOn = context.weekStartsOn, fromDate = context.fromDate, toDate = context.toDate, locale = context.locale;
     var moveFns = {
-        day: dateFns.addDays,
-        week: dateFns.addWeeks,
-        month: dateFns.addMonths,
-        year: dateFns.addYears,
+        day: addDays,
+        week: addWeeks,
+        month: addMonths,
+        year: addYears,
         startOfWeek: function (date) {
             return context.ISOWeek
-                ? dateFns.startOfISOWeek(date)
-                : dateFns.startOfWeek(date, { locale: locale, weekStartsOn: weekStartsOn });
+                ? startOfISOWeek(date)
+                : startOfWeek(date, { locale: locale, weekStartsOn: weekStartsOn });
         },
         endOfWeek: function (date) {
             return context.ISOWeek
-                ? dateFns.endOfISOWeek(date)
-                : dateFns.endOfWeek(date, { locale: locale, weekStartsOn: weekStartsOn });
+                ? endOfISOWeek(date)
+                : endOfWeek(date, { locale: locale, weekStartsOn: weekStartsOn });
         }
     };
     var newFocusedDay = moveFns[moveBy](focusedDay, direction === 'after' ? 1 : -1);
     if (direction === 'before' && fromDate) {
-        newFocusedDay = dateFns.max([fromDate, newFocusedDay]);
+        newFocusedDay = max([fromDate, newFocusedDay]);
     }
     else if (direction === 'after' && toDate) {
-        newFocusedDay = dateFns.min([toDate, newFocusedDay]);
+        newFocusedDay = min([toDate, newFocusedDay]);
     }
     var isFocusable = true;
     if (modifiers) {
@@ -1333,13 +1331,13 @@ function getNextFocus(focusedDay, options) {
  *
  * Access this context from the {@link useFocusContext} hook.
  */
-var FocusContext = react.createContext(undefined);
+var FocusContext = createContext(undefined);
 /** The provider for the {@link FocusContext}. */
 function FocusProvider(props) {
     var navigation = useNavigation();
     var modifiers = useModifiers();
-    var _a = react.useState(), focusedDay = _a[0], setFocusedDay = _a[1];
-    var _b = react.useState(), lastFocused = _b[0], setLastFocused = _b[1];
+    var _a = useState(), focusedDay = _a[0], setFocusedDay = _a[1];
+    var _b = useState(), lastFocused = _b[0], setLastFocused = _b[1];
     var initialFocusTarget = getInitialFocusTarget(navigation.displayMonths, modifiers);
     // TODO: cleanup and test obscure code below
     var focusTarget = (focusedDay !== null && focusedDay !== void 0 ? focusedDay : (lastFocused && navigation.isDateDisplayed(lastFocused)))
@@ -1362,7 +1360,7 @@ function FocusProvider(props) {
             context: context,
             modifiers: modifiers
         });
-        if (dateFns.isSameDay(focusedDay, nextFocused))
+        if (isSameDay(focusedDay, nextFocused))
             return undefined;
         navigation.goToDate(nextFocused, focusedDay);
         focus(nextFocused);
@@ -1383,7 +1381,7 @@ function FocusProvider(props) {
         focusStartOfWeek: function () { return moveFocus('startOfWeek', 'before'); },
         focusEndOfWeek: function () { return moveFocus('endOfWeek', 'after'); }
     };
-    return (jsxRuntime.jsx(FocusContext.Provider, { value: value, children: props.children }));
+    return (jsx(FocusContext.Provider, { value: value, children: props.children }));
 }
 /**
  * Hook to access the {@link FocusContextValue}. Use this hook to handle the
@@ -1392,7 +1390,7 @@ function FocusProvider(props) {
  * This hook is meant to be used inside internal or custom components.
  */
 function useFocusContext() {
-    var context = react.useContext(FocusContext);
+    var context = useContext(FocusContext);
     if (!context) {
         throw new Error('useFocusContext must be used within a FocusProvider');
     }
@@ -1424,16 +1422,16 @@ displayMonth) {
  *
  * Access this context from the {@link useSelectSingle} hook.
  */
-var SelectSingleContext = react.createContext(undefined);
+var SelectSingleContext = createContext(undefined);
 /** Provides the values for the {@link SelectSingleProvider}. */
 function SelectSingleProvider(props) {
     if (!isDayPickerSingle(props.initialProps)) {
         var emptyContextValue = {
             selected: undefined
         };
-        return (jsxRuntime.jsx(SelectSingleContext.Provider, { value: emptyContextValue, children: props.children }));
+        return (jsx(SelectSingleContext.Provider, { value: emptyContextValue, children: props.children }));
     }
-    return (jsxRuntime.jsx(SelectSingleProviderInternal, { initialProps: props.initialProps, children: props.children }));
+    return (jsx(SelectSingleProviderInternal, { initialProps: props.initialProps, children: props.children }));
 }
 function SelectSingleProviderInternal(_a) {
     var initialProps = _a.initialProps, children = _a.children;
@@ -1450,7 +1448,7 @@ function SelectSingleProviderInternal(_a) {
         selected: initialProps.selected,
         onDayClick: onDayClick
     };
-    return (jsxRuntime.jsx(SelectSingleContext.Provider, { value: contextValue, children: children }));
+    return (jsx(SelectSingleContext.Provider, { value: contextValue, children: children }));
 }
 /**
  * Hook to access the {@link SelectSingleContextValue}.
@@ -1458,7 +1456,7 @@ function SelectSingleProviderInternal(_a) {
  * This hook is meant to be used inside internal or custom components.
  */
 function useSelectSingle() {
-    var context = react.useContext(SelectSingleContext);
+    var context = useContext(SelectSingleContext);
     if (!context) {
         throw new Error('useSelectSingle must be used within a SelectSingleProvider');
     }
@@ -1639,7 +1637,7 @@ function useSelectedDays() {
 }
 
 function isInternalModifier(modifier) {
-    return Object.values(exports.InternalModifier).includes(modifier);
+    return Object.values(InternalModifier).includes(modifier);
 }
 /**
  * Return the class names for the Day element, according to the given active
@@ -1697,7 +1695,7 @@ buttonRef) {
     var selectedDays = useSelectedDays();
     var isButton = Boolean(dayPicker.onDayClick || dayPicker.mode !== 'default');
     // Focus the button if the day is focused according to the focus context
-    react.useEffect(function () {
+    useEffect(function () {
         var _a;
         if (activeModifiers.outside)
             return;
@@ -1705,7 +1703,7 @@ buttonRef) {
             return;
         if (!isButton)
             return;
-        if (dateFns.isSameDay(focusContext.focusedDay, day)) {
+        if (isSameDay(focusContext.focusedDay, day)) {
             (_a = buttonRef.current) === null || _a === void 0 ? void 0 : _a.focus();
         }
     }, [
@@ -1720,7 +1718,7 @@ buttonRef) {
     var isHidden = Boolean((activeModifiers.outside && !dayPicker.showOutsideDays) ||
         activeModifiers.hidden);
     var DayContentComponent = (_c = (_b = dayPicker.components) === null || _b === void 0 ? void 0 : _b.DayContent) !== null && _c !== void 0 ? _c : DayContent;
-    var children = (jsxRuntime.jsx(DayContentComponent, { date: day, displayMonth: displayMonth, activeModifiers: activeModifiers }));
+    var children = (jsx(DayContentComponent, { date: day, displayMonth: displayMonth, activeModifiers: activeModifiers }));
     var divProps = {
         style: style,
         className: className,
@@ -1728,9 +1726,9 @@ buttonRef) {
         role: 'gridcell'
     };
     var isFocusTarget = focusContext.focusTarget &&
-        dateFns.isSameDay(focusContext.focusTarget, day) &&
+        isSameDay(focusContext.focusTarget, day) &&
         !activeModifiers.outside;
-    var isFocused = focusContext.focusedDay && dateFns.isSameDay(focusContext.focusedDay, day);
+    var isFocused = focusContext.focusedDay && isSameDay(focusContext.focusedDay, day);
     var buttonProps = __assign(__assign(__assign({}, divProps), (_a = { disabled: activeModifiers.disabled, role: 'gridcell' }, _a['aria-selected'] = activeModifiers.selected, _a.tabIndex = isFocused || isFocusTarget ? 0 : -1, _a)), eventHandlers);
     var dayRender = {
         isButton: isButton,
@@ -1748,15 +1746,15 @@ buttonRef) {
  * modifiers.
  */
 function Day(props) {
-    var buttonRef = react.useRef(null);
+    var buttonRef = useRef(null);
     var dayRender = useDayRender(props.date, props.displayMonth, buttonRef);
     if (dayRender.isHidden) {
-        return jsxRuntime.jsx("div", { role: "gridcell" });
+        return jsx("div", { role: "gridcell" });
     }
     if (!dayRender.isButton) {
-        return jsxRuntime.jsx("div", __assign({}, dayRender.divProps));
+        return jsx("div", __assign({}, dayRender.divProps));
     }
-    return jsxRuntime.jsx(Button, __assign({ name: "day", ref: buttonRef }, dayRender.buttonProps));
+    return jsx(Button, __assign({ name: "day", ref: buttonRef }, dayRender.buttonProps));
 }
 
 /**
@@ -1768,13 +1766,13 @@ function WeekNumber(props) {
     var _a = useDayPicker(), onWeekNumberClick = _a.onWeekNumberClick, styles = _a.styles, classNames = _a.classNames, locale = _a.locale, labelWeekNumber = _a.labels.labelWeekNumber, formatWeekNumber = _a.formatters.formatWeekNumber;
     var content = formatWeekNumber(Number(weekNumber), { locale: locale });
     if (!onWeekNumberClick) {
-        return (jsxRuntime.jsx("span", { className: classNames.weeknumber, style: styles.weeknumber, children: content }));
+        return (jsx("span", { className: classNames.weeknumber, style: styles.weeknumber, children: content }));
     }
     var label = labelWeekNumber(Number(weekNumber), { locale: locale });
     var handleClick = function (e) {
         onWeekNumberClick(weekNumber, dates, e);
     };
-    return (jsxRuntime.jsx(Button, { name: "week-number", "aria-label": label, className: classNames.weeknumber, style: styles.weeknumber, onClick: handleClick, children: content }));
+    return (jsx(Button, { name: "week-number", "aria-label": label, className: classNames.weeknumber, style: styles.weeknumber, onClick: handleClick, children: content }));
 }
 
 /** Render a row in the calendar, with the days and the week number. */
@@ -1785,28 +1783,28 @@ function Row(props) {
     var WeeknumberComponent = (_b = components === null || components === void 0 ? void 0 : components.WeekNumber) !== null && _b !== void 0 ? _b : WeekNumber;
     var weekNumberCell;
     if (showWeekNumber) {
-        weekNumberCell = (jsxRuntime.jsx("td", { className: classNames.cell, style: styles.cell, children: jsxRuntime.jsx(WeeknumberComponent, { number: props.weekNumber, dates: props.dates }) }));
+        weekNumberCell = (jsx("td", { className: classNames.cell, style: styles.cell, children: jsx(WeeknumberComponent, { number: props.weekNumber, dates: props.dates }) }));
     }
-    return (jsxRuntime.jsxs("tr", { className: classNames.row, style: styles.row, children: [weekNumberCell, props.dates.map(function (date) { return (jsxRuntime.jsx("td", { className: classNames.cell, style: styles.cell, role: "presentation", children: jsxRuntime.jsx(DayComponent, { displayMonth: props.displayMonth, date: date }) }, dateFns.getUnixTime(date))); })] }));
+    return (jsxs("tr", { className: classNames.row, style: styles.row, children: [weekNumberCell, props.dates.map(function (date) { return (jsx("td", { className: classNames.cell, style: styles.cell, role: "presentation", children: jsx(DayComponent, { displayMonth: props.displayMonth, date: date }) }, getUnixTime(date))); })] }));
 }
 
 /** Return the weeks between two dates.  */
 function daysToMonthWeeks(fromDate, toDate, options) {
     var toWeek = (options === null || options === void 0 ? void 0 : options.ISOWeek)
-        ? dateFns.endOfISOWeek(toDate)
-        : dateFns.endOfWeek(toDate, options);
+        ? endOfISOWeek(toDate)
+        : endOfWeek(toDate, options);
     var fromWeek = (options === null || options === void 0 ? void 0 : options.ISOWeek)
-        ? dateFns.startOfISOWeek(fromDate)
-        : dateFns.startOfWeek(fromDate, options);
-    var nOfDays = dateFns.differenceInCalendarDays(toWeek, fromWeek);
+        ? startOfISOWeek(fromDate)
+        : startOfWeek(fromDate, options);
+    var nOfDays = differenceInCalendarDays(toWeek, fromWeek);
     var days = [];
     for (var i = 0; i <= nOfDays; i++) {
-        days.push(dateFns.addDays(fromWeek, i));
+        days.push(addDays(fromWeek, i));
     }
     var weeksInMonth = days.reduce(function (result, date) {
         var weekNumber = (options === null || options === void 0 ? void 0 : options.ISOWeek)
-            ? dateFns.getISOWeek(date)
-            : dateFns.getWeek(date, options);
+            ? getISOWeek(date)
+            : getWeek(date, options);
         var existingWeek = result.find(function (value) { return value.weekNumber === weekNumber; });
         if (existingWeek) {
             existingWeek.dates.push(date);
@@ -1826,15 +1824,15 @@ function daysToMonthWeeks(fromDate, toDate, options) {
  * the first and last week.
  */
 function getMonthWeeks(month, options) {
-    var weeksInMonth = daysToMonthWeeks(dateFns.startOfMonth(month), dateFns.endOfMonth(month), options);
+    var weeksInMonth = daysToMonthWeeks(startOfMonth(month), endOfMonth(month), options);
     if (options === null || options === void 0 ? void 0 : options.useFixedWeeks) {
         // Add extra weeks to the month, up to 6 weeks
-        var nrOfMonthWeeks = dateFns.getWeeksInMonth(month, options);
+        var nrOfMonthWeeks = getWeeksInMonth(month, options);
         if (nrOfMonthWeeks < 6) {
             var lastWeek = weeksInMonth[weeksInMonth.length - 1];
             var lastDate = lastWeek.dates[lastWeek.dates.length - 1];
-            var toDate = dateFns.addWeeks(lastDate, 6 - nrOfMonthWeeks);
-            var extraWeeks = daysToMonthWeeks(dateFns.addWeeks(lastDate, 1), toDate, options);
+            var toDate = addWeeks(lastDate, 6 - nrOfMonthWeeks);
+            var extraWeeks = daysToMonthWeeks(addWeeks(lastDate, 1), toDate, options);
             weeksInMonth.push.apply(weeksInMonth, extraWeeks);
         }
     }
@@ -1855,7 +1853,7 @@ function Table(props) {
     var HeadComponent = (_a = components === null || components === void 0 ? void 0 : components.Head) !== null && _a !== void 0 ? _a : Head;
     var RowComponent = (_b = components === null || components === void 0 ? void 0 : components.Row) !== null && _b !== void 0 ? _b : Row;
     var FooterComponent = (_c = components === null || components === void 0 ? void 0 : components.Footer) !== null && _c !== void 0 ? _c : Footer;
-    return (jsxRuntime.jsxs("table", { id: props.id, className: classNames.table, style: styles.table, role: "grid", "aria-labelledby": props['aria-labelledby'], children: [!hideHead && jsxRuntime.jsx(HeadComponent, {}), jsxRuntime.jsx("tbody", { className: classNames.tbody, style: styles.tbody, children: weeks.map(function (week) { return (jsxRuntime.jsx(RowComponent, { displayMonth: props.displayMonth, dates: week.dates, weekNumber: week.weekNumber }, week.weekNumber)); }) }), jsxRuntime.jsx(FooterComponent, { displayMonth: props.displayMonth })] }));
+    return (jsxs("table", { id: props.id, className: classNames.table, style: styles.table, role: "grid", "aria-labelledby": props['aria-labelledby'], children: [!hideHead && jsx(HeadComponent, {}), jsx("tbody", { className: classNames.tbody, style: styles.tbody, children: weeks.map(function (week) { return (jsx(RowComponent, { displayMonth: props.displayMonth, dates: week.dates, weekNumber: week.weekNumber }, week.weekNumber)); }) }), jsx(FooterComponent, { displayMonth: props.displayMonth })] }));
 }
 
 /*
@@ -1954,7 +1952,7 @@ function canUseDOM() {
  * @param effect
  * @param deps
  */
-var useIsomorphicLayoutEffect = canUseDOM() ? react.useLayoutEffect : react.useEffect;
+var useIsomorphicLayoutEffect = canUseDOM() ? useLayoutEffect : useEffect;
 var serverHandoffComplete = false;
 var id = 0;
 function genId() {
@@ -1967,7 +1965,7 @@ function useId(providedId) {
     // If this instance isn't part of the initial render, we don't have to do the
     // double render/patch-up dance. We can just generate the ID and return it.
     var initialId = providedId !== null && providedId !== void 0 ? providedId : (serverHandoffComplete ? genId() : null);
-    var _b = react.useState(initialId), id = _b[0], setId = _b[1];
+    var _b = useState(initialId), id = _b[0], setId = _b[1];
     useIsomorphicLayoutEffect(function () {
         if (id === null) {
             // Patch the ID after render. We do this in `useLayoutEffect` to avoid any
@@ -1978,7 +1976,7 @@ function useId(providedId) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    react.useEffect(function () {
+    useEffect(function () {
         if (serverHandoffComplete === false) {
             // Flag all future uses of `useId` to skip the update dance. This is in
             // `useEffect` because it goes after `useLayoutEffect`, ensuring we don't
@@ -2021,7 +2019,7 @@ function Month(props) {
         style = __assign(__assign({}, style), styles.caption_between);
     }
     var CaptionComponent = (_b = components === null || components === void 0 ? void 0 : components.Caption) !== null && _b !== void 0 ? _b : Caption;
-    return (jsxRuntime.jsxs("div", { className: className.join(' '), style: style, children: [jsxRuntime.jsx(CaptionComponent, { id: captionId, displayMonth: props.displayMonth, displayIndex: props.displayIndex }), jsxRuntime.jsx(Table, { id: tableId, "aria-labelledby": captionId, displayMonth: props.displayMonth })] }, props.displayIndex));
+    return (jsxs("div", { className: className.join(' '), style: style, children: [jsx(CaptionComponent, { id: captionId, displayMonth: props.displayMonth, displayIndex: props.displayIndex }), jsx(Table, { id: tableId, "aria-labelledby": captionId, displayMonth: props.displayMonth })] }, props.displayIndex));
 }
 
 /**
@@ -2029,7 +2027,7 @@ function Month(props) {
  */
 function Months(props) {
     var _a = useDayPicker(), classNames = _a.classNames, styles = _a.styles;
-    return (jsxRuntime.jsx("div", { className: classNames.months, style: styles.months, children: props.children }));
+    return (jsx("div", { className: classNames.months, style: styles.months, children: props.children }));
 }
 
 /** Render the container with the months according to the number of months to display. */
@@ -2039,9 +2037,9 @@ function Root(_a) {
     var dayPicker = useDayPicker();
     var focusContext = useFocusContext();
     var navigation = useNavigation();
-    var _d = react.useState(false), hasInitialFocus = _d[0], setHasInitialFocus = _d[1];
+    var _d = useState(false), hasInitialFocus = _d[0], setHasInitialFocus = _d[1];
     // Focus the focus target when initialFocus is passed in
-    react.useEffect(function () {
+    useEffect(function () {
         if (!dayPicker.initialFocus)
             return;
         if (!focusContext.focusTarget)
@@ -2073,13 +2071,13 @@ function Root(_a) {
         return __assign(__assign({}, attrs), (_a = {}, _a[key] = initialProps[key], _a));
     }, {});
     var MonthsComponent = (_c = (_b = initialProps.components) === null || _b === void 0 ? void 0 : _b.Months) !== null && _c !== void 0 ? _c : Months;
-    return (jsxRuntime.jsx("div", __assign({ className: classNames.join(' '), style: style, dir: dayPicker.dir, id: dayPicker.id, nonce: initialProps.nonce, title: initialProps.title, lang: initialProps.lang }, dataAttributes, { children: jsxRuntime.jsx(MonthsComponent, { children: navigation.displayMonths.map(function (month, i) { return (jsxRuntime.jsx(Month, { displayIndex: i, displayMonth: month }, i)); }) }) })));
+    return (jsx("div", __assign({ className: classNames.join(' '), style: style, dir: dayPicker.dir, id: dayPicker.id, nonce: initialProps.nonce, title: initialProps.title, lang: initialProps.lang }, dataAttributes, { children: jsx(MonthsComponent, { children: navigation.displayMonths.map(function (month, i) { return (jsx(Month, { displayIndex: i, displayMonth: month }, i)); }) }) })));
 }
 
 /** Provide the value for all the context providers. */
 function RootProvider(props) {
     var children = props.children, initialProps = __rest(props, ["children"]);
-    return (jsxRuntime.jsx(DayPickerProvider, { initialProps: initialProps, children: jsxRuntime.jsx(NavigationProvider, { children: jsxRuntime.jsx(SelectSingleProvider, { initialProps: initialProps, children: jsxRuntime.jsx(SelectMultipleProvider, { initialProps: initialProps, children: jsxRuntime.jsx(SelectRangeProvider, { initialProps: initialProps, children: jsxRuntime.jsx(ModifiersProvider, { children: jsxRuntime.jsx(FocusProvider, { children: children }) }) }) }) }) }) }));
+    return (jsx(DayPickerProvider, { initialProps: initialProps, children: jsx(NavigationProvider, { children: jsx(SelectSingleProvider, { initialProps: initialProps, children: jsx(SelectMultipleProvider, { initialProps: initialProps, children: jsx(SelectRangeProvider, { initialProps: initialProps, children: jsx(ModifiersProvider, { children: jsx(FocusProvider, { children: children }) }) }) }) }) }) }));
 }
 
 /**
@@ -2170,7 +2168,7 @@ function RootProvider(props) {
  * ```
  */
 function DayPicker(props) {
-    return (jsxRuntime.jsx(RootProvider, __assign({}, props, { children: jsxRuntime.jsx(Root, { initialProps: props }) })));
+    return (jsx(RootProvider, __assign({}, props, { children: jsx(Root, { initialProps: props }) })));
 }
 
 /** @private */
@@ -2181,17 +2179,17 @@ function isValidDate(day) {
 /** Return props and setters for binding an input field to DayPicker. */
 function useInput(options) {
     if (options === void 0) { options = {}; }
-    var _a = options.locale, locale$1 = _a === void 0 ? locale.enUS : _a, required = options.required, _b = options.format, format = _b === void 0 ? 'PP' : _b, defaultSelected = options.defaultSelected, _c = options.today, today = _c === void 0 ? new Date() : _c;
+    var _a = options.locale, locale = _a === void 0 ? enUS : _a, required = options.required, _b = options.format, format$1 = _b === void 0 ? 'PP' : _b, defaultSelected = options.defaultSelected, _c = options.today, today = _c === void 0 ? new Date() : _c;
     var _d = parseFromToProps(options), fromDate = _d.fromDate, toDate = _d.toDate;
     // Shortcut to the DateFns functions
-    var parseValue = function (value) { return dateFns.parse(value, format, today, { locale: locale$1 }); };
+    var parseValue = function (value) { return parse(value, format$1, today, { locale: locale }); };
     // Initialize states
-    var _e = react.useState(defaultSelected !== null && defaultSelected !== void 0 ? defaultSelected : today), month = _e[0], setMonth = _e[1];
-    var _f = react.useState(defaultSelected), selectedDay = _f[0], setSelectedDay = _f[1];
+    var _e = useState(defaultSelected !== null && defaultSelected !== void 0 ? defaultSelected : today), month = _e[0], setMonth = _e[1];
+    var _f = useState(defaultSelected), selectedDay = _f[0], setSelectedDay = _f[1];
     var defaultInputValue = defaultSelected
-        ? dateFns.format(defaultSelected, format, { locale: locale$1 })
+        ? format(defaultSelected, format$1, { locale: locale })
         : '';
-    var _g = react.useState(defaultInputValue), inputValue = _g[0], setInputValue = _g[1];
+    var _g = useState(defaultInputValue), inputValue = _g[0], setInputValue = _g[1];
     var reset = function () {
         setSelectedDay(defaultSelected);
         setMonth(defaultSelected !== null && defaultSelected !== void 0 ? defaultSelected : today);
@@ -2200,7 +2198,7 @@ function useInput(options) {
     var setSelected = function (date) {
         setSelectedDay(date);
         setMonth(date !== null && date !== void 0 ? date : today);
-        setInputValue(date ? dateFns.format(date, format, { locale: locale$1 }) : '');
+        setInputValue(date ? format(date, format$1, { locale: locale }) : '');
     };
     var handleDayClick = function (day, _a) {
         var selected = _a.selected;
@@ -2210,7 +2208,7 @@ function useInput(options) {
             return;
         }
         setSelectedDay(day);
-        setInputValue(day ? dateFns.format(day, format, { locale: locale$1 }) : '');
+        setInputValue(day ? format(day, format$1, { locale: locale }) : '');
     };
     var handleMonthChange = function (month) {
         setMonth(month);
@@ -2221,8 +2219,8 @@ function useInput(options) {
     var handleChange = function (e) {
         setInputValue(e.target.value);
         var day = parseValue(e.target.value);
-        var isBefore = fromDate && dateFns.differenceInCalendarDays(fromDate, day) > 0;
-        var isAfter = toDate && dateFns.differenceInCalendarDays(day, toDate) > 0;
+        var isBefore = fromDate && differenceInCalendarDays(fromDate, day) > 0;
+        var isAfter = toDate && differenceInCalendarDays(day, toDate) > 0;
         if (!isValidDate(day) || isBefore || isAfter) {
             setSelectedDay(undefined);
             return;
@@ -2255,7 +2253,7 @@ function useInput(options) {
         onDayClick: handleDayClick,
         onMonthChange: handleMonthChange,
         selected: selectedDay,
-        locale: locale$1,
+        locale: locale,
         fromDate: fromDate,
         toDate: toDate,
         today: today
@@ -2265,7 +2263,7 @@ function useInput(options) {
         onChange: handleChange,
         onFocus: handleFocus,
         value: inputValue,
-        placeholder: dateFns.format(new Date(), format, { locale: locale$1 })
+        placeholder: format(new Date(), format$1, { locale: locale })
     };
     return { dayPickerProps: dayPickerProps, inputProps: inputProps, reset: reset, setSelected: setSelected };
 }
@@ -2275,58 +2273,5 @@ function isDayPickerDefault(props) {
     return props.mode === undefined || props.mode === 'default';
 }
 
-exports.Button = Button;
-exports.Caption = Caption;
-exports.CaptionDropdowns = CaptionDropdowns;
-exports.CaptionLabel = CaptionLabel;
-exports.CaptionNavigation = CaptionNavigation;
-exports.Day = Day;
-exports.DayContent = DayContent;
-exports.DayPicker = DayPicker;
-exports.DayPickerContext = DayPickerContext;
-exports.DayPickerProvider = DayPickerProvider;
-exports.Dropdown = Dropdown;
-exports.FocusContext = FocusContext;
-exports.FocusProvider = FocusProvider;
-exports.Footer = Footer;
-exports.Head = Head;
-exports.HeadRow = HeadRow;
-exports.IconDropdown = IconDropdown;
-exports.IconLeft = IconLeft;
-exports.IconRight = IconRight;
-exports.Months = Months;
-exports.NavigationContext = NavigationContext;
-exports.NavigationProvider = NavigationProvider;
-exports.RootProvider = RootProvider;
-exports.Row = Row;
-exports.SelectMultipleContext = SelectMultipleContext;
-exports.SelectMultipleProvider = SelectMultipleProvider;
-exports.SelectMultipleProviderInternal = SelectMultipleProviderInternal;
-exports.SelectRangeContext = SelectRangeContext;
-exports.SelectRangeProvider = SelectRangeProvider;
-exports.SelectRangeProviderInternal = SelectRangeProviderInternal;
-exports.SelectSingleContext = SelectSingleContext;
-exports.SelectSingleProvider = SelectSingleProvider;
-exports.SelectSingleProviderInternal = SelectSingleProviderInternal;
-exports.WeekNumber = WeekNumber;
-exports.addToRange = addToRange;
-exports.isDateAfterType = isDateAfterType;
-exports.isDateBeforeType = isDateBeforeType;
-exports.isDateInterval = isDateInterval;
-exports.isDateRange = isDateRange;
-exports.isDayOfWeekType = isDayOfWeekType;
-exports.isDayPickerDefault = isDayPickerDefault;
-exports.isDayPickerMultiple = isDayPickerMultiple;
-exports.isDayPickerRange = isDayPickerRange;
-exports.isDayPickerSingle = isDayPickerSingle;
-exports.isMatch = isMatch;
-exports.useActiveModifiers = useActiveModifiers;
-exports.useDayPicker = useDayPicker;
-exports.useDayRender = useDayRender;
-exports.useFocusContext = useFocusContext;
-exports.useInput = useInput;
-exports.useNavigation = useNavigation;
-exports.useSelectMultiple = useSelectMultiple;
-exports.useSelectRange = useSelectRange;
-exports.useSelectSingle = useSelectSingle;
-//# sourceMappingURL=index.js.map
+export { Button, Caption, CaptionDropdowns, CaptionLabel, CaptionNavigation, Day, DayContent, DayPicker, DayPickerContext, DayPickerProvider, Dropdown, FocusContext, FocusProvider, Footer, Head, HeadRow, IconDropdown, IconLeft, IconRight, InternalModifier, Months, NavigationContext, NavigationProvider, RootProvider, Row, SelectMultipleContext, SelectMultipleProvider, SelectMultipleProviderInternal, SelectRangeContext, SelectRangeProvider, SelectRangeProviderInternal, SelectSingleContext, SelectSingleProvider, SelectSingleProviderInternal, WeekNumber, addToRange, isDateAfterType, isDateBeforeType, isDateInterval, isDateRange, isDayOfWeekType, isDayPickerDefault, isDayPickerMultiple, isDayPickerRange, isDayPickerSingle, isMatch, useActiveModifiers, useDayPicker, useDayRender, useFocusContext, useInput, useNavigation, useSelectMultiple, useSelectRange, useSelectSingle };
+//# sourceMappingURL=index.esm.js.map

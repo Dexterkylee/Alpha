@@ -1,126 +1,65 @@
-# Recharts
+# React DayPicker
 
-[![storybook](https://raw.githubusercontent.com/storybooks/brand/master/badge/badge-storybook.svg)](https://release--63da8268a0da9970db6992aa.chromatic.com/)
-[![Build Status](https://github.com/recharts/recharts/workflows/Node.js%20CI/badge.svg)](https://github.com/recharts/recharts/actions)
-[![Coverage Status](https://coveralls.io/repos/recharts/recharts/badge.svg?branch=master&service=github)](https://coveralls.io/github/recharts/recharts?branch=master)
-[![npm version](https://badge.fury.io/js/recharts.svg)](http://badge.fury.io/js/recharts)
-[![npm downloads](https://img.shields.io/npm/dm/recharts.svg?style=flat-square)](https://www.npmjs.com/package/recharts)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](/LICENSE)
+[DayPicker](http://react-day-picker.js.org) is a date picker component for [React](https://reactjs.org). Renders a monthly calendar to select days. DayPicker is customizable, works great with input fields and can be styled to match any design.
 
-## Introduction
+➡️ **[react-day-picker.js.org](http://react-day-picker.js.org)** for guides, examples and API reference.
 
-Recharts is a **Redefined** chart library built with [React](https://facebook.github.io/react/) and [D3](http://d3js.org).
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcSet="https://user-images.githubusercontent.com/120693/188241991-19d0e8a1-230a-48c8-8477-3c90d4e36197.png"/>
+  <source media="(prefers-color-scheme: light)" srcSet="https://user-images.githubusercontent.com/120693/188238076-311ec6d1-503d-4c21-8ffe-d89faa60e40f.png"/>
+  <img alt="Shows a screenshot of the React DayPicker component in a browser’s window." width="900" />
+</picture>
 
-The main purpose of this library is to help you to write charts in React applications without any pain. Main principles of Recharts are:
+## Main features
 
-1. **Simply** deploy with React components.
-2. **Native** SVG support, lightweight depending only on some D3 submodules.
-3. **Declarative** components, components of charts are purely presentational.
-
-Documentation at [recharts.org](https://recharts.org) and our [storybook (WIP)](https://release--63da8268a0da9970db6992aa.chromatic.com/)
-
-Please see [the wiki](https://github.com/recharts/recharts/wiki) for FAQ.
-
-All development is done on the `master` branch. The current latest release and storybook documentation reflects what is on the `release` branch.
-
-## Examples
-
-```jsx
-<LineChart width={400} height={400} data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-  <XAxis dataKey="name" />
-  <Tooltip />
-  <CartesianGrid stroke="#f5f5f5" />
-  <Line type="monotone" dataKey="uv" stroke="#ff7300" yAxisId={0} />
-  <Line type="monotone" dataKey="pv" stroke="#387908" yAxisId={1} />
-</LineChart>
-```
-
-All the components of Recharts are clearly separated. The lineChart is composed of x axis, tooltip, grid, and line items, and each of them is an independent React Component. The clear separation and composition of components is one of the principle Recharts follows.
+- ☀️ Select days, ranges or whatever
+- 🧘‍♀️ using [date-fns](http://date-fns.org) as date library
+- 🌎 Localizable into any language
+- ➡️ Keyboard navigation
+- ♿️ [WAI-ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) support
+- 🤖 Written in TypeScript
+- 🎨 Easy to style and customize
+- 🗓 Support multiple calendars
+- 📄 Easy to integrate input fields
 
 ## Installation
 
-### npm
-
-NPM is the easiest and fastest way to get started using Recharts. It is also the recommended installation method when building single-page applications (SPAs). It pairs nicely with a CommonJS module bundler such as Webpack.
-
-```sh
-# latest stable
-$ npm install recharts
+```shell
+npm install react-day-picker date-fns  # using npm
+pnpm install react-day-picker date-fns # using pnpm
+yarn add react-day-picker date-fns     # using yarn
 ```
 
-### umd
+<a href="https://www.npmjs.com/package/react-day-picker"><img src="https://img.shields.io/npm/v/react-day-picker.svg?style=flat-square" alt="npm version"/></a> <img src="https://img.shields.io/npm/dm/react-day-picker.svg?style=flat-square" alt="npm downloads"/> <img src="https://img.shields.io/bundlephobia/minzip/react-day-picker" alt="Min gzipped size"/>
 
-The UMD build is also available on unpkg.com:
+## Example
 
-```html
-<script src="https://unpkg.com/react/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+```tsx
+import { useState } from 'react';
+import { format } from 'date-fns';
+
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
+
+export default function Example() {
+  const [selected, setSelected] = useState<Date>();
+
+  let footer = <p>Please pick a day.</p>;
+  if (selected) {
+    footer = <p>You picked {format(selected, 'PP')}.</p>;
+  }
+  return (
+    <DayPicker
+      mode="single"
+      selected={selected}
+      onSelect={setSelected}
+      footer={footer}
+    />
+  );
+}
 ```
 
-Then you can find the library on `window.Recharts`.
+## Documentation
 
-### dev build
-
-```sh
-$ git clone https://github.com/recharts/recharts.git
-$ cd recharts
-$ npm install
-$ npm run build
-```
-
-## Demo
-
-To examine the demos in your local build, execute:
-
-```sh
-$ npm run[-script] demo
-```
-
-and then browse to http://localhost:3000.
-
-## Storybook
-
-We are in the process of unifying documentation and examples in storybook. To run it locally, execute
-
-```sh
-$ npm run[-script] storybook
-```
-
-and then browse to http://localhost:6006.
-
-## Releases
-
-[Releases](https://github.com/recharts/recharts/releases) are automated via GH Actions - when a new release is created in GH, CI will trigger that:
-
-1. Runs a build
-2. Runs tests
-3. Runs `npm publish`
-
-Version increments and tagging are not automated at this time.
-
-### Release testing
-
-Until we can automate more, it should be preferred to test as close to the results of `npm publish` as we possibly can. This ensures we don't publish unintended breaking changes. One way to do that is using `yalc` - `npm i -g yalc`.
-
-1. Make your changes in recharts
-2. `yalc publish` in recharts
-3. `yalc add recharts` in your test package (ex: in a vite or webpack reach app with recharts installed, imported, and your recent changes used)
-4. `npm install`
-5. Test a local run, a build, etc.
-
-## Module Formats
-
-- [babel-plugin-recharts](https://github.com/recharts/babel-plugin-recharts) A simple transform to cherry-pick Recharts modules so you don’t have to. **Note: this plugin is out of date and may not work with 2.x**
-
-## Thanks
-
-<a href="https://www.chromatic.com/"><img src="https://user-images.githubusercontent.com/321738/84662277-e3db4f80-af1b-11ea-88f5-91d67a5e59f6.png" width="153" height="30" alt="Chromatic" /></a>
-
-Thanks to [Chromatic](https://www.chromatic.com/) for providing the visual testing platform that helps us review UI changes and catch visual regressions.
-
-## License
-
-[MIT](http://opensource.org/licenses/MIT)
-
-Copyright (c) 2015-2023 Recharts Group.
+See **[react-day-picker.js.org](http://react-day-picker.js.org)** for guides, examples and API reference of the latest version.
+<small>Docs for version 7 are at <a href="https://react-day-picker-v7.netlify.app" target="_blank">react-day-picker-v7.netlify.app</a>.</small>
