@@ -1,57 +1,50 @@
----
-title: Overview
-sidebar_label: Overview
-pagination_next: null
-pagination_prev: null
-slug: /
----
 
-`@typescript-eslint/eslint-plugin` includes over 100 rules that detect best practice violations, bugs, and/or stylistic issues specifically for TypeScript code. All of our rules are listed below.
+# TypeScript
 
-:::tip
-Instead of enabling rules one by one, we recommend using one of [our pre-defined configs](/users/configs) to enable a large set of recommended rules.
-:::
+[![GitHub Actions CI](https://github.com/microsoft/TypeScript/workflows/CI/badge.svg)](https://github.com/microsoft/TypeScript/actions?query=workflow%3ACI)
+[![npm version](https://badge.fury.io/js/typescript.svg)](https://www.npmjs.com/package/typescript)
+[![Downloads](https://img.shields.io/npm/dm/typescript.svg)](https://www.npmjs.com/package/typescript)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/microsoft/TypeScript/badge)](https://securityscorecards.dev/viewer/?uri=github.com/microsoft/TypeScript)
 
-## Rules
 
-The rules are listed in alphabetical order. You can optionally filter them based on these categories:
+[TypeScript](https://www.typescriptlang.org/) is a language for application-scale JavaScript. TypeScript adds optional types to JavaScript that support tools for large-scale JavaScript applications for any browser, for any host, on any OS. TypeScript compiles to readable, standards-based JavaScript. Try it out at the [playground](https://www.typescriptlang.org/play/), and stay up to date via [our blog](https://blogs.msdn.microsoft.com/typescript) and [Twitter account](https://twitter.com/typescript).
 
-import RulesTable from "@site/src/components/RulesTable";
+Find others who are using TypeScript at [our community page](https://www.typescriptlang.org/community/).
 
-<RulesTable />
+## Installing
 
-## Filtering
+For the latest stable version:
 
-### Config Group (⚙️)
-
-"Config Group" refers to the [pre-defined config](/users/configs) that includes the rule. Extending from a configuration preset allow for enabling a large set of recommended rules all at once.
-
-### Metadata
-
-- `🔧 fixable` refers to whether the rule contains an [ESLint `--fix` auto-fixer](https://eslint.org/docs/latest/use/command-line-interface#--fix).
-- `💡 has suggestions` refers to whether the rule contains an ESLint suggestion fixer.
-  - Sometimes, it is not safe to automatically fix the code with an auto-fixer. But in these cases, we often have a good guess of what the correct fix should be, and we can provide it as a suggestion to the developer.
-- `💭 requires type information` refers to whether the rule requires [typed linting](/getting-started/typed-linting).
-- `🧱 extension rule` means that the rule is an extension of an [core ESLint rule](https://eslint.org/docs/latest/rules) (see [Extension Rules](#extension-rules)).
-- `💀 deprecated rule` means that the rule should no longer be used and will be removed from the plugin in a future version.
-
-## Extension Rules
-
-Some core ESLint rules do not support TypeScript syntax: either they crash, ignore the syntax, or falsely report against it.
-In these cases, we create what we call an "extension rule": a rule within our plugin that has the same functionality, but also supports TypeScript.
-
-Extension rules generally completely replace the base rule from ESLint core.
-If the base rule is enabled in a config you extend from, you'll need to disable the base rule:
-
-```js
-module.exports = {
-  extends: ['eslint:recommended'],
-  rules: {
-    // Note: you must disable the base rule as it can report incorrect errors
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
-  },
-};
+```bash
+npm install -D typescript
 ```
 
-[Search for `🧱 extension rule`s](?=extension#rules) in this page to see all extension rules.
+For our nightly builds:
+
+```bash
+npm install -D typescript@next
+```
+
+## Contribute
+
+There are many ways to [contribute](https://github.com/microsoft/TypeScript/blob/main/CONTRIBUTING.md) to TypeScript.
+* [Submit bugs](https://github.com/microsoft/TypeScript/issues) and help us verify fixes as they are checked in.
+* Review the [source code changes](https://github.com/microsoft/TypeScript/pulls).
+* Engage with other TypeScript users and developers on [StackOverflow](https://stackoverflow.com/questions/tagged/typescript).
+* Help each other in the [TypeScript Community Discord](https://discord.gg/typescript).
+* Join the [#typescript](https://twitter.com/search?q=%23TypeScript) discussion on Twitter.
+* [Contribute bug fixes](https://github.com/microsoft/TypeScript/blob/main/CONTRIBUTING.md).
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see
+the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com)
+with any additional questions or comments.
+
+## Documentation
+
+*  [TypeScript in 5 minutes](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
+*  [Programming handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
+*  [Homepage](https://www.typescriptlang.org/)
+
+## Roadmap
+
+For details on our planned features and future direction, please refer to our [roadmap](https://github.com/microsoft/TypeScript/wiki/Roadmap).
