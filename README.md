@@ -1,169 +1,70 @@
-# YAML <a href="https://www.npmjs.com/package/yaml"><img align="right" src="https://badge.fury.io/js/yaml.svg" title="npm package" /></a>
+# VictoryVendor
 
-`yaml` is a definitive library for [YAML](https://yaml.org/), the human friendly data serialization standard.
-This library:
+Vendored dependencies for Victory.
 
-- Supports both YAML 1.1 and YAML 1.2 and all common data schemas,
-- Passes all of the [yaml-test-suite](https://github.com/yaml/yaml-test-suite) tests,
-- Can accept any string as input without throwing, parsing as much YAML out of it as it can, and
-- Supports parsing, modifying, and writing YAML comments and blank lines.
+## Background
 
-The library is released under the ISC open source license, and the code is [available on GitHub](https://github.com/eemeli/yaml/).
-It has no external dependencies and runs on Node.js as well as modern browsers.
+D3 has released most of its libraries as ESM-only. This means that consumers in Node.js applications can no longer just `require()` anything with a d3 transitive dependency, including much of Victory.
 
-For the purposes of versioning, any changes that break any of the documented endpoints or APIs will be considered semver-major breaking changes.
-Undocumented library internals may change between minor versions, and previous APIs may be deprecated (but not removed).
+To help provide an easy path to folks still using CommonJS in their Node.js applications that consume Victory, we now provide this package to vendor in various d3-related packages.
 
-The minimum supported TypeScript version of the included typings is 3.9;
-for use in earlier versions you may need to set `skipLibCheck: true` in your config.
-This requirement may be updated between minor versions of the library.
+## Packages
 
-For more information, see the project's documentation site: [**eemeli.org/yaml**](https://eemeli.org/yaml/)
+We presently provide the following top-level libraries:
+<!-- cat packages/victory-vendor/package.json | egrep '"d3-' | egrep -o 'd3-[^"]*'| sor t-->
 
-To install:
+- d3-ease
+- d3-interpolate
+- d3-scale
+- d3-shape
+- d3-timer
 
-```sh
-npm install yaml
-```
+This is the total list of top and transitive libraries we vendor:
+<!-- ls packages/victory-vendor/lib-vendor | sort -->
 
-**Note:** These docs are for `yaml@2`. For v1, see the [v1.10.0 tag](https://github.com/eemeli/yaml/tree/v1.10.0) for the source and [eemeli.org/yaml/v1](https://eemeli.org/yaml/v1/) for the documentation.
+- d3-array
+- d3-color
+- d3-ease
+- d3-format
+- d3-interpolate
+- d3-path
+- d3-scale
+- d3-shape
+- d3-time
+- d3-time-format
+- d3-timer
+- internmap
 
-The development and maintenance of this library is [sponsored](https://github.com/sponsors/eemeli) by:
+Note that this does _not_ include the following D3 libraries that still support CommonJS:
 
-<p align="center" width="100%">
-  <a href="https://www.scipress.io/"
-    ><img
-      width="150"
-      align="top"
-      src="https://eemeli.org/yaml/images/scipress.svg"
-      alt="Scipress"
-  /></a>
-  &nbsp; &nbsp;
-  <a href="https://manifest.build/"
-    ><img
-      width="150"
-      align="top"
-      src="https://eemeli.org/yaml/images/manifest.svg"
-      alt="Manifest"
-  /></a>
-</p>
+- d3-voronoi
 
-## API Overview
+## How it works
 
-The API provided by `yaml` has three layers, depending on how deep you need to go: [Parse & Stringify](https://eemeli.org/yaml/#parse-amp-stringify), [Documents](https://eemeli.org/yaml/#documents), and the underlying [Lexer/Parser/Composer](https://eemeli.org/yaml/#parsing-yaml).
-The first has the simplest API and "just works", the second gets you all the bells and whistles supported by the library along with a decent [AST](https://eemeli.org/yaml/#content-nodes), and the third lets you get progressively closer to YAML source, if that's your thing.
+We provide two alternate paths and behaviors -- for ESM and CommonJS
 
-A [command-line tool](https://eemeli.org/yaml/#command-line-tool) is also included.
+### ESM
+
+If you do a Node.js import like:
 
 ```js
-import { parse, stringify } from 'yaml'
-// or
-import YAML from 'yaml'
-// or
-const YAML = require('yaml')
+import { interpolate } from "victory-vendor/d3-interpolate";
 ```
 
-### Parse & Stringify
+under the hood it's going to just re-export and pass you through to `node_modules/d3-interpolate`, the **real** ESM library from D3.
 
-- [`parse(str, reviver?, options?): value`](https://eemeli.org/yaml/#yaml-parse)
-- [`stringify(value, replacer?, options?): string`](https://eemeli.org/yaml/#yaml-stringify)
+### CommonJS
 
-### Documents
-
-- [`Document`](https://eemeli.org/yaml/#documents)
-  - [`constructor(value, replacer?, options?)`](https://eemeli.org/yaml/#creating-documents)
-  - [`#anchors`](https://eemeli.org/yaml/#working-with-anchors)
-  - [`#contents`](https://eemeli.org/yaml/#content-nodes)
-  - [`#directives`](https://eemeli.org/yaml/#stream-directives)
-  - [`#errors`](https://eemeli.org/yaml/#errors)
-  - [`#warnings`](https://eemeli.org/yaml/#errors)
-- [`isDocument(foo): boolean`](https://eemeli.org/yaml/#identifying-node-types)
-- [`parseAllDocuments(str, options?): Document[]`](https://eemeli.org/yaml/#parsing-documents)
-- [`parseDocument(str, options?): Document`](https://eemeli.org/yaml/#parsing-documents)
-
-### Content Nodes
-
-- [`isAlias(foo): boolean`](https://eemeli.org/yaml/#identifying-node-types)
-- [`isCollection(foo): boolean`](https://eemeli.org/yaml/#identifying-node-types)
-- [`isMap(foo): boolean`](https://eemeli.org/yaml/#identifying-node-types)
-- [`isNode(foo): boolean`](https://eemeli.org/yaml/#identifying-node-types)
-- [`isPair(foo): boolean`](https://eemeli.org/yaml/#identifying-node-types)
-- [`isScalar(foo): boolean`](https://eemeli.org/yaml/#identifying-node-types)
-- [`isSeq(foo): boolean`](https://eemeli.org/yaml/#identifying-node-types)
-- [`new Scalar(value)`](https://eemeli.org/yaml/#scalar-values)
-- [`new YAMLMap()`](https://eemeli.org/yaml/#collections)
-- [`new YAMLSeq()`](https://eemeli.org/yaml/#collections)
-- [`doc.createAlias(node, name?): Alias`](https://eemeli.org/yaml/#working-with-anchors)
-- [`doc.createNode(value, options?): Node`](https://eemeli.org/yaml/#creating-nodes)
-- [`doc.createPair(key, value): Pair`](https://eemeli.org/yaml/#creating-nodes)
-- [`visit(node, visitor)`](https://eemeli.org/yaml/#finding-and-modifying-nodes)
-
-### Parsing YAML
-
-- [`new Lexer().lex(src)`](https://eemeli.org/yaml/#lexer)
-- [`new Parser(onNewLine?).parse(src)`](https://eemeli.org/yaml/#parser)
-- [`new Composer(options?).compose(tokens)`](https://eemeli.org/yaml/#composer)
-
-## YAML.parse
-
-```yaml
-# file.yml
-YAML:
-  - A human-readable data serialization language
-  - https://en.wikipedia.org/wiki/YAML
-yaml:
-  - A complete JavaScript implementation
-  - https://www.npmjs.com/package/yaml
-```
+If you do a Node.js import like:
 
 ```js
-import fs from 'fs'
-import YAML from 'yaml'
-
-YAML.parse('3.14159')
-// 3.14159
-
-YAML.parse('[ true, false, maybe, null ]\n')
-// [ true, false, 'maybe', null ]
-
-const file = fs.readFileSync('./file.yml', 'utf8')
-YAML.parse(file)
-// { YAML:
-//   [ 'A human-readable data serialization language',
-//     'https://en.wikipedia.org/wiki/YAML' ],
-//   yaml:
-//   [ 'A complete JavaScript implementation',
-//     'https://www.npmjs.com/package/yaml' ] }
+const { interpolate } = require("victory-vendor/d3-interpolate");
 ```
 
-## YAML.stringify
+under the hood it's going to will go to an alternate path that contains the transpiled version of the underlying d3 library to be found at `victory-vendor/lib-vendor/d3-interpolate/**/*.js`. This futher has internally consistent import references to other `victory-vendor/lib-vendor/<pkg-name>` paths.
 
-```js
-import YAML from 'yaml'
+Note that for some tooling (like Jest) that doesn't play well with `package.json:exports` routing to this CommonJS path, we **also** output a root file in the form of `victory-vendor/d3-interpolate.js`.
 
-YAML.stringify(3.14159)
-// '3.14159\n'
+## Licenses
 
-YAML.stringify([true, false, 'maybe', null])
-// `- true
-// - false
-// - maybe
-// - null
-// `
-
-YAML.stringify({ number: 3, plain: 'string', block: 'two\nlines\n' })
-// `number: 3
-// plain: string
-// block: |
-//   two
-//   lines
-// `
-```
-
----
-
-Browser testing provided by:
-
-<a href="https://www.browserstack.com/open-source">
-<img width=200 src="https://eemeli.org/yaml/images/browserstack.svg" alt="BrowserStack" />
-</a>
+This project is released under the MIT license, but the vendor'ed in libraries include other licenses (e.g. ISC) that we enumerate in our `package.json:license` field.
