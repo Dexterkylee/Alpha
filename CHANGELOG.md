@@ -1,2713 +1,1940 @@
-# Changelog
+## ⚠️ Next versions change notes are available only on the [GitHub Releases](https://github.com/recharts/recharts/releases) page ⚠️
+
+## 2.2.0 (Dec 8, 2022)
+### feat
+- Support keyboard navigation in pie chart (#2923) 
+- Allow reversing the tooltip direction (#3056)
+### fix
+- fix rounding leading to hairline gaps (#3075)
+- fix: do not override zero brush end index (#3076)
+- fix: allow dragging brush when the mouse is outside (#3072)
+- fix: add label type to line props (#3068)
+- Ensure LabelList generic extends Data interface (#2954)
+
+## 2.1.16 (Oct 29, 2022)
+
+### fix
+- Fix incorrect date in CHAGELOG (#3016)
+- Let formatter function run even when value is falsy (#3026)
+- Fix(Sankey): update tooltip active state by trigger type(hover/click) (#3021)
+- Fix Area's `baseValue` prop (#3013)
+
+## 2.1.15 (Oct 12, 2022)
+
+### fix
+- Fix scroll on hover
+- DefaultTooltipContent.tsx Solving type error for entry.value and entry.name
+
+### chore
+- Revert D3 version
+
+
+## 2.1.14 (Sep 7, 2022)
+### fix
+- Add inactiveShape prop to Pie component (#2900)
+- Revert "chore: move type deps into devDependencies (#2843)" (#2942)
+- Fix typing of default tooltip formatter (#2924)
+- Take letter-spacing and font-size into consideration while rendering ticks (#2898)
+- Add formatter function type to tooltip props (#2916)
+- doc: Update CHANGELOG.md about d3 7.x (#2919)
+
+## 2.1.13 (Jul 26, 2022)
+
+### fix
+
+- set animate flag before chart data update (#2911)
+- Error bar domain fix (#2863)
+- fix: fix "recharts@… doesn't provide prop-types, requested by react-smooth" warning (#2895)
+
+### chore
+
+- upgrade d3 (#2893)
+
+## 2.1.12 (Jun 27, 2022)
+
+### fix
+
+- update react-smooth version
+- update d3 from 6.x to 7.x it may break some tools like jest
+
+fix config for jest is to add the following configuration
+
+```javascript
+const path = require('path');
+// took from d3/package.json
+const d3Pkgs = [
+	'd3',
+	'd3-array',
+	'd3-axis',
+	'd3-brush',
+	'd3-chord',
+	'd3-color',
+	'd3-contour',
+	'd3-delaunay',
+	'd3-dispatch',
+	'd3-drag',
+	'd3-dsv',
+	'd3-ease',
+	'd3-fetch',
+	'd3-force',
+	'd3-format',
+	'd3-geo',
+	'd3-hierarchy',
+	'd3-interpolate',
+	'd3-path',
+	'd3-polygon',
+	'd3-quadtree',
+	'd3-random',
+	'd3-scale',
+	'd3-scale-chromatic',
+	'd3-selection',
+	'd3-shape',
+	'd3-time',
+	'd3-time-format',
+	'd3-timer',
+	'd3-transition',
+	'd3-zoom',
+];
 
-All notable changes to this project will be documented in this file.
+// option 1 map module to an bundled version of the package which is es5
+const moduleNameMapper = d3Pkgs.reduce((acc, pkg) => {
+	acc[`^${pkg}$`] = path.join(require.resolve(pkg), `../../dist/${pkg}.min.js`);
+	return acc;
+}, {});
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+module.exports = {
+	moduleNameMapper: {
+		// option 1
+		// ...moduleNameMapper
+	},
+	transform: {
+		// match mjs js jsx ts tsx
+		'^.+\\.m?[jt]sx?$': 'babel-jest',
+	},
+	// stop ignore node_modules transform since d3 and others start to put es6 as main of packages
+	transformIgnorePatterns: [
+		// option 2, stop ignore transform on es6 packages
+		`/node_modules/(?!${d3Pkgs.join('|')}|internmap|d3-delaunay|delaunator|robust-predicates)`,
+		// option 3, stop ignore transform on all node_modules
+		// `/node_modules/(?!.*)`,
+	],
+};
+```
 
-## [Unreleased]
+## 2.1.11 (Jun 24, 2022)
 
-- Nothing yet!
+### feat
 
-## [3.4.17] - 2024-12-17
+-  Adds react `^18.0.0`  as valid peerDependency (#2820)
 
-### Fixed
+## 2.1.10 (May 19, 2022)
 
-- Work around Node v22.12+ issue ([#15421](https://github.com/tailwindlabs/tailwindcss/pull/15421))
+### feat
 
-## [3.4.16] - 2024-12-03
+- Add ARIA1.2 attributes to the SvgElementPropKeys filter array
+- Added Storybook Badge (#2840)
+- Handling of undefined values and type checks in DefaultTooltipContent
 
-### Fixed
+### fix
 
-- Ensure the TypeScript types for `PluginsConfig` allow `undefined` values ([#14668](https://github.com/tailwindlabs/tailwindcss/pull/14668))
+- Axis scale=band no longer works as of Recharts 2.x.x (#2742)
 
-# Changed
+### chore
 
-- Bumped lilconfig to v3.x ([#15289](https://github.com/tailwindlabs/tailwindcss/pull/15289))
+- chore: move type deps into devDependencies (#2843)
 
-## [3.4.15] - 2024-11-14
+## 2.1.9 (Feb 10, 2022)
 
-- Bump versions for security vulnerabilities ([#14697](https://github.com/tailwindlabs/tailwindcss/pull/14697))
-- Ensure the TypeScript types for the `boxShadow` theme configuration allows arrays ([#14856](https://github.com/tailwindlabs/tailwindcss/pull/14856))
-- Set fallback for opacity variables to ensure setting colors with the `selection:*` variant works in Chrome 131 ([#15003](https://github.com/tailwindlabs/tailwindcss/pull/15003))
+### feat
 
-## [3.4.14] - 2024-10-15
+- feat: allow axis domain to accept a callback (#2770)
+- Categorical chart callback types (#2739)
 
-### Fixed
+### fix
 
-- Don't set `display: none` on elements that use `hidden="until-found"` ([#14625](https://github.com/tailwindlabs/tailwindcss/pull/14625))
+- Fixing types in strict mode (#2745) (#2747)
+- Fix: removes overlapping legend for categorical charts (#2752)
+- Categorical chart callback types (#2739)
 
-## [3.4.13] - 2024-09-23
+## 2.1.8 (dec 14, 2021)
 
-### Fixed
+### fix
 
-- Improve source glob verification performance ([#14481](https://github.com/tailwindlabs/tailwindcss/pull/14481))
+- Must use import to load ES Module (#2658)
 
-## [3.4.12] - 2024-09-17
+## 2.1.7 (dec 14, 2021)
 
-### Fixed
+### fix
 
-- Ensure using `@apply` with utilities that use `@defaults` works with rules defined in the base layer when using `optimizeUniversalDefaults` ([#14427](https://github.com/tailwindlabs/tailwindcss/pull/14427))
+- Treemap do not render depth (#2718 #2719)
+- Update PolarRadiusAxis.tsx (#2720)
 
-## [3.4.11] - 2024-09-11
+### chore
 
-### Fixed
+- Update d3-interpolate, d3-scale and d3-shape (#2707)
 
-- Allow `anchor-size(…)` in arbitrary values ([#14393](https://github.com/tailwindlabs/tailwindcss/pull/14393))
+## 2.1.6 (oct 26, 2021)
 
-## [3.4.10] - 2024-08-13
+### fix
 
-### Fixed
+- Fix types folder missing
 
-- Bump versions of plugins in the Standalone CLI ([#14185](https://github.com/tailwindlabs/tailwindcss/pull/14185))
+## 2.1.5 (oct 15, 2021)
 
-## [3.4.9] - 2024-08-08
+### fix
 
-### Fixed
+- Fixed types for legend events (#2267 #2269)
+- Fix the react-is version (#2670)
+- Fix type declaration errors when tsc (#2675)
+- Fix(build-umd): add webpack output options libraryTarget (#2684)
 
-- No longer warns when broad glob patterns are detecting `vendor` folders
+## 2.1.4 (sep 19, 2021)
 
-## [3.4.8] - 2024-08-07
+### fix
 
-### Fixed
+- Fix: ResponsiveContainer makes legend overlapping with chart when re-rendering (#2660)
+- Fix: rendering of a single bar when maxBarSize is absent and barSize is present (#2659)
 
-- Fix minification when using nested CSS ([#14105](https://github.com/tailwindlabs/tailwindcss/pull/14105))
-- Warn when broad glob patterns are used in the content configuration ([#14140](https://github.com/tailwindlabs/tailwindcss/pull/14140))
+## 2.1.3 (sep 18, 2021)
 
-## [3.4.7] - 2024-07-25
+### fix
 
-### Fixed
+- fix: Customized component has no key (#2637)
+- Fix XAxis scale property type (#2641)
 
-- Fix class detection in Slim templates with attached attributes and ID ([#14019](https://github.com/tailwindlabs/tailwindcss/pull/14019))
-- Ensure attribute values in `data-*` and `aria-*` modifiers are always quoted in the generated CSS ([#14037](https://github.com/tailwindlabs/tailwindcss/pull/14037))
+## 2.1.2 (aug 24, 2021)
 
-## [3.4.6] - 2024-07-16
+### fix
 
-### Fixed
+- Fixes undefined field reference when optional variables not supplied (#2630)
+- Fix fragment children (#2481)
+## 2.1.1 (aug 21, 2021)
 
-- Fix detection of some utilities in Slim/Pug templates ([#14006](https://github.com/tailwindlabs/tailwindcss/pull/14006))
+### fix
 
-### Changed
+- Fix: responsive container
 
-- Loosen `:is()` wrapping rules when using an important selector ([#13900](https://github.com/tailwindlabs/tailwindcss/pull/13900))
+## 2.1.0 (aug 10, 2021)
 
-## [3.4.5] - 2024-07-15
+### feat
 
-### Fixed
+- Wrap ResponsiveContainer with forwardRef
 
-- Disable automatic `var()` injection for anchor properties ([#13826](https://github.com/tailwindlabs/tailwindcss/pull/13826))
-- Use no value instead of `blur(0px)` for `backdrop-blur-none` and `blur-none` utilities ([#13830](https://github.com/tailwindlabs/tailwindcss/pull/13830))
-- Add `.mts` and `.cts` config file detection ([#13940](https://github.com/tailwindlabs/tailwindcss/pull/13940))
-- Don't generate utilities like `px-1` unnecessarily when using utilities like `px-1.5` ([#13959](https://github.com/tailwindlabs/tailwindcss/pull/13959))
-- Always generate `-webkit-backdrop-filter` for `backdrop-*` utilities ([#13997](https://github.com/tailwindlabs/tailwindcss/pull/13997))
+### fix
 
-## [3.4.4] - 2024-06-05
+- Fix for recharts issue #1787
+- Add chart type to tooltip payload
+## 2.0.10 (jul 13, 2021)
+### feat
 
-### Fixed
+- Feat: Allow automated axis padding for "gap" and "no-gap" for barcharts with continuous axis #2457
+- Passthrough position attribute on createLabeledScales
 
-- Make it possible to use multiple `<alpha-value>` placeholders in a single color definition ([#13740](https://github.com/tailwindlabs/tailwindcss/pull/13740))
-- Don't prefix classes in arbitrary values of `has-*`, `group-has-*`, and `peer-has-*` variants ([#13770](https://github.com/tailwindlabs/tailwindcss/pull/13770))
-- Support negative values for `{col,row}-{start,end}` utilities ([#13781](https://github.com/tailwindlabs/tailwindcss/pull/13781))
-- Update embedded browserslist database ([#13792](https://github.com/tailwindlabs/tailwindcss/pull/13792))
+### fix
 
-## [3.4.3] - 2024-03-27
+- fix: barchart for a single data point #2512
+- fix: the bar label type definition #2582
+- fix: show scatter chart tooltip cross cursor #2592
 
-### Fixed
+## 2.0.9 (mar 24, 2021)
 
-- Revert changes to glob handling ([#13384](https://github.com/tailwindlabs/tailwindcss/pull/13384))
+### chore
 
-## [3.4.2] - 2024-03-27
+- update test config and webpack, etc
 
-### Fixed
+## fix
 
-- Ensure max specificity of `0,0,1` for button and input Preflight rules ([#12735](https://github.com/tailwindlabs/tailwindcss/pull/12735))
-- Improve glob handling for folders with `(`, `)`, `[` or `]` in the file path ([#12715](https://github.com/tailwindlabs/tailwindcss/pull/12715))
-- Split `:has` rules when using `experimental.optimizeUniversalDefaults` ([#12736](https://github.com/tailwindlabs/tailwindcss/pull/12736))
-- Sort arbitrary properties alphabetically across multiple class lists ([#12911](https://github.com/tailwindlabs/tailwindcss/pull/12911))
-- Add `mix-blend-plus-darker` utility ([#12923](https://github.com/tailwindlabs/tailwindcss/pull/12923))
-- Ensure dashes are allowed in variant modifiers ([#13303](https://github.com/tailwindlabs/tailwindcss/pull/13303))
-- Fix crash showing completions in Intellisense when using a custom separator ([#13306](https://github.com/tailwindlabs/tailwindcss/pull/13306))
-- Transpile `import.meta.url` in config files ([#13322](https://github.com/tailwindlabs/tailwindcss/pull/13322))
-- Reset letter spacing for form elements ([#13150](https://github.com/tailwindlabs/tailwindcss/pull/13150))
-- Fix missing `xx-large` and remove double `x-large` absolute size ([#13324](https://github.com/tailwindlabs/tailwindcss/pull/13324))
-- Don't error when encountering nested CSS unless trying to `@apply` a class that uses nesting ([#13325](https://github.com/tailwindlabs/tailwindcss/pull/13325))
-- Ensure that arbitrary properties respect `important` configuration ([#13353](https://github.com/tailwindlabs/tailwindcss/pull/13353))
-- Change dark mode selector so `@apply` works correctly with pseudo elements ([#13379](https://github.com/tailwindlabs/tailwindcss/pull/13379))
+- fix for missing sankey tooltips, fix #2496
+- added polyfill for ReactResizeDetector, fix #2504
+- fix condition to actually remove the listener, fix #2498
+- fix typing of <Area type /> prop, fix #2471
 
-## [3.4.1] - 2024-01-05
+## 2.0.8 (Feb 24, 2021)
 
-### Fixed
+### feat
 
-- Don't remove keyframe stops when using important utilities ([#12639](https://github.com/tailwindlabs/tailwindcss/pull/12639))
-- Don't add spaces to gradients and grid track names when followed by `calc()` ([#12704](https://github.com/tailwindlabs/tailwindcss/pull/12704))
-- Restore old behavior for `class` dark mode strategy ([#12717](https://github.com/tailwindlabs/tailwindcss/pull/12717))
-- Improve glob handling for folders with `(`, `)`, `[` or `]` in the file path ([#12715](https://github.com/tailwindlabs/tailwindcss/pull/12715))
+- allow to show tooltip when hover or click bar item for <BarChart /> and <RadialBarChart />
+- add api `getXScales`, `getYScales`, `getXScaleByAxisId`, `getYScaleByAxisId`, `getItemByXY` to chart, fix #2422
+- Add SyncMethod to categorical charts
+- `findAllByType` searches for match inside of a fragment
+- allow to add customized `polarAngles` and `polarRadius` to <PolarGrid />, fix #2452
 
-### Added
+### fix
 
-- Add new `selector` and `variant` strategies for dark mode ([#12717](https://github.com/tailwindlabs/tailwindcss/pull/12717))
+- fix Tooltip receive wrong payload when mouse enter <Line />, .etc, fix #2394
+- fix Treemap tooltip when use `dataKey` to specify value, fix #2428
 
-### Changed
+### deps
 
-- Support `rtl` and `ltr` variants on same element as `dir` attribute ([#12717](https://github.com/tailwindlabs/tailwindcss/pull/12717))
+- update react-resize-detector to 6.6.0, fix #2431
 
-## [3.4.0] - 2023-12-19
 
-### Added
+## 2.0.7 (Feb 18, 2021)
 
-- Add `svh`, `lvh`, and `dvh` values to default `height`/`min-height`/`max-height` theme ([#11317](https://github.com/tailwindlabs/tailwindcss/pull/11317))
-- Add `has-*` variants for `:has(...)` pseudo-class ([#11318](https://github.com/tailwindlabs/tailwindcss/pull/11318))
-- Add `text-wrap` utilities including `text-balance` and `text-pretty` ([#11320](https://github.com/tailwindlabs/tailwindcss/pull/11320), [#12031](https://github.com/tailwindlabs/tailwindcss/pull/12031))
-- Extend default `opacity` scale to include all steps of 5 ([#11832](https://github.com/tailwindlabs/tailwindcss/pull/11832))
-- Update Preflight `html` styles to include shadow DOM `:host` pseudo-class ([#11200](https://github.com/tailwindlabs/tailwindcss/pull/11200))
-- Increase default values for `grid-rows-*` utilities from 1–6 to 1–12 ([#12180](https://github.com/tailwindlabs/tailwindcss/pull/12180))
-- Add `size-*` utilities ([#12287](https://github.com/tailwindlabs/tailwindcss/pull/12287))
-- Add utilities for CSS subgrid ([#12298](https://github.com/tailwindlabs/tailwindcss/pull/12298))
-- Add spacing scale to `min-w-*`, `min-h-*`, and `max-w-*` utilities ([#12300](https://github.com/tailwindlabs/tailwindcss/pull/12300))
-- Add `forced-color-adjust` utilities ([#11931](https://github.com/tailwindlabs/tailwindcss/pull/11931))
-- Add `forced-colors` variant ([#11694](https://github.com/tailwindlabs/tailwindcss/pull/11694), [#12582](https://github.com/tailwindlabs/tailwindcss/pull/12582))
-- Add `appearance-auto` utility ([#12404](https://github.com/tailwindlabs/tailwindcss/pull/12404))
-- Add logical property values for `float` and `clear` utilities ([#12480](https://github.com/tailwindlabs/tailwindcss/pull/12480))
-- Add `*` variant for targeting direct children ([#12551](https://github.com/tailwindlabs/tailwindcss/pull/12551))
+### fix
 
-### Changed
+- add missed type definition of tickMargin in XAxis, YAxis, fix #2427
+- filter out nil elements of chart
+- ensures `id="undefined"` is not rendered to the DOM when use ResponsiveContainer
+- fix auto scale type of ComposedChart, fix #2403
+- Fix .d.ts types that relay on d3
 
-- Simplify the `sans` font-family stack ([#11748](https://github.com/tailwindlabs/tailwindcss/pull/11748))
-- Disable the tap highlight overlay on iOS ([#12299](https://github.com/tailwindlabs/tailwindcss/pull/12299))
-- Improve relative precedence of `rtl`, `ltr`, `forced-colors`, and `dark` variants ([#12584](https://github.com/tailwindlabs/tailwindcss/pull/12584))
+## 2.0.6 (Feb 08, 2021)
 
-## [3.3.7] - 2023-12-18
+### fix
 
-### Fixed
+- fix types error in npm pkg, fix #2398
 
-- Fix support for container query utilities with arbitrary values ([#12534](https://github.com/tailwindlabs/tailwindcss/pull/12534))
-- Fix custom config loading in Standalone CLI ([#12616](https://github.com/tailwindlabs/tailwindcss/pull/12616))
+## 2.0.5 (Feb 08, 2021)
 
-## [3.3.6] - 2023-12-04
+### feat
 
-### Fixed
+-  defer when syncing to other charts
 
-- Don’t add spaces to negative numbers following a comma ([#12324](https://github.com/tailwindlabs/tailwindcss/pull/12324))
-- Don't emit `@config` in CSS when watching via the CLI ([#12327](https://github.com/tailwindlabs/tailwindcss/pull/12327))
-- Improve types for `resolveConfig` ([#12272](https://github.com/tailwindlabs/tailwindcss/pull/12272))
-- Ensure configured `font-feature-settings` for `mono` are included in Preflight ([#12342](https://github.com/tailwindlabs/tailwindcss/pull/12342))
-- Improve candidate detection in minified JS arrays (without spaces) ([#12396](https://github.com/tailwindlabs/tailwindcss/pull/12396))
-- Don't crash when given applying a variant to a negated version of a simple utility ([#12514](https://github.com/tailwindlabs/tailwindcss/pull/12514))
-- Fix support for slashes in arbitrary modifiers ([#12515](https://github.com/tailwindlabs/tailwindcss/pull/12515))
-- Fix source maps of variant utilities that come from an `@layer` rule ([#12508](https://github.com/tailwindlabs/tailwindcss/pull/12508))
-- Fix loading of built-in plugins when using an ESM or TypeScript config with the Standalone CLI ([#12506](https://github.com/tailwindlabs/tailwindcss/pull/12506))
+### fix
 
-## [3.3.5] - 2023-10-25
+- Fix Customized component types
+- fix child event not dispatched, fix #2414
 
-### Fixed
+## 2.0.4 (Jan 27, 2021)
 
-- Fix incorrect spaces around `-` in `calc()` expression ([#12283](https://github.com/tailwindlabs/tailwindcss/pull/12283))
+### feat
 
-## [3.3.4] - 2023-10-24
+- add maxLines prop to Text component
 
-### Fixed
 
-- Improve normalisation of `calc()`-like functions ([#11686](https://github.com/tailwindlabs/tailwindcss/pull/11686))
-- Skip `calc()` normalisation in nested `theme()` calls ([#11705](https://github.com/tailwindlabs/tailwindcss/pull/11705))
-- Fix incorrectly generated CSS when using square brackets inside arbitrary properties ([#11709](https://github.com/tailwindlabs/tailwindcss/pull/11709))
-- Make `content` optional for presets in TypeScript types ([#11730](https://github.com/tailwindlabs/tailwindcss/pull/11730))
-- Handle variable colors that have variable fallback values ([#12049](https://github.com/tailwindlabs/tailwindcss/pull/12049))
-- Batch reading content files to prevent `too many open files` error ([#12079](https://github.com/tailwindlabs/tailwindcss/pull/12079))
-- Skip over classes inside `:not(…)` when nested in an at-rule ([#12105](https://github.com/tailwindlabs/tailwindcss/pull/12105))
-- Update types to work with `Node16` module resolution ([#12097](https://github.com/tailwindlabs/tailwindcss/pull/12097))
-- Don’t crash when important and parent selectors are equal in `@apply` ([#12112](https://github.com/tailwindlabs/tailwindcss/pull/12112))
-- Eliminate irrelevant rules when applying variants ([#12113](https://github.com/tailwindlabs/tailwindcss/pull/12113))
-- Improve RegEx parser, reduce possibilities as the key for arbitrary properties ([#12121](https://github.com/tailwindlabs/tailwindcss/pull/12121))
-- Fix sorting of utilities that share multiple candidates ([#12173](https://github.com/tailwindlabs/tailwindcss/pull/12173))
-- Ensure variants with arbitrary values and a modifier are correctly matched in the RegEx based parser ([#12179](https://github.com/tailwindlabs/tailwindcss/pull/12179))
-- Fix crash when watching renamed files on FreeBSD ([#12193](https://github.com/tailwindlabs/tailwindcss/pull/12193))
-- Allow plugins from a parent document to be used in an iframe ([#12208](https://github.com/tailwindlabs/tailwindcss/pull/12208))
-- Add types for `tailwindcss/nesting` ([#12269](https://github.com/tailwindlabs/tailwindcss/pull/12269))
-- Bump `jiti`, `fast-glob`, and `browserlist` dependencies ([#11550](https://github.com/tailwindlabs/tailwindcss/pull/11550))
-- Improve automatic `var` injection for properties that accept a `<dashed-ident>` ([#12236](https://github.com/tailwindlabs/tailwindcss/pull/12236))
+### fix
 
-## [3.3.3] - 2023-07-13
+- Add `payload` to `Payload` interface
+- prevent rerender errors in ResponsiveContainer
+- Add PieLabel, PieLabelRenderProps types
 
-### Fixed
+### deps
 
-- Fix issue where some pseudo-element variants generated the wrong selector ([#10943](https://github.com/tailwindlabs/tailwindcss/pull/10943), [#10962](https://github.com/tailwindlabs/tailwindcss/pull/10962), [#11111](https://github.com/tailwindlabs/tailwindcss/pull/11111))
-- Make font settings propagate into buttons, inputs, etc. ([#10940](https://github.com/tailwindlabs/tailwindcss/pull/10940))
-- Fix parsing of `theme()` inside `calc()` when there are no spaces around operators ([#11157](https://github.com/tailwindlabs/tailwindcss/pull/11157))
-- Ensure `repeating-conic-gradient` is detected as an image ([#11180](https://github.com/tailwindlabs/tailwindcss/pull/11180))
-- Move unknown pseudo-elements outside of `:is` by default ([#11345](https://github.com/tailwindlabs/tailwindcss/pull/11345))
-- Escape animation names when prefixes contain special characters ([#11470](https://github.com/tailwindlabs/tailwindcss/pull/11470))
-- Don't prefix arbitrary classes in `group` and `peer` variants ([#11454](https://github.com/tailwindlabs/tailwindcss/pull/11454))
-- Sort classes using position of first matching rule ([#11504](https://github.com/tailwindlabs/tailwindcss/pull/11504))
-- Allow variant to be an at-rule without a prelude ([#11589](https://github.com/tailwindlabs/tailwindcss/pull/11589))
-- Make PostCSS plugin async to improve performance ([#11548](https://github.com/tailwindlabs/tailwindcss/pull/11548))
-- Don’t error when a config file is missing ([f97759f](https://github.com/tailwindlabs/tailwindcss/commit/f97759f808d15ace66647b1405744fcf95a392e5))
+- Upgrade react-resize-detector(4.x => 5.x) types to match the library
 
-### Added
 
-- Add `aria-busy` utility ([#10966](https://github.com/tailwindlabs/tailwindcss/pull/10966))
 
-### Changed
+## 2.0.3 (Jan 13, 2021)
 
-- Reset padding for `<dialog>` elements in preflight ([#11069](https://github.com/tailwindlabs/tailwindcss/pull/11069))
+### refactor
 
-## [3.3.2] - 2023-04-25
+- use `getDerivedStateFromProps` to replace `UNSAFE_componentWillReceiveProps`, support react@17, #2385
 
-### Fixed
+## 2.0.2 (Jan 12, 2021)
 
-- Don’t move unknown pseudo-elements to the end of selectors ([#10943](https://github.com/tailwindlabs/tailwindcss/pull/10943), [#10962](https://github.com/tailwindlabs/tailwindcss/pull/10962))
-- Inherit gradient stop positions when using variants ([#11002](https://github.com/tailwindlabs/tailwindcss/pull/11002))
-- Honor default `to` position of gradient when using implicit transparent colors ([#11002](https://github.com/tailwindlabs/tailwindcss/pull/11002))
-- Ensure `@tailwindcss/oxide` doesn't leak in the stable engine ([#10988](https://github.com/tailwindlabs/tailwindcss/pull/10988))
-- Ensure multiple `theme(spacing[5])` calls with bracket notation in arbitrary properties work ([#11039](https://github.com/tailwindlabs/tailwindcss/pull/11039))
-- Normalize arbitrary modifiers ([#11057](https://github.com/tailwindlabs/tailwindcss/pull/11057))
+### fix
 
-### Changed
+- fix lint error
 
-- Drop support for Node.js v12 ([#11089](https://github.com/tailwindlabs/tailwindcss/pull/11089))
+## 2.0.1 (Jan 12, 2021)
 
-## [3.3.1] - 2023-03-30
+### fix
 
-### Fixed
+- Fix typo, createLabeldScales -> createLabeledScales
+- Prefer Number.isFinite if available
+- fix types error
+- fix(package.json): disable side effects explicitly
 
-- Fix edge case bug when loading a TypeScript config file with webpack ([#10898](https://github.com/tailwindlabs/tailwindcss/pull/10898))
-- Fix variant, `@apply`, and `important` selectors when using `:is()` or `:has()` with pseudo-elements ([#10903](https://github.com/tailwindlabs/tailwindcss/pull/10903))
-- Fix `safelist` config types ([#10901](https://github.com/tailwindlabs/tailwindcss/pull/10901))
-- Fix build errors caused by `@tailwindcss/line-clamp` warning ([#10915](https://github.com/tailwindlabs/tailwindcss/pull/10915), [#10919](https://github.com/tailwindlabs/tailwindcss/pull/10919))
-- Fix "process is not defined" error ([#10919](https://github.com/tailwindlabs/tailwindcss/pull/10919))
 
-## [3.3.0] - 2023-03-27
+### feat
 
-### Added
+- Add aria-hidden to measurementSpan
 
-- Support ESM and TypeScript config files ([#10785](https://github.com/tailwindlabs/tailwindcss/pull/10785))
-- Extend default color palette with new 950 shades ([#10879](https://github.com/tailwindlabs/tailwindcss/pull/10879))
-- Add `line-height` modifier support to `font-size` utilities ([#9875](https://github.com/tailwindlabs/tailwindcss/pull/9875))
-- Add support for using variables as arbitrary values without `var(...)` ([#9880](https://github.com/tailwindlabs/tailwindcss/pull/9880), [#9962](https://github.com/tailwindlabs/tailwindcss/pull/9962))
-- Add logical properties support for inline direction ([#10166](https://github.com/tailwindlabs/tailwindcss/pull/10166))
-- Add `hyphens` utilities ([#10071](https://github.com/tailwindlabs/tailwindcss/pull/10071))
-- Add `from-{position}`, `via-{position}` and `to-{position}` utilities ([#10886](https://github.com/tailwindlabs/tailwindcss/pull/10886))
-- Add `list-style-image` utilities ([#10817](https://github.com/tailwindlabs/tailwindcss/pull/10817))
-- Add `caption-side` utilities ([#10470](https://github.com/tailwindlabs/tailwindcss/pull/10470))
-- Add `line-clamp` utilities from `@tailwindcss/line-clamp` to core ([#10768](https://github.com/tailwindlabs/tailwindcss/pull/10768), [#10876](https://github.com/tailwindlabs/tailwindcss/pull/10876), [#10862](https://github.com/tailwindlabs/tailwindcss/pull/10862))
-- Add `delay-0` and `duration-0` utilities ([#10294](https://github.com/tailwindlabs/tailwindcss/pull/10294))
-- Add `justify-normal` and `justify-stretch` utilities ([#10560](https://github.com/tailwindlabs/tailwindcss/pull/10560))
-- Add `content-normal` and `content-stretch` utilities ([#10645](https://github.com/tailwindlabs/tailwindcss/pull/10645))
-- Add `whitespace-break-spaces` utility ([#10729](https://github.com/tailwindlabs/tailwindcss/pull/10729))
-- Add support for configuring default `font-variation-settings` for a `font-family` ([#10034](https://github.com/tailwindlabs/tailwindcss/pull/10034), [#10515](https://github.com/tailwindlabs/tailwindcss/pull/10515))
 
-### Fixed
+## 2.0.0 (Dec 29, 2020)
 
-- Disallow using multiple selectors in arbitrary variants ([#10655](https://github.com/tailwindlabs/tailwindcss/pull/10655))
-- Sort class lists deterministically for Prettier plugin ([#10672](https://github.com/tailwindlabs/tailwindcss/pull/10672))
-- Ensure CLI builds have a non-zero exit code on failure ([#10703](https://github.com/tailwindlabs/tailwindcss/pull/10703))
-- Ensure module dependencies for value `null`, is an empty `Set` ([#10877](https://github.com/tailwindlabs/tailwindcss/pull/10877))
-- Fix format assumption when resolving module dependencies ([#10878](https://github.com/tailwindlabs/tailwindcss/pull/10878))
+### fix
 
-### Changed
+- fix minAngle for 0 in PieChart, fix ##2237
+- fix type error of <Bar />, fix #2335
+- fix type error of cursor in <Tooltip />, fix #2178
+- fix Props of XAxis, fix #2128
+- export Props of components, fix #2319, #2156, #2203
+- Fix typo, getRectangePath -> getRectanglePath in Rectangle
+- allow Duplicated Category for bar charts not using correct entries for custom tool tips
+- fixing typescript array coalesce
+- fix types error of sankey, fix #2280
+- Fixed SVG path for pie charts when corner radius is set to a value other than zero (#2331)
 
-- Mark `rtl` and `ltr` variants as stable and remove warnings ([#10764](https://github.com/tailwindlabs/tailwindcss/pull/10764))
-- Use `inset` instead of `top`, `right`, `bottom`, and `left` properties ([#10765](https://github.com/tailwindlabs/tailwindcss/pull/10765))
-- Make `dark` and `rtl`/`ltr` variants insensitive to DOM order ([#10766](https://github.com/tailwindlabs/tailwindcss/pull/10766))
-- Use `:is` to make important selector option insensitive to DOM order ([#10835](https://github.com/tailwindlabs/tailwindcss/pull/10835))
+### feat
 
-## [3.2.7] - 2023-02-16
+- add props `reversed` to `<Funnel />`
+- add `breakAll` props to `<Text />` to allow break all for chinese
+- fix width of labelList in Funnel; fix #2056, #1866
+- support range RadarChart and add props `connectNulls` to <Radar />, fix #1890
+- add ability to pass in custom legend icon.
 
-### Fixed
+### deps
 
-- Fix use of `:where(.btn)` when matching `!btn` ([#10601](https://github.com/tailwindlabs/tailwindcss/pull/10601))
-- Revert including `outline-color` in `transition` and `transition-colors` by default ([#10604](https://github.com/tailwindlabs/tailwindcss/pull/10604))
+- upgrade react-resize-detector to 5.2.0 and fix ts error, fix #2300
+- update react-smooth to 1.0.6 to fix bug after upgrading d3
+- upgrade d3 packages
 
-## [3.2.6] - 2023-02-08
 
-### Fixed
+## 2.0.0-beta.8 (Nov 16, 2020)
 
-- Fix installation failing with yarn and pnpm by dropping `oxide-api-shim` ([add1636](https://github.com/tailwindlabs/tailwindcss/commit/add16364b4b1100e1af23ad1ca6900a0b53cbba0))
+### fix
 
-## [3.2.5] - 2023-02-08
+-  Add color change for inactive legend label
+- fix stackOffset="sign" in #2292, and add props stackOffset="positive" to fix #1667
 
-### Added
+### refactor
 
-- Add standalone CLI build for 64-bit Windows on ARM (`node16-win-arm64`) ([#10001](https://github.com/tailwindlabs/tailwindcss/pull/10001))
+- update `filterSvgElements` and `renderByOrder`
+- Replace core-js polyfill and remove babel-polyfill
 
-### Fixed
 
-- Cleanup unused `variantOrder` ([#9829](https://github.com/tailwindlabs/tailwindcss/pull/9829))
-- Fix `foo-[abc]/[def]` not being handled correctly ([#9866](https://github.com/tailwindlabs/tailwindcss/pull/9866))
-- Add container queries plugin to standalone CLI ([#9865](https://github.com/tailwindlabs/tailwindcss/pull/9865))
-- Support renaming of output files by PostCSS plugins in CLI ([#9944](https://github.com/tailwindlabs/tailwindcss/pull/9944))
-- Improve return value of `resolveConfig`, unwrap `ResolvableTo` ([#9972](https://github.com/tailwindlabs/tailwindcss/pull/9972))
-- Clip unbalanced brackets in arbitrary values ([#9973](https://github.com/tailwindlabs/tailwindcss/pull/9973))
-- Don’t reorder webkit scrollbar pseudo elements ([#9991](https://github.com/tailwindlabs/tailwindcss/pull/9991))
-- Deterministic sorting of arbitrary variants ([#10016](https://github.com/tailwindlabs/tailwindcss/pull/10016))
-- Add `data` key to theme types ([#10023](https://github.com/tailwindlabs/tailwindcss/pull/10023))
-- Prevent invalid arbitrary variant selectors from failing the build ([#10059](https://github.com/tailwindlabs/tailwindcss/pull/10059))
-- Properly handle subtraction followed by a variable ([#10074](https://github.com/tailwindlabs/tailwindcss/pull/10074))
-- Fix missing `string[]` in the `theme.dropShadow` types ([#10072](https://github.com/tailwindlabs/tailwindcss/pull/10072))
-- Update list of length units ([#10100](https://github.com/tailwindlabs/tailwindcss/pull/10100))
-- Fix not matching arbitrary properties when closely followed by square brackets ([#10212](https://github.com/tailwindlabs/tailwindcss/pull/10212))
-- Allow direct nesting in `root` or `@layer` nodes ([#10229](https://github.com/tailwindlabs/tailwindcss/pull/10229))
-- Don't prefix classes in arbitrary variants ([#10214](https://github.com/tailwindlabs/tailwindcss/pull/10214))
-- Fix perf regression when checking for changed content ([#10234](https://github.com/tailwindlabs/tailwindcss/pull/10234))
-- Fix missing `blocklist` member in the `Config` type ([#10239](https://github.com/tailwindlabs/tailwindcss/pull/10239))
-- Escape group names in selectors ([#10276](https://github.com/tailwindlabs/tailwindcss/pull/10276))
-- Consider earlier variants before sorting functions ([#10288](https://github.com/tailwindlabs/tailwindcss/pull/10288))
-- Allow variants with slashes ([#10336](https://github.com/tailwindlabs/tailwindcss/pull/10336))
-- Ensure generated CSS is always sorted in the same order for a given set of templates ([#10382](https://github.com/tailwindlabs/tailwindcss/pull/10382))
-- Handle variants when the same class appears multiple times in a selector ([#10397](https://github.com/tailwindlabs/tailwindcss/pull/10397))
-- Handle group/peer variants with quoted strings ([#10400](https://github.com/tailwindlabs/tailwindcss/pull/10400))
-- Parse alpha value from rgba/hsla colors when using variables ([#10429](https://github.com/tailwindlabs/tailwindcss/pull/10429))
-- Sort by `layer` inside `variants` layer ([#10505](https://github.com/tailwindlabs/tailwindcss/pull/10505))
-- Add `--watch=always` option to prevent exit when stdin closes ([#9966](https://github.com/tailwindlabs/tailwindcss/pull/9966))
-
-### Changed
-
-- Alphabetize `theme` keys in default config ([#9953](https://github.com/tailwindlabs/tailwindcss/pull/9953))
-- Update esbuild to v17 ([#10368](https://github.com/tailwindlabs/tailwindcss/pull/10368))
-- Include `outline-color` in `transition` and `transition-colors` utilities ([#10385](https://github.com/tailwindlabs/tailwindcss/pull/10385))
-
-## [3.2.4] - 2022-11-11
-
-### Added
-
-- Add `blocklist` option to prevent generating unwanted CSS ([#9812](https://github.com/tailwindlabs/tailwindcss/pull/9812))
+## 2.0.0-beta.7 (Sep 08, 2020)
 
-### Fixed
+### fix
 
-- Fix watching of files on Linux when renames are involved ([#9796](https://github.com/tailwindlabs/tailwindcss/pull/9796))
-- Make sure errors are always displayed when watching for changes ([#9810](https://github.com/tailwindlabs/tailwindcss/pull/9810))
+- Fix flickering tooltip by keeping the isTooltipActive flag from the previous state
+- fix(AreaDot Type): add option to use a function that returns a react element
+- Fix typescript error in polar radar
+- Fix typos in Label.renderCallByParent
+- Add type definition for label prop on XAxis, YAxis and ZAxis
 
-## [3.2.3] - 2022-11-09
+### feat
 
-### Fixed
+- Pass tickFormatter as a prop to customized tick component
+- Allow array value for last data element in Funnel to set bottom width instead of forcing 0
+-  Add payloadIndex to cursor props
 
-- Fixed use of `raw` content in the CLI ([#9773](https://github.com/tailwindlabs/tailwindcss/pull/9773))
-- Pick up changes from files that are both context and content deps ([#9787](https://github.com/tailwindlabs/tailwindcss/pull/9787))
-- Sort pseudo-elements ONLY after classes when using variants and `@apply` ([#9765](https://github.com/tailwindlabs/tailwindcss/pull/9765))
-- Support important utilities in the safelist (pattern must include a `!`) ([#9791](https://github.com/tailwindlabs/tailwindcss/pull/9791))
+## 2.0.0-beta.6 (May 12, 2020)
 
-## [3.2.2] - 2022-11-04
+### fix
 
-### Fixed
+- fix error of Brush when data is empty, but chart width or height or Brush update, fix #2093
+- fix build error , fix #2120
+- fix attrs of <Label />, reverts previous change: now `positionAttrs` is again after `attrs`
+- Get legend wrapper boundingRect to correctly compute legend offset, fix #2062
 
-- Escape special characters in resolved content base paths ([#9650](https://github.com/tailwindlabs/tailwindcss/pull/9650))
-- Don't reuse container for array returning variant functions ([#9644](https://github.com/tailwindlabs/tailwindcss/pull/9644))
-- Exclude non-relevant selectors when generating rules with the important modifier ([#9677](https://github.com/tailwindlabs/tailwindcss/issues/9677))
-- Fix merging of arrays during config resolution ([#9706](https://github.com/tailwindlabs/tailwindcss/issues/9706))
-- Ensure configured `font-feature-settings` are included in Preflight ([#9707](https://github.com/tailwindlabs/tailwindcss/pull/9707))
-- Fix fractional values not being parsed properly inside arbitrary properties ([#9705](https://github.com/tailwindlabs/tailwindcss/pull/9705))
-- Fix incorrect selectors when using `@apply` in selectors with combinators and pseudos ([#9722](https://github.com/tailwindlabs/tailwindcss/pull/9722))
-- Fix cannot read properties of undefined (reading 'modifier') ([#9656](https://github.com/tailwindlabs/tailwindcss/pull/9656), [aa979d6](https://github.com/tailwindlabs/tailwindcss/commit/aa979d645f8bf4108c5fc938d7c0ba085b654c31))
+### feat
 
-## [3.2.1] - 2022-10-21
+- support customized traveller of Brush, fix #1600
 
-### Fixed
+## 2.0.0-beta.5 (Mar 26, 2020)
 
-- Fix missing `supports` in types ([#9616](https://github.com/tailwindlabs/tailwindcss/pull/9616))
-- Fix missing PostCSS dependencies in the CLI ([#9617](https://github.com/tailwindlabs/tailwindcss/pull/9617))
-- Ensure `micromatch` is a proper CLI dependency ([#9620](https://github.com/tailwindlabs/tailwindcss/pull/9620))
-- Ensure modifier values exist when using a `modifiers` object for `matchVariant` ([ba6551d](https://github.com/tailwindlabs/tailwindcss/commit/ba6551db0f2726461371b4f3c6cd4c7090888504))
+### fix
 
-## [3.2.0] - 2022-10-19
+- fix types of generateCategoricalChart
+- fix position of tooltip when the categorical axis has time scale
+- fix position of tooltip when direction is rtl
+- fix name of Scatter in tooltip
+- Fix outerArcAngle and innerArcAngle when cornerIsExternal == true
+- fix IE 11 supoort because of d3-scale@3.x
 
-### Added
+### feat
 
-- Add new `@config` directive ([#9405](https://github.com/tailwindlabs/tailwindcss/pull/9405))
-- Add new `relative: true` option to resolve content paths relative to the config file ([#9396](https://github.com/tailwindlabs/tailwindcss/pull/9396))
-- Add new `supports-*` variant ([#9453](https://github.com/tailwindlabs/tailwindcss/pull/9453))
-- Add new `min-*` and `max-*` variants ([#9558](https://github.com/tailwindlabs/tailwindcss/pull/9558))
-- Add new `aria-*` variants ([#9557](https://github.com/tailwindlabs/tailwindcss/pull/9557), [#9588](https://github.com/tailwindlabs/tailwindcss/pull/9588))
-- Add new `data-*` variants ([#9559](https://github.com/tailwindlabs/tailwindcss/pull/9559), [#9588](https://github.com/tailwindlabs/tailwindcss/pull/9588))
-- Add new `break-keep` utility for `word-break: keep-all` ([#9393](https://github.com/tailwindlabs/tailwindcss/pull/9393))
-- Add new `collapse` utility for `visibility: collapse` ([#9181](https://github.com/tailwindlabs/tailwindcss/pull/9181))
-- Add new `fill-none` utility for `fill: none` ([#9403](https://github.com/tailwindlabs/tailwindcss/pull/9403))
-- Add new `stroke-none` utility for `stroke: none` ([#9403](https://github.com/tailwindlabs/tailwindcss/pull/9403))
-- Add new `place-content-baseline` utility for `place-content: baseline` ([#9498](https://github.com/tailwindlabs/tailwindcss/pull/9498))
-- Add new `place-items-baseline` utility for `place-items: baseline` ([#9507](https://github.com/tailwindlabs/tailwindcss/pull/9507))
-- Add new `content-baseline` utility for `align-content: baseline` ([#9507](https://github.com/tailwindlabs/tailwindcss/pull/9507))
-- Add support for configuring default `font-feature-settings` for a font family ([#9039](https://github.com/tailwindlabs/tailwindcss/pull/9039))
-- Add standalone CLI build for 32-bit Linux on ARM (`node16-linux-armv7`) ([#9084](https://github.com/tailwindlabs/tailwindcss/pull/9084))
-- Add future flag to disable color opacity utility plugins ([#9088](https://github.com/tailwindlabs/tailwindcss/pull/9088))
-- Add negative value support for `outline-offset` ([#9136](https://github.com/tailwindlabs/tailwindcss/pull/9136))
-- Add support for modifiers to `matchUtilities` ([#9541](https://github.com/tailwindlabs/tailwindcss/pull/9541))
-- Allow negating utilities using `min`/`max`/`clamp` ([#9237](https://github.com/tailwindlabs/tailwindcss/pull/9237))
-- Implement fallback plugins when there is ambiguity between plugins when using arbitrary values ([#9376](https://github.com/tailwindlabs/tailwindcss/pull/9376))
-- Support `sort` function in `matchVariant` ([#9423](https://github.com/tailwindlabs/tailwindcss/pull/9423))
-- Upgrade to `postcss-nested` v6.0 ([#9546](https://github.com/tailwindlabs/tailwindcss/pull/9546))
+- add Global setting, include "isSsr"
+- support tooltip trigger by click event
+- add static method `registerSymbol` to Symbols
+- add payload to formatter and labelFormatter in Tooltip
+- allow domain of axis to change the order of categories
 
-### Fixed
 
-- Use absolute paths when resolving changed files for resilience against working directory changes ([#9032](https://github.com/tailwindlabs/tailwindcss/pull/9032))
-- Fix ring color utility generation when using `respectDefaultRingColorOpacity` ([#9070](https://github.com/tailwindlabs/tailwindcss/pull/9070))
-- Sort tags before classes when `@apply`-ing a selector with joined classes ([#9107](https://github.com/tailwindlabs/tailwindcss/pull/9107))
-- Remove invalid `outline-hidden` utility ([#9147](https://github.com/tailwindlabs/tailwindcss/pull/9147))
-- Honor the `hidden` attribute on elements in preflight ([#9174](https://github.com/tailwindlabs/tailwindcss/pull/9174))
-- Don't stop watching atomically renamed files ([#9173](https://github.com/tailwindlabs/tailwindcss/pull/9173), [#9215](https://github.com/tailwindlabs/tailwindcss/pull/9215))
-- Fix duplicate utilities issue causing memory leaks ([#9208](https://github.com/tailwindlabs/tailwindcss/pull/9208))
-- Fix `fontFamily` config TypeScript types ([#9214](https://github.com/tailwindlabs/tailwindcss/pull/9214))
-- Handle variants on complex selector utilities ([#9262](https://github.com/tailwindlabs/tailwindcss/pull/9262))
-- Fix shared config mutation issue ([#9294](https://github.com/tailwindlabs/tailwindcss/pull/9294))
-- Fix ordering of parallel variants ([#9282](https://github.com/tailwindlabs/tailwindcss/pull/9282))
-- Handle variants in utility selectors using `:where()` and `:has()` ([#9309](https://github.com/tailwindlabs/tailwindcss/pull/9309))
-- Improve data type analysis for arbitrary values ([#9320](https://github.com/tailwindlabs/tailwindcss/pull/9320))
-- Don't emit generated utilities with invalid uses of theme functions ([#9319](https://github.com/tailwindlabs/tailwindcss/pull/9319))
-- Revert change that only listened for stdin close on TTYs ([#9331](https://github.com/tailwindlabs/tailwindcss/pull/9331))
-- Ignore unset values (like `null` or `undefined`) when resolving the classList for intellisense ([#9385](https://github.com/tailwindlabs/tailwindcss/pull/9385))
-- Improve type checking for formal syntax ([#9349](https://github.com/tailwindlabs/tailwindcss/pull/9349), [#9448](https://github.com/tailwindlabs/tailwindcss/pull/9448))
-- Fix incorrect required `content` key in custom plugin configs ([#9502](https://github.com/tailwindlabs/tailwindcss/pull/9502), [#9545](https://github.com/tailwindlabs/tailwindcss/pull/9545))
-- Fix content path detection on Windows ([#9569](https://github.com/tailwindlabs/tailwindcss/pull/9569))
-- Ensure `--content` is used in the CLI when passed ([#9587](https://github.com/tailwindlabs/tailwindcss/pull/9587))
+## 2.0.0-beta.4 (Mar 17, 2020)
 
-## [3.1.8] - 2022-08-05
+### fix
 
-### Fixed
+- fix error of <Curve /> when add child to <Line />, fix #2051
+- fix Stack AreaChart when some values is negative, fix #1667
+- fix stack AreaChart when some values is nill, fix #1601
 
-- Don’t prefix classes within reused arbitrary variants ([#8992](https://github.com/tailwindlabs/tailwindcss/pull/8992))
-- Fix usage of alpha values inside single-named colors that are functions ([#9008](https://github.com/tailwindlabs/tailwindcss/pull/9008))
-- Fix `@apply` of user utilities when negative and non-negative versions both exist ([#9027](https://github.com/tailwindlabs/tailwindcss/pull/9027))
+### dep
 
-## [3.1.7] - 2022-07-29
+- Upgrade reduce-css-calc
 
-### Fixed
+### chore
 
-- Don't rewrite source maps for `@layer` rules ([#8971](https://github.com/tailwindlabs/tailwindcss/pull/8971))
+- add types
 
-### Added
 
-- Added types for `resolveConfig` ([#8924](https://github.com/tailwindlabs/tailwindcss/pull/8924))
+## 2.0.0-beta.3 (Mar 13, 2020)
 
-## [3.1.6] - 2022-07-11
+### fix
 
-### Fixed
+- fix range of ReferenceArea of BarChart, fix #2045
+- fix className of axis line, fix ##2024
+- fix ComposedChart when has multiple <Bar/>, fix #2031
+- fix ComposedChart when specify scale of <XAxis />, fix #2010
 
-- Fix usage on Node 12.x ([b4e637e](https://github.com/tailwindlabs/tailwindcss/commit/b4e637e2e096a9d6f2210efba9541f6fd4f28e56))
-- Handle theme keys with slashes when using `theme()` in CSS ([#8831](https://github.com/tailwindlabs/tailwindcss/pull/8831))
+### chore
 
-## [3.1.5] - 2022-07-07
+- update eslint and add .prettierrc
 
-### Added
+## 2.0.0-beta.2 (Mar 10, 2020)
 
-- Support configuring a default `font-weight` for each font size utility ([#8763](https://github.com/tailwindlabs/tailwindcss/pull/8763))
-- Add support for alpha values in safe list ([#8774](https://github.com/tailwindlabs/tailwindcss/pull/8774))
+### fix
 
-### Fixed
+- Do word line calculation only when needed
+- Fixes arc angles when `cornerIsExternal` is used
+- Invert cartesian label position based on negative values
+- Fix usage of hooks in Tooltip, Label, Legend and Customized
+- Move draging-end listener to the window for brush
+- Fix trigger after mouse leave
+- Added the angle as key which need to be used in the Label align
+- Rewrite index.js to index.ts, update scripts in package.json
 
-- Improve types to support fallback values in the CSS-in-JS syntax used in plugin APIs ([#8762](https://github.com/tailwindlabs/tailwindcss/pull/8762))
-- Support including `tailwindcss` and `autoprefixer` in `postcss.config.js` in standalone CLI ([#8769](https://github.com/tailwindlabs/tailwindcss/pull/8769))
-- Fix using special-characters as prefixes ([#8772](https://github.com/tailwindlabs/tailwindcss/pull/8772))
-- Don’t prefix classes used within arbitrary variants ([#8773](https://github.com/tailwindlabs/tailwindcss/pull/8773))
-- Add more explicit types for the default theme ([#8780](https://github.com/tailwindlabs/tailwindcss/pull/8780))
+### feat
 
-## [3.1.4] - 2022-06-21
+- Added index to tickFormatter
+- Allow axis line customization through axisLine prop
 
-### Fixed
-
-- Provide default to `<alpha-value>` when using `theme()` ([#8652](https://github.com/tailwindlabs/tailwindcss/pull/8652))
-- Detect arbitrary variants with quotes ([#8687](https://github.com/tailwindlabs/tailwindcss/pull/8687))
-- Don’t add spaces around raw `/` that are preceded by numbers ([#8688](https://github.com/tailwindlabs/tailwindcss/pull/8688))
-
-## [3.1.3] - 2022-06-14
-
-### Fixed
-
-- Fix extraction of multi-word utilities with arbitrary values and quotes ([#8604](https://github.com/tailwindlabs/tailwindcss/pull/8604))
-- Fix casing of import of `corePluginList` type definition ([#8587](https://github.com/tailwindlabs/tailwindcss/pull/8587))
-- Ignore PostCSS nodes returned by `addVariant` ([#8608](https://github.com/tailwindlabs/tailwindcss/pull/8608))
-- Fix missing spaces around arithmetic operators ([#8615](https://github.com/tailwindlabs/tailwindcss/pull/8615))
-- Detect alpha value in CSS `theme()` function when using quotes ([#8625](https://github.com/tailwindlabs/tailwindcss/pull/8625))
-- Fix "Maximum call stack size exceeded" bug ([#8636](https://github.com/tailwindlabs/tailwindcss/pull/8636))
-- Allow functions returning parallel variants to mutate the container ([#8622](https://github.com/tailwindlabs/tailwindcss/pull/8622))
-- Remove text opacity CSS variables from `::marker` ([#8622](https://github.com/tailwindlabs/tailwindcss/pull/8622))
+## 2.0.0-beta.1 (Dec 03, 2019)
 
-## [3.1.2] - 2022-06-10
-
-### Fixed
+### fix
 
-- Ensure `\` is a valid arbitrary variant token ([#8576](https://github.com/tailwindlabs/tailwindcss/pull/8576))
-- Enable `postcss-import` in the CLI by default in watch mode ([#8574](https://github.com/tailwindlabs/tailwindcss/pull/8574), [#8580](https://github.com/tailwindlabs/tailwindcss/pull/8580))
+- fix error parameters in `appendOffsetOfLegend`
+- fix style of <Area />
 
-## [3.1.1] - 2022-06-09
+## 2.0.0-beta.0 (Dec 03, 2019)
 
-### Fixed
+### feat
 
-- Fix candidate extractor regression ([#8558](https://github.com/tailwindlabs/tailwindcss/pull/8558))
-- Split `::backdrop` into separate defaults group ([#8567](https://github.com/tailwindlabs/tailwindcss/pull/8567))
-- Fix postcss plugin type ([#8564](https://github.com/tailwindlabs/tailwindcss/pull/8564))
-- Fix class detection in markdown code fences and slim templates ([#8569](https://github.com/tailwindlabs/tailwindcss/pull/8569))
+- Only support react@16
+- Use typescript to rewrite src/
 
-## [3.1.0] - 2022-06-08
+## 1.8.5 (Oct 22, 2019)
 
-### Fixed
+### fix
 
-- Types: allow for arbitrary theme values (for 3rd party plugins) ([#7926](https://github.com/tailwindlabs/tailwindcss/pull/7926))
-- Don’t split vars with numbers in them inside arbitrary values ([#8091](https://github.com/tailwindlabs/tailwindcss/pull/8091))
-- Require matching prefix when detecting negatives ([#8121](https://github.com/tailwindlabs/tailwindcss/pull/8121))
-- Handle duplicate At Rules without children ([#8122](https://github.com/tailwindlabs/tailwindcss/pull/8122))
-- Allow arbitrary values with commas in `@apply` ([#8125](https://github.com/tailwindlabs/tailwindcss/pull/8125))
-- Fix intellisense for plugins with multiple `@apply` rules ([#8213](https://github.com/tailwindlabs/tailwindcss/pull/8213))
-- Improve type detection for arbitrary color values ([#8201](https://github.com/tailwindlabs/tailwindcss/pull/8201))
-- Support PostCSS config options in config file in CLI ([#8226](https://github.com/tailwindlabs/tailwindcss/pull/8226))
-- Remove default `[hidden]` style in preflight ([#8248](https://github.com/tailwindlabs/tailwindcss/pull/8248))
-- Only check selectors containing base apply candidates for circular dependencies ([#8222](https://github.com/tailwindlabs/tailwindcss/pull/8222))
-- Rewrite default class extractor ([#8204](https://github.com/tailwindlabs/tailwindcss/pull/8204))
-- Move `important` selector to the front when `@apply`-ing selector-modifying variants in custom utilities ([#8313](https://github.com/tailwindlabs/tailwindcss/pull/8313))
-- Error when registering an invalid custom variant ([#8345](https://github.com/tailwindlabs/tailwindcss/pull/8345))
-- Create tailwind.config.cjs file in ESM package when running init ([#8363](https://github.com/tailwindlabs/tailwindcss/pull/8363))
-- Fix `matchVariant` that use at-rules and placeholders ([#8392](https://github.com/tailwindlabs/tailwindcss/pull/8392))
-- Improve types of the `tailwindcss/plugin` ([#8400](https://github.com/tailwindlabs/tailwindcss/pull/8400))
-- Allow returning parallel variants from `addVariant` or `matchVariant` callback functions ([#8455](https://github.com/tailwindlabs/tailwindcss/pull/8455))
-- Try using local `postcss` installation first in the CLI ([#8270](https://github.com/tailwindlabs/tailwindcss/pull/8270))
-- Allow default ring color to be a function ([#7587](https://github.com/tailwindlabs/tailwindcss/pull/7587))
-- Don't inherit `to` value from parent gradients ([#8489](https://github.com/tailwindlabs/tailwindcss/pull/8489))
-- Remove process dependency from log functions ([#8530](https://github.com/tailwindlabs/tailwindcss/pull/8530))
-- Ensure we can use `@import 'tailwindcss/...'` without node_modules ([#8537](https://github.com/tailwindlabs/tailwindcss/pull/8537))
+- revert [PR#1916](https://github.com/recharts/recharts/pull/1916)
+- fix Text update, fix #1914
 
-### Changed
+## 1.8.4 (Oct 22, 2019)
 
-- Only apply hover styles when supported (future) ([#8394](https://github.com/tailwindlabs/tailwindcss/pull/8394))
-- Respect default ring color opacity (future) ([#8448](https://github.com/tailwindlabs/tailwindcss/pull/8448), [3f4005e](https://github.com/tailwindlabs/tailwindcss/commit/3f4005e833445f7549219eb5ae89728cbb3a2630))
+### fix
 
-### Added
+- Adding Composed chart to rescaled charts, to fix #1887
 
-- Support PostCSS `Document` nodes ([#7291](https://github.com/tailwindlabs/tailwindcss/pull/7291))
-- Add `text-start` and `text-end` utilities ([#6656](https://github.com/tailwindlabs/tailwindcss/pull/6656))
-- Support customizing class name when using `darkMode: 'class'` ([#5800](https://github.com/tailwindlabs/tailwindcss/pull/5800))
-- Add `--poll` option to the CLI ([#7725](https://github.com/tailwindlabs/tailwindcss/pull/7725))
-- Add new `border-spacing` utilities ([#7102](https://github.com/tailwindlabs/tailwindcss/pull/7102))
-- Add `enabled` variant ([#7905](https://github.com/tailwindlabs/tailwindcss/pull/7905))
-- Add TypeScript types for the `tailwind.config.js` file ([#7891](https://github.com/tailwindlabs/tailwindcss/pull/7891))
-- Add `backdrop` variant ([#7924](https://github.com/tailwindlabs/tailwindcss/pull/7924), [#8526](https://github.com/tailwindlabs/tailwindcss/pull/8526))
-- Add `grid-flow-dense` utility ([#8193](https://github.com/tailwindlabs/tailwindcss/pull/8193))
-- Add `mix-blend-plus-lighter` utility ([#8288](https://github.com/tailwindlabs/tailwindcss/pull/8288))
-- Add arbitrary variants ([#8299](https://github.com/tailwindlabs/tailwindcss/pull/8299))
-- Add experimental `matchVariant` API ([#8310](https://github.com/tailwindlabs/tailwindcss/pull/8310), [34fd0fb8](https://github.com/tailwindlabs/tailwindcss/commit/34fd0fb82aa574cddc5c7aa3ad7d1af5e3735e5d))
-- Add `prefers-contrast` media query variants ([#8410](https://github.com/tailwindlabs/tailwindcss/pull/8410))
-- Add opacity support when referencing colors with `theme` function ([#8416](https://github.com/tailwindlabs/tailwindcss/pull/8416))
-- Add `postcss-import` support to the CLI ([#8437](https://github.com/tailwindlabs/tailwindcss/pull/8437))
-- Add `optional` variant ([#8486](https://github.com/tailwindlabs/tailwindcss/pull/8486))
-- Add `<alpha-value>` placeholder support for custom colors ([#8501](https://github.com/tailwindlabs/tailwindcss/pull/8501))
+## 1.8.3 (Oct 17, 2019)
 
-## [3.0.24] - 2022-04-12
+### fix
 
-### Fixed
+- fix: rollback to componentWillReceiveProps, fix crash in react@15
 
-- Prevent nesting plugin from breaking other plugins ([#7563](https://github.com/tailwindlabs/tailwindcss/pull/7563))
-- Recursively collapse adjacent rules ([#7565](https://github.com/tailwindlabs/tailwindcss/pull/7565))
-- Preserve source maps for generated CSS ([#7588](https://github.com/tailwindlabs/tailwindcss/pull/7588))
-- Split box shadows on top-level commas only ([#7479](https://github.com/tailwindlabs/tailwindcss/pull/7479))
-- Use local user CSS cache for `@apply` ([#7524](https://github.com/tailwindlabs/tailwindcss/pull/7524))
-- Invalidate context when main CSS changes ([#7626](https://github.com/tailwindlabs/tailwindcss/pull/7626))
-- Only add `!` to selector class matching template candidate when using important modifier with multi-class selectors ([#7664](https://github.com/tailwindlabs/tailwindcss/pull/7664))
-- Correctly parse and prefix animation names with dots ([#7163](https://github.com/tailwindlabs/tailwindcss/pull/7163))
-- Fix extraction from template literal/function with array ([#7481](https://github.com/tailwindlabs/tailwindcss/pull/7481))
-- Don't output unparsable arbitrary values ([#7789](https://github.com/tailwindlabs/tailwindcss/pull/7789))
-- Fix generation of `div:not(.foo)` if `.foo` is never defined ([#7815](https://github.com/tailwindlabs/tailwindcss/pull/7815))
-- Allow for custom properties in `rgb`, `rgba`, `hsl` and `hsla` colors ([#7933](https://github.com/tailwindlabs/tailwindcss/pull/7933))
-- Remove autoprefixer as explicit peer-dependency to avoid invalid warnings in situations where it isn't actually needed ([#7949](https://github.com/tailwindlabs/tailwindcss/pull/7949))
-- Ensure the `percentage` data type is validated correctly ([#8015](https://github.com/tailwindlabs/tailwindcss/pull/8015))
-- Make sure `font-weight` is inherited by form controls in all browsers ([#8078](https://github.com/tailwindlabs/tailwindcss/pull/8078))
+## 1.8.2 (Oct 17, 2019)
 
-### Changed
+### fix
 
-- Replace `chalk` with `picocolors` ([#6039](https://github.com/tailwindlabs/tailwindcss/pull/6039))
-- Replace `cosmiconfig` with `lilconfig` ([#6039](https://github.com/tailwindlabs/tailwindcss/pull/6038))
-- Update `cssnano` to avoid removing empty variables when minifying ([#7818](https://github.com/tailwindlabs/tailwindcss/pull/7818))
+- Used UNSAFE_componentWillReceiveProps to replace componentDidUpdate
 
-## [3.0.23] - 2022-02-16
+## 1.8.1 (Oct 16, 2019)
 
-### Fixed
+### fix
 
-- Remove opacity variables from `:visited` pseudo class ([#7458](https://github.com/tailwindlabs/tailwindcss/pull/7458))
-- Support arbitrary values + calc + theme with quotes ([#7462](https://github.com/tailwindlabs/tailwindcss/pull/7462))
-- Don't duplicate layer output when scanning content with variants + wildcards ([#7478](https://github.com/tailwindlabs/tailwindcss/pull/7478))
-- Implement `getClassOrder` instead of `sortClassList` ([#7459](https://github.com/tailwindlabs/tailwindcss/pull/7459))
+- Fixed Text Component crash
+- Fixed eslint errors in src/
 
-## [3.0.22] - 2022-02-11
 
-### Fixed
+### feat
 
-- Temporarily move `postcss` to dependencies ([#7424](https://github.com/tailwindlabs/tailwindcss/pull/7424))
+- Add props of <Brush /> to always show text
+- Add onClick event to sankey chart
+- Shape prop can be used without any other prop in reference area
 
-## [3.0.21] - 2022-02-10
+## 1.8.0 (Oct 15, 2019)
 
-### Fixed
+### refactor
 
-- Move prettier plugin to dev dependencies ([#7418](https://github.com/tailwindlabs/tailwindcss/pull/7418))
+- react unsafe methods refactored
 
-## [3.0.20] - 2022-02-10
+## 1.7.1 (Aug 13, 2019)
 
-### Added
+### fix
 
-- Expose `context.sortClassList(classes)` ([#7412](https://github.com/tailwindlabs/tailwindcss/pull/7412))
+- Fix bar chart tooltip (#1837)
 
-## [3.0.19] - 2022-02-07
+## 1.7.0 (Aug 08, 2019)
 
-### Fixed
+### feat
 
-- Fix preflight border color fallback ([#7288](https://github.com/tailwindlabs/tailwindcss/pull/7288))
-- Correctly parse shadow lengths without a leading zero ([#7289](https://github.com/tailwindlabs/tailwindcss/pull/7289))
-- Don't crash when scanning extremely long class candidates ([#7331](https://github.com/tailwindlabs/tailwindcss/pull/7331))
-- Use less hacky fix for URLs detected as custom properties ([#7275](https://github.com/tailwindlabs/tailwindcss/pull/7275))
-- Correctly generate negative utilities when dash is before the prefix ([#7295](https://github.com/tailwindlabs/tailwindcss/pull/7295))
-- Detect prefixed negative utilities in the safelist ([#7295](https://github.com/tailwindlabs/tailwindcss/pull/7295))
+- allow events on Text and Label components
+- Enable Tooltip's `translate` style
+- Added position props for ReferenceLine to allow to control offset of it
 
-## [3.0.18] - 2022-01-28
+### fix
 
-### Fixed
+- handle `dataKey` as function, get correct data array for tooltip
+- fix style of legend in case of area and radar use fill for fallback color
 
-- Fix `@apply` order regression (in `addComponents`, `addUtilities`, ...) ([#7232](https://github.com/tailwindlabs/tailwindcss/pull/7232))
-- Quick fix for incorrect arbitrary properties when using URLs ([#7252](https://github.com/tailwindlabs/tailwindcss/pull/7252))
+## 1.6.2 (May 22, 2019)
 
-## [3.0.17] - 2022-01-26
+### feat
 
-### Fixed
+- Add cornerIsExternal prop to center rounded corner at radial bar edge
+- Add new component `Customized` to render customized content which can user internal state and props
+- Add props `tooltipType="none"` to hide tooltip data for Area, Bar, Line, Scatter, Funnel, Pie, Radar, RadialBar
 
-- Remove false positive warning in CLI when using the `--content` option ([#7220](https://github.com/tailwindlabs/tailwindcss/pull/7220))
+### fix
 
-## [3.0.16] - 2022-01-24
+- fix the order of tooltip items when not specify itemSorter
+- Fix typo in example of RadialBarChart
 
-### Fixed
 
-- Ensure to transpile the PostCSS Nesting plugin (tailwindcss/nesting) ([#7080](https://github.com/tailwindlabs/tailwindcss/pull/7080))
-- Improve various warnings ([#7118](https://github.com/tailwindlabs/tailwindcss/pull/7118))
-- Fix grammatical mistake ([cca5a38](https://github.com/tailwindlabs/tailwindcss/commit/cca5a3804e1d3ee0214491921e1aec35bf62a813))
+## 1.6.1 (May 20, 2019)
 
-## [3.0.15] - 2022-01-15
+### fix
 
-### Fixed
+- fix "Maximum call stack size exceeded" error when use label={<Label />}
+- fix bug of "Cannot read property reduce of undefined in Text.js"
+- fix `getDomainOfDataByKey` when all the values are null or undefined
 
-- Temporarily remove optional chaining in nesting plugin ([#7077](https://github.com/tailwindlabs/tailwindcss/pull/7077))
+## 1.6.0(May 14, 2019)
 
-## [3.0.14] - 2022-01-14
+### fix
 
-### Added
+- Use y-axis ticks to determine y-axis category
+- fix bug in ThreeMap inside ResponsiveContainer, fix #1692
+- Avoid same keys on label and line, fixes #1302
+- use _.max to replace Math.max.apply, use _.min to replace Math.min.apply
 
-- Show warnings for invalid content config ([#7065](https://github.com/tailwindlabs/tailwindcss/pull/7065))
+### feat
 
-### Fixed
+- Adds forceCornerRadius prop to RadialBar
+- calculate width with aspect and height when width is falsey
 
-- Only emit utility/component variants when those layers exist ([#7066](https://github.com/tailwindlabs/tailwindcss/pull/7066))
-- Ensure nesting plugins can receive options ([#7016](https://github.com/tailwindlabs/tailwindcss/pull/7016))
+## 1.5.0(Feb 15, 2019)
 
-## [3.0.13] - 2022-01-11
+### fix
 
-### Fixed
+- fix the bug of ReferenceLine when calculate coordinates, fix #1643
+- fix bug of Scatter in ComposedChart
 
-- Fix consecutive builds with at apply producing different CSS ([#6999](https://github.com/tailwindlabs/tailwindcss/pull/6999))
+### feat
 
-## [3.0.12] - 2022-01-07
+- allow aria-* attributes and "role", "focusable", "tabIndex" of charts, fix #1226, fix #1584
+- add new props "paylodUniqBy" to Tooltip and Legend
 
-### Fixed
+## 1.4.4(Feb 15, 2019)
 
-- Allow use of falsy values in theme config ([#6917](https://github.com/tailwindlabs/tailwindcss/pull/6917))
-- Ensure we can apply classes that are grouped with non-class selectors ([#6922](https://github.com/tailwindlabs/tailwindcss/pull/6922))
-- Improve standalone CLI compatibility on Linux by switching to the `linuxstatic` build target ([#6914](https://github.com/tailwindlabs/tailwindcss/pull/6914))
-- Ensure `@apply` works consistently with or without `@layer` ([#6938](https://github.com/tailwindlabs/tailwindcss/pull/6938))
-- Only emit defaults when using base layer ([#6926](https://github.com/tailwindlabs/tailwindcss/pull/6926))
-- Emit plugin defaults regardless of usage ([#6926](https://github.com/tailwindlabs/tailwindcss/pull/6926))
-- Move default border color back to preflight ([#6926](https://github.com/tailwindlabs/tailwindcss/pull/6926))
-- Change `experimental.optimizeUniversalDefaults` to only work with `@tailwind base` ([#6926](https://github.com/tailwindlabs/tailwindcss/pull/6926))
+### fix
 
-## [3.0.11] - 2022-01-05
+- fix the bug of automatically calculate the y-coordinate of yAxis tick when tick has unit, fix #1623
+- render clipPath in <defs />, fix bug in generateCategoricalChart, fix #1592
+- remove React.Fragment in DefaultTooltipContent, fix #1645
 
-### Fixed
+## 1.4.3(Feb 12, 2019)
 
-- Preserve casing of CSS variables added by plugins ([#6888](https://github.com/tailwindlabs/tailwindcss/pull/6888))
-- Ignore content paths that are passed in but don't actually exist ([#6901](https://github.com/tailwindlabs/tailwindcss/pull/6901))
-- Revert change that applies Tailwind's defaults in isolated environments like CSS modules ([9fdc391](https://github.com/tailwindlabs/tailwindcss/commit/9fdc391d4ff93e7e350f5ce439060176b1f0162f))
+### fix
 
-## [3.0.10] - 2022-01-04
+- fix bug of <Rectangle /> when width < 0 && `radius` is not null, fix #1596
+- fix paddingAngle of Pie when render only <Pie /> not <PieChart />
+- fix onMouseEnter and Tooltip for Pie on FireFox
 
-### Fixed
+### feat
 
-- Fix `@apply` in files without `@tailwind` directives ([#6580](https://github.com/tailwindlabs/tailwindcss/pull/6580), [#6875](https://github.com/tailwindlabs/tailwindcss/pull/6875))
-- CLI: avoid unnecessary writes to output files ([#6550](https://github.com/tailwindlabs/tailwindcss/pull/6550))
+- Make the timeOut timer for the brush configurable through props
+- Allow to format name in Tooltips
 
-### Added
+### dep
 
-- Allow piping data into the CLI ([#6876](https://github.com/tailwindlabs/tailwindcss/pull/6876))
+- Update lodash version to 4.17.5 and install webpack-dev-server@3.1.14 dev dependency
+- Updated package.json to mark effectful modules
+- chore: update version of sinon, from 4.x to 7.x
 
-## [3.0.9] - 2022-01-03
 
-### Fixed
+## 1.4.2(Dec 21, 2018)
 
-- Improve `DEBUG` flag ([#6797](https://github.com/tailwindlabs/tailwindcss/pull/6797), [#6804](https://github.com/tailwindlabs/tailwindcss/pull/6804))
-- Ensure we can use `<` and `>` characters in modifiers ([#6851](https://github.com/tailwindlabs/tailwindcss/pull/6851))
-- Validate `theme()` works in arbitrary values ([#6852](https://github.com/tailwindlabs/tailwindcss/pull/6852))
-- Properly detect `theme()` value usage in arbitrary properties ([#6854](https://github.com/tailwindlabs/tailwindcss/pull/6854))
-- Improve collapsing of duplicate declarations ([#6856](https://github.com/tailwindlabs/tailwindcss/pull/6856))
-- Remove support for `TAILWIND_MODE=watch` ([#6858](https://github.com/tailwindlabs/tailwindcss/pull/6858))
+### refactor
 
-## [3.0.8] - 2021-12-28
+- Refactor transition of <Area />, <Line />, <Radar />, make transition more smoothly when the length of dataset changes
 
-### Fixed
+### fix
 
-- Reduce specificity of `abbr` rule in preflight ([#6671](https://github.com/tailwindlabs/tailwindcss/pull/6671))
-- Support HSL with hue units in arbitrary values ([#6726](https://github.com/tailwindlabs/tailwindcss/pull/6726))
-- Add `node16-linux-arm64` target for standalone CLI ([#6693](https://github.com/tailwindlabs/tailwindcss/pull/6693))
+- replace lodash isFinite with Number.isFinite, meanwhile add polyfill core-js's Number polyfill in order to use Number.usFinite directly
+- updated area chart to cut off dots on left most axis
 
-## [3.0.7] - 2021-12-17
+## 1.4.1(Nov 16, 2018)
 
-### Fixed
+### fix
 
-- Don't mutate custom color palette when overriding per-plugin colors ([#6546](https://github.com/tailwindlabs/tailwindcss/pull/6546))
-- Improve circular dependency detection when using `@apply` ([#6588](https://github.com/tailwindlabs/tailwindcss/pull/6588))
-- Only generate variants for non-`user` layers ([#6589](https://github.com/tailwindlabs/tailwindcss/pull/6589))
-- Properly extract classes with arbitrary values in arrays and classes followed by escaped quotes ([#6590](https://github.com/tailwindlabs/tailwindcss/pull/6590))
-- Improve jsx interpolation candidate matching ([#6593](https://github.com/tailwindlabs/tailwindcss/pull/6593))
-- Ensure `@apply` of a rule inside an AtRule works ([#6594](https://github.com/tailwindlabs/tailwindcss/pull/6594))
+- Fix height of TreeMap
 
-## [3.0.6] - 2021-12-16
+## 1.4.0(Nov 15, 2018)
 
-### Fixed
+### feat
 
-- Support square bracket notation in paths ([#6519](https://github.com/tailwindlabs/tailwindcss/pull/6519))
-- Ensure all plugins are executed for a given candidate ([#6540](https://github.com/tailwindlabs/tailwindcss/pull/6540))
+- Add FunnelChart and Trapezoid
+- Add nested Treemap
 
-## [3.0.5] - 2021-12-15
+## 1.3.6(Nov 07, 2018)
 
-### Fixed
+### fix
 
-- Revert: add `li` to list-style reset ([9777562d](https://github.com/tailwindlabs/tailwindcss/commit/9777562da37ee631bbf77374c0d14825f09ef9af))
+- Fix bug preventing use of functions or custom components for the Bar background prop
+- Fix incorrect sort logic in stripe rendering
 
-## [3.0.4] - 2021-12-15
+### feat
 
-### Fixed
+- Added animateNewValues property to Line
 
-- Insert always-on defaults layer in correct spot ([#6526](https://github.com/tailwindlabs/tailwindcss/pull/6526))
+## 1.3.5(Oct 25, 2018)
 
-## [3.0.3] - 2021-12-15
+### fix
 
-### Added
+- use lodash _.values instead of Object.values
+- perfer YAxis which has finite domain and nice ticks when a chart has many YAxes
+- fix <Area /> for expected length height attribute
 
-- Warn about invalid globs in `content` ([#6449](https://github.com/tailwindlabs/tailwindcss/pull/6449))
-- Add standalone tailwindcss CLI ([#6506](https://github.com/tailwindlabs/tailwindcss/pull/6506))
-- Add `li` to list-style reset ([00f60e6](https://github.com/tailwindlabs/tailwindcss/commit/00f60e61013c6e4e3419e4b699371a13eb30b75d))
+### chore
 
-### Fixed
+- add babel-plugin-lodash in babelrc
+- update webpack.config.js to remove sourceMap in umd/Recharts.min.js
 
-- Don't output unparsable values ([#6469](https://github.com/tailwindlabs/tailwindcss/pull/6469))
-- Fix text decoration utilities from overriding the new text decoration color/style/thickness utilities when used with a modifier ([#6378](https://github.com/tailwindlabs/tailwindcss/pull/6378))
-- Move defaults to their own always-on layer ([#6500](https://github.com/tailwindlabs/tailwindcss/pull/6500))
-- Support negative values in safelist patterns ([#6480](https://github.com/tailwindlabs/tailwindcss/pull/6480))
+## 1.3.4(Oct 13, 2018)
 
-## [3.0.2] - 2021-12-13
+### fix
 
-### Fixed
+- Fix domain calculation with 0 values (#1519)
 
-- Temporarily disable optimize universal defaults, fixes issue with transforms/filters/rings not being `@apply`-able in CSS modules/Svelte components/Vue components ([#6461](https://github.com/tailwindlabs/tailwindcss/pull/6461))
+## 1.3.3(Oct 10, 2018)
 
-## [3.0.1] - 2021-12-10
+### feat
 
-### Fixed
+- find yAxisWithNiceTicks and choose it over getAnyElementOfObject
 
-- Ensure complex variants with multiple classes work ([#6311](https://github.com/tailwindlabs/tailwindcss/pull/6311))
-- Re-add `default` interop to public available functions ([#6348](https://github.com/tailwindlabs/tailwindcss/pull/6348))
-- Detect circular dependencies when using `@apply` ([#6365](https://github.com/tailwindlabs/tailwindcss/pull/6365))
-- Fix defaults optimization when vendor prefixes are involved ([#6369](https://github.com/tailwindlabs/tailwindcss/pull/6369))
+### fix
 
-## [3.0.0] - 2021-12-09
+- update recharts-scale to 0.4.2 to fix bug of DecimalError when data is Inifinity, fix #1493
 
-### Fixed
+## 1.3.2(Oct 07, 2018)
 
-- Enforce the order of some variants (like `before` and `after`) ([#6018](https://github.com/tailwindlabs/tailwindcss/pull/6018))
+### fix
 
-### Added
+- Fix axis type error
+- Fix add sideEffects flag to enable tree-shaing
 
-- Add `placeholder` variant ([#6106](https://github.com/tailwindlabs/tailwindcss/pull/6106))
-- Add composable `touch-action` utilities ([#6115](https://github.com/tailwindlabs/tailwindcss/pull/6115))
-- Add support for "arbitrary properties" ([#6161](https://github.com/tailwindlabs/tailwindcss/pull/6161))
-- Add `portrait` and `landscape` variants ([#6046](https://github.com/tailwindlabs/tailwindcss/pull/6046))
-- Add `text-decoration-style`, `text-decoration-thickness`, and `text-underline-offset` utilities ([#6004](https://github.com/tailwindlabs/tailwindcss/pull/6004))
-- Add `menu` reset to preflight ([#6213](https://github.com/tailwindlabs/tailwindcss/pull/6213))
-- Allow `0` as a valid `length` value ([#6233](https://github.com/tailwindlabs/tailwindcss/pull/6233), [#6259](https://github.com/tailwindlabs/tailwindcss/pull/6259))
-- Add CSS functions to data types ([#6258](https://github.com/tailwindlabs/tailwindcss/pull/6258))
-- Support negative values for `scale-*` utilities ([c48e629](https://github.com/tailwindlabs/tailwindcss/commit/c48e629955585ad18dadba9f470fda59cc448ab7))
-- Improve `length` data type, by validating each value individually ([#6283](https://github.com/tailwindlabs/tailwindcss/pull/6283))
+## 1.3.1(Sep 29, 2018)
 
-### Changed
+### fix
 
-- Deprecate `decoration-slice` and `decoration-break` in favor `box-decoration-slice` and `box-decoration-break` _(non-breaking)_ ([#6004](https://github.com/tailwindlabs/tailwindcss/pull/6004))
+- Fix the react-resize-detector don't match react 15
 
-## [3.0.0-alpha.2] - 2021-11-08
+## 1.3.0(Sep 28, 2018)
 
-### Changed
+### feat
 
-- Don't use pointer cursor on disabled buttons by default ([#5772](https://github.com/tailwindlabs/tailwindcss/pull/5772))
-- Set default content value in preflight instead of within each before/after utility ([#5820](https://github.com/tailwindlabs/tailwindcss/pull/5820))
-- Remove `prefix` as a function ([#5829](https://github.com/tailwindlabs/tailwindcss/pull/5829))
+- upgrade recharts-scale to 0.4.0, to fix the calculation of big float
 
-### Added
+## 1.2.0(Sep 7, 2018)
 
-- Add `flex-basis` utilities ([#5671](https://github.com/tailwindlabs/tailwindcss/pull/5671))
-- Make negative values a first-class feature ([#5709](https://github.com/tailwindlabs/tailwindcss/pull/5709))
-- Add `fit-content` values for `min/max-width/height` utilities ([#5638](https://github.com/tailwindlabs/tailwindcss/pull/5638))
-- Add `min/max-content` values for `min/max-height` utilities ([#5729](https://github.com/tailwindlabs/tailwindcss/pull/5729))
-- Add all standard `cursor-*` values by default ([#5734](https://github.com/tailwindlabs/tailwindcss/pull/5734))
-- Add `grow-*` and `shrink-*` utilities, deprecate `flex-grow-*` and `flex-shrink-*` ([#5733](https://github.com/tailwindlabs/tailwindcss/pull/5733))
-- Add `text-decoration-color` utilities ([#5760](https://github.com/tailwindlabs/tailwindcss/pull/5760))
-- Add new declarative `addVariant` API ([#5809](https://github.com/tailwindlabs/tailwindcss/pull/5809))
-- Add first-class `print` variant for targeting printed media ([#5885](https://github.com/tailwindlabs/tailwindcss/pull/5885))
-- Add `outline-style`, `outline-color`, `outline-width` and `outline-offset` utilities ([#5887](https://github.com/tailwindlabs/tailwindcss/pull/5887))
-- Add full color palette for `fill-*` and `stroke-*` utilities (#5933[](https://github.com/tailwindlabs/tailwindcss/pull/5933))
-- Add composable API for colored box shadows ([#5979](https://github.com/tailwindlabs/tailwindcss/pull/5979))
+### feat
 
-### Fixed
+- Add blendStroke prop to Pie component
+- Adding contentStyle prop to Tooltip for styling DefaultTooltipContent
 
-- Configure chokidar's `awaitWriteFinish` setting to avoid occasional stale builds on Windows ([#5774](https://github.com/tailwindlabs/tailwindcss/pull/5774))
-- Fix CLI `--content` option ([#5775](https://github.com/tailwindlabs/tailwindcss/pull/5775))
-- Fix before/after utilities overriding custom content values at larger breakpoints ([#5820](https://github.com/tailwindlabs/tailwindcss/pull/5820))
-- Cleanup duplicate properties ([#5830](https://github.com/tailwindlabs/tailwindcss/pull/5830))
-- Allow `_` inside `url()` when using arbitrary values ([#5853](https://github.com/tailwindlabs/tailwindcss/pull/5853))
-- Prevent crashes when using comments in `@layer` AtRules ([#5854](https://github.com/tailwindlabs/tailwindcss/pull/5854))
-- Handle color transformations properly with `theme(...)` for all relevant plugins ([#4533](https://github.com/tailwindlabs/tailwindcss/pull/4533), [#5871](https://github.com/tailwindlabs/tailwindcss/pull/5871))
-- Ensure `@apply`-ing a utility with multiple definitions works ([#5870](https://github.com/tailwindlabs/tailwindcss/pull/5870))
+### fix
 
-## [3.0.0-alpha.1] - 2021-10-01
+- Fixed typo of playload -> payload in Radar chart
+- Fix PieChart animation event handlers not firing
+- Fix alwaysShow warn() condition in ReferenceLine
+- Fix Tooltip disappears when using setState()
 
-### Changed
+## 1.1.0(Jul 19, 2018)
 
-- Remove AOT engine, make JIT the default ([#5340](https://github.com/tailwindlabs/tailwindcss/pull/5340))
-- Throw when trying to `@apply` the `group` class ([#4666](https://github.com/tailwindlabs/tailwindcss/pull/4666))
-- Remove dependency on `modern-normalize`, inline and consolidate with Preflight ([#5358](https://github.com/tailwindlabs/tailwindcss/pull/5358))
-- Enable extended color palette by default with updated color names ([#5384](https://github.com/tailwindlabs/tailwindcss/pull/5384))
-- Move `vertical-align` values to config file instead of hard-coding ([#5487](https://github.com/tailwindlabs/tailwindcss/pull/5487))
-- Rename `overflow-clip` to `text-clip` and `overflow-ellipsis` to `text-ellipsis` ([#5630](https://github.com/tailwindlabs/tailwindcss/pull/5630))
+### feat
 
-### Added
+- Allow reference areas which extend past the canvas bounds
+- Allow to add more classes in tooltips
+- Reference line segment by specifying a pair of
+ endpoints
 
-- Add native `aspect-ratio` utilities ([#5359](https://github.com/tailwindlabs/tailwindcss/pull/5359))
-- Unify config callback helpers into single object ([#5382](https://github.com/tailwindlabs/tailwindcss/pull/5382))
-- Preserve original color format when adding opacity whenever possible ([#5154](https://github.com/tailwindlabs/tailwindcss/pull/5154))
-- Add `accent-color` utilities ([#5387](https://github.com/tailwindlabs/tailwindcss/pull/5387))
-- Add `scroll-behavior` utilities ([#5388](https://github.com/tailwindlabs/tailwindcss/pull/5388))
-- Add `will-change` utilities ([#5448](https://github.com/tailwindlabs/tailwindcss/pull/5448))
-- Add `text-indent` utilities ([#5449](https://github.com/tailwindlabs/tailwindcss/pull/5449))
-- Add `column` utilities ([#5457](https://github.com/tailwindlabs/tailwindcss/pull/5457))
-- Add `border-hidden` utility ([#5485](https://github.com/tailwindlabs/tailwindcss/pull/5485))
-- Add `align-sub` and `align-super` utilities by default ([#5486](https://github.com/tailwindlabs/tailwindcss/pull/5486))
-- Add `break-before`, `break-inside` and `break-after` utilities ([#5530](https://github.com/tailwindlabs/tailwindcss/pull/5530))
-- Add `file` variant for `::file-selector-button` pseudo element ([#4936](https://github.com/tailwindlabs/tailwindcss/pull/4936))
-- Add comprehensive arbitrary value support ([#5568](https://github.com/tailwindlabs/tailwindcss/pull/5568))
-- Add `touch-action` utilities ([#5603](https://github.com/tailwindlabs/tailwindcss/pull/5603))
-- Add `inherit` to default color palette ([#5597](https://github.com/tailwindlabs/tailwindcss/pull/5597))
-- Add `overflow-clip`, `overflow-x-clip` and `overflow-y-clip` utilities ([#5630](https://github.com/tailwindlabs/tailwindcss/pull/5630))
-- Add `[open]` variant ([#5627](https://github.com/tailwindlabs/tailwindcss/pull/5627))
-- Add `scroll-snap` utilities ([#5637](https://github.com/tailwindlabs/tailwindcss/pull/5637))
-- Add `border-x` and `border-y` width and color utilities ([#5639](https://github.com/tailwindlabs/tailwindcss/pull/5639))
+## 1.0.1(Jul 05, 2018)
 
-### Fixed
+### fix
 
-- Fix defining colors as functions when color opacity plugins are disabled ([#5470](https://github.com/tailwindlabs/tailwindcss/pull/5470))
-- Fix using negated `content` globs ([#5625](https://github.com/tailwindlabs/tailwindcss/pull/5625))
-- Fix using backslashes in `content` globs ([#5628](https://github.com/tailwindlabs/tailwindcss/pull/5628))
+- only use babel-es in es6/, fix #1372
 
-## [2.2.19] - 2021-10-29
+## 1.0.0(Jul 05, 2018)
 
-### Fixed
+### fix
 
-- Ensure `corePlugins` order is consistent in AOT mode ([#5928](https://github.com/tailwindlabs/tailwindcss/pull/5928))
+- #1195 Replace axis scale value `utcTime` with `utc`
+- remove wrapperStyle on DefaultTooltipContent
+- Clip dots of <Line />
+- Move style spread to after default styles to allow overriding
+- Fixing range area chart bottom bound. Base line needed to be filterted for connecting
+ null
+- Fix tooltips that disappear while mouse still over a scatter point
 
-## [2.2.18] - 2021-10-29
+### refactor
 
-### Fixed
+- use lodash-es for es6 build
+- Factor out some scale- and rect-related functions
 
-- Bump versions for security vulnerabilities ([#5924](https://github.com/tailwindlabs/tailwindcss/pull/5924))
+### feat
 
-## [2.2.17] - 2021-10-13
+- Add touchStart & touchEnd event handling
+- Add explicit prop `defaultShowTooltip`  to activate tooltip
+- Position the 'top' label outside the element for negative heights
 
-### Fixed
+## 1.0.0-beta.10(Jan 31, 2018)
 
-- Configure chokidar's `awaitWriteFinish` setting to avoid occasional stale builds on Windows ([#5758](https://github.com/tailwindlabs/tailwindcss/pull/5758))
+### fix
 
-## [2.2.16] - 2021-09-26
+- fix Scatter Chart:lineType 'fitting' does not work
+- Update to allow CSP compliance on setting styles
+- Remove react-transition-group from peerDependencies
 
-### Fixed
+### refactor
 
-- JIT: Properly handle animations that use CSS custom properties ([#5602](https://github.com/tailwindlabs/tailwindcss/pull/5602))
+- Replace flatmap of reduce to _.flatmap in getDomainOfDataByKey
 
-## [2.2.15] - 2021-09-10
+### feat
 
-### Fixed
+- Add the gap of props for brush
 
-- Ensure using CLI without `-i` for input file continues to work even though deprecated ([#5464](https://github.com/tailwindlabs/tailwindcss/pull/5464))
+## 1.0.0-beta.9(Jan 09, 2018)
 
-## [2.2.14] - 2021-09-08
+### fix
 
-### Fixed
+- Fix `verticalFill` and `horizontalFill` in `<CartesianGrid />` when points are unordered
 
-- Only use `@defaults` in JIT, switch back to `clean-css` in case there's any meaningful differences in the output ([bf248cb](https://github.com/tailwindlabs/tailwindcss/commit/bf248cb0de889d48854fbdd26536f4a492556efd))
+## 1.0.0-beta.8(Jan 09, 2018)
 
-## [2.2.13] - 2021-09-08
+### feat
 
-### Fixed
+- Add props `useTranslate3d` to control whether use translate3d or translate in <Tooltip />
+- Add props `verticalFill` and `horizontalFill` in `<CartesianGrid />` to show grid background
+- Add  `visibleTicksCount` in props of customized tick of `<CartesianAxis />`
 
-- Replace `clean-css` with `cssnano` for CDN builds to fix minified builds ([75cc3ca](https://github.com/tailwindlabs/tailwindcss/commit/75cc3ca305aedddc8a85f3df1a420fefad3fb5c4))
+### fix
 
-## [2.2.12] - 2021-09-08
+- Replace lodash _.get with simple Array.prototype.find
+- Prevent texts from being selected when dragging the brush
+- Add try...catch... when getTotalLength is called by a svg path to fix IE bug
 
-### Fixed
+## 1.0.0-beta.7(Dec 21, 2017)
 
-- Ensure that divide utilities inject a default border color ([#5438](https://github.com/tailwindlabs/tailwindcss/pull/5438))
+### feat
 
-## [2.2.11] - 2021-09-07
+- Add props `allowDuplicatedCategory` to XAxis, YAxis, PolarAngleAxis, PolarRadiusAxis, to remove duplicated category when type="category"
+- Add props id in `<Area />`, `<Bar />`, `<Line />`, `<Scatter />`, `<Label />`, `<LabelList />` for SSR
+- Support specify domain of category type axis when allowDuplicatedCategory is false, add cooresponding "xAis", "yAxis", "zAxis" to the props or customized shape of Scatter
 
-### Fixed
+### fix
 
-- Rebundle to fix missing CLI peer dependencies
+- Fx sanketartAngle and endAngle of RadarChart diagram not re-rendering when updating data prop
+- Fix animation of AreaChart when baseLine is NaN / undefined
+- Fix default startAngle and endAngle of RadarChart
+- Use cloneElement to create Legend
 
-## [2.2.10] - 2021-09-06
+## 1.0.0-beta.6(Dec 02, 2017)
 
-### Fixed
+### feat
 
-- Fix build error when using `presets: []` in config file ([#4903](https://github.com/tailwindlabs/tailwindcss/pull/4903))
+- Add props `background` to support background rectange in `<Bar />`
+- add props `tickMargin` which set the space between text and tick line
 
-### Added
+### fix
 
-- Reintroduce universal selector optimizations under experimental `optimizeUniversalDefaults` flag ([a9e160c](https://github.com/tailwindlabs/tailwindcss/commit/a9e160cf9acb75a2bbac34f8864568b12940f89a))
+- update PRESENTATION_ATTRIBUTES to allow set the radius of each `<Rectangle />` of BarChart
+- render Legend when all values of Pie is 0
+- fix animation of intial `<Bar />`
 
-## [2.2.9] - 2021-08-30
+## 1.0.0-beta.5(Nov 24, 2017)
 
-### Fixed
+### fix
 
-- JIT: Fix `@apply`ing utilities that contain variants + the important modifier ([#4854](https://github.com/tailwindlabs/tailwindcss/pull/4854))
-- JIT: Don't strip "null" when parsing tracked file paths ([#5008](https://github.com/tailwindlabs/tailwindcss/pull/5008))
-- Pin `clean-css` to v5.1.4 to fix empty CSS variables in CDN builds ([#5338](https://github.com/tailwindlabs/tailwindcss/pull/5338))
+- fix `isChildrenEqual` when chart has a single child in an array
+- support LabelList in ScatterChart
 
-## [2.2.8] - 2021-08-27
+## 1.0.0-beta.4(Nov 24, 2017)
 
-### Fixed
+### fix
 
-- Improve accessibility of default link focus styles in Firefox ([#5082](https://github.com/tailwindlabs/tailwindcss/pull/5082))
-- JIT: Fix animation variants corrupting keyframes rules ([#5223](https://github.com/tailwindlabs/tailwindcss/pull/5223))
-- JIT: Ignore escaped commas when splitting selectors to apply prefixes ([#5239](https://github.com/tailwindlabs/tailwindcss/pull/5239/))
-- Nesting: Maintain PostCSS node sources when handling `@apply` ([#5249](https://github.com/tailwindlabs/tailwindcss/pull/5249))
-- JIT: Fix support for animation lists ([#5252](https://github.com/tailwindlabs/tailwindcss/pull/5252))
-- JIT: Fix arbitrary value support for `object-position` utilities ([#5245](https://github.com/tailwindlabs/tailwindcss/pull/5245))
-- CLI: Abort watcher if stdin is closed to avoid zombie processes ([#4997](https://github.com/tailwindlabs/tailwindcss/pull/4997))
-- JIT: Ignore arbitrary values with unbalanced brackets ([#5293](https://github.com/tailwindlabs/tailwindcss/pull/5293))
+- fix Label when content is a function and return simple string
+- add name to propTypes of Scatter
+- fix ** error of lib/
 
-## [2.2.7] - 2021-07-23
+## 1.0.0-beta.3(Nov 23, 2017)
 
-### Fixed
+### feat
 
-- Temporarily revert runtime performance optimizations introduced in v2.2.5, use universal selector again ([#5060](https://github.com/tailwindlabs/tailwindcss/pull/5060))
+- Add datakey to proops of customized dot
 
-## [2.2.6] - 2021-07-21
+### fix
 
-### Fixed
+- Removed the use of `Children.only` from the isSingleChildEqual call. Appears to resolve the issue logged at https://github.com/recharts/recharts/issues/935
+- Fix Line Animation with given Magic Number
+- Don't break text contents on non-breaking spaces
+- Support for "strokeDasharray" in <Legend/>
+- Fix Bar Animation with the given Magic Number
+- Fix position of `<Label />`
+- Fix exception of AreaChart when all the values are null
+- Fix the orders of polar angle ticks in RadarChart
+- Replace ** width Math.pow
 
-- Fix issue where base styles not generated for translate transforms in JIT ([#5038](https://github.com/tailwindlabs/tailwindcss/pull/5038))
+## 1.0.0-beta.2(Nov 17, 2017)
 
-## [2.2.5] - 2021-07-21
+### fix
 
-### Added
+- fix attributes order of `<Label />`
+- fix the domain of Axis when specify `ticks`
 
-- Added `self-baseline` utility (I know this is a patch release, no one's going to die relax) ([#5000](https://github.com/tailwindlabs/tailwindcss/pull/5000))
+### feat
 
-### Changed
+- allow set x, y, width, height, horizontalPoints, verticalPoints of CartesianGrid
+- add props to the parameters of callbacks
 
-- JIT: Optimize universal selector usage by inlining only the relevant selectors ([#4850](https://github.com/tailwindlabs/tailwindcss/pull/4850)))
+### refactor
 
-  This provides a very significant performance boost on pages with a huge number of DOM nodes, but there's a chance it could be a breaking change in very rare edge cases we haven't thought of. Please open an issue if anything related to shadows, rings, transforms, filters, or backdrop-filters seems to be behaving differently after upgrading.
+- add id prop to Pie Component
+- Update Bar and Line to allow them to recognise multiple ErrorBars
 
-### Fixed
+## 1.0.0-beta.1(Nov 06, 2017)
 
-- Fix support for `step-start` and `step-end` in animation utilities ([#4795](https://github.com/tailwindlabs/tailwindcss/pull/4795)))
-- JIT: Prevent presence of `!*` in templates from ruining everything ([#4816](https://github.com/tailwindlabs/tailwindcss/pull/4816)))
-- JIT: Improve support for quotes in arbitrary values ([#4817](https://github.com/tailwindlabs/tailwindcss/pull/4817)))
-- Fix filter/backdrop-filter/transform utilities being inserted into the wrong position if not all core plugins are enabled ([#4852](https://github.com/tailwindlabs/tailwindcss/pull/4852)))
-- JIT: Fix `@layer` rules being mistakenly inserted during incremental rebuilds ([#4853](https://github.com/tailwindlabs/tailwindcss/pull/4853)))
-- Improve build performance for projects with many small non-Tailwind stylesheets ([#4644](https://github.com/tailwindlabs/tailwindcss/pull/4644))
-- Ensure `[hidden]` works as expected on elements where we override the default `display` value in Preflight ([#4873](https://github.com/tailwindlabs/tailwindcss/pull/4873))
-- Fix variant configuration not being applied to `backdropOpacity` utilities ([#4892](https://github.com/tailwindlabs/tailwindcss/pull/4892))
+### feat
 
-## [2.2.4] - 2021-06-23
+- Add index to line props in Pie
+- Update ReferenceDot.js
 
-### Fixed
+### chore
 
-- Remove `postinstall` script that was preventing people from installing the library ([1eacfb9](https://github.com/tailwindlabs/tailwindcss/commit/1eacfb98849c0d4737e0af3595ddec8c73addaac))
+- update react-resize-detector, react-smooth to support react16
 
-## [2.2.3] - 2021-06-23
+## 1.0.0-beta.0(Oct 24, 2017)
 
-### Added
+### feat
 
-- Pass extended color palette to theme closures so it can be used without installing Tailwind when using `npx tailwindcss` ([359252c](https://github.com/tailwindlabs/tailwindcss/commit/359252c9b429e81217c28eb3ca7bab73d8f81e6d))
+- Allow ReferenceArea to cover available space
+- Support React 16
 
-### Fixed
+### fix
 
-- JIT: Explicitly error when `-` is used as a custom separator ([#4704](https://github.com/tailwindlabs/tailwindcss/pull/4704))
-- JIT: Don't add multiple `~` when stacking `peer-*` variants ([#4757](https://github.com/tailwindlabs/tailwindcss/pull/4757))
-- Remove outdated focus style fix in Preflight ([#4780](https://github.com/tailwindlabs/tailwindcss/pull/4780))
-- Enable `purge` if provided on the CLI ([#4772](https://github.com/tailwindlabs/tailwindcss/pull/4772))
-- JIT: Fix error when not using a config file with postcss-cli ([#4773](https://github.com/tailwindlabs/tailwindcss/pull/4773))
-- Fix issue with `resolveConfig` not being importable in Next.js pages ([#4725](https://github.com/tailwindlabs/tailwindcss/pull/4725))
+- Fix bug of animation when toggle the value of `isAnimationActive`
 
-## [2.2.2] - 2021-06-18
+## 1.0.0-alpha.6(Oct 10, 2017)
 
-### Fixed
+### feat
 
-- JIT: Reintroduce `transform`, `filter`, and `backdrop-filter` classes purely to create stacking contexts to minimize the impact of the breaking change ([#4700](https://github.com/tailwindlabs/tailwindcss/pull/4700))
+- Add props `reverseStackOrder` to reverse the order of stacked items
+- Allow an arbirary domain for cartesian X and Y axes
+- Added className prop for Label
 
-## [2.2.1] - 2021-06-18
+### fix
 
-### Fixed
+- Fix confused parameter `startX` in `<Brush />`
+- Fix ScatterChart when the type of XAxis is "category"
 
-- Recover from errors gracefully in CLI watch mode ([#4693](https://github.com/tailwindlabs/tailwindcss/pull/4693))
-- Fix issue with media queries not being generated properly when using PostCSS 7 ([#4695](https://github.com/tailwindlabs/tailwindcss/pull/4695))
+### docs
 
-## [2.2.0] - 2021-06-17
+- Fix typo initilaState -> initialState
 
-### Changed
 
-- JIT: Use "tracking" context by default instead of "watching" context for improved reliability with most bundlers ([#4514](https://github.com/tailwindlabs/tailwindcss/pull/4514))
+## 1.0.0-alpha.5(Sep 16, 2017)
 
-  Depending on which tooling you use, you may need to explicitly set `TAILWIND_MODE=watch` until your build runner has been updated to support PostCSS's `dir-dependency` message type.
+### fix
 
-### Added
+- Don't check for animation when it is disabled
+- fix bug of paddingAngle when isAnimationActive is true
 
-- Add `background-origin` utilities ([#4117](https://github.com/tailwindlabs/tailwindcss/pull/4117))
-- Improve `@apply` performance in projects that process many CSS sources ([#3178](https://github.com/tailwindlabs/tailwindcss/pull/3718))
-- JIT: Don't use CSS variables for color utilities if color opacity utilities are disabled ([#3984](https://github.com/tailwindlabs/tailwindcss/pull/3984))
-- JIT: Redesign `matchUtilities` API to make it more suitable for third-party use ([#4232](https://github.com/tailwindlabs/tailwindcss/pull/4232))
-- JIT: Support applying important utility variants ([#4260](https://github.com/tailwindlabs/tailwindcss/pull/4260))
-- JIT: Support coercing arbitrary values when the type isn't detectable ([#4263](https://github.com/tailwindlabs/tailwindcss/pull/4263))
-- JIT: Support for `raw` syntax in `purge` config ([#4272](https://github.com/tailwindlabs/tailwindcss/pull/4272))
-- Add `empty` variant ([#3298](https://github.com/tailwindlabs/tailwindcss/pull/3298))
-- Update `modern-normalize` to v1.1 ([#4287](https://github.com/tailwindlabs/tailwindcss/pull/4287))
-- Implement `theme` function internally, remove `postcss-functions` dependency ([#4317](https://github.com/tailwindlabs/tailwindcss/pull/4317))
-- Add `screen` function to improve nesting plugin compatibility ([#4318](https://github.com/tailwindlabs/tailwindcss/pull/4318))
-- JIT: Add universal shorthand color opacity syntax ([#4348](https://github.com/tailwindlabs/tailwindcss/pull/4348))
-- JIT: Add `@tailwind variants` directive to replace `@tailwind screens` ([#4356](https://github.com/tailwindlabs/tailwindcss/pull/4356))
-- JIT: Add support for PostCSS `dir-dependency` messages in `TAILWIND_DISABLE_TOUCH` mode ([#4388](https://github.com/tailwindlabs/tailwindcss/pull/4388))
-- JIT: Add per-side border color utilities ([#4404](https://github.com/tailwindlabs/tailwindcss/pull/4404))
-- JIT: Add support for `before` and `after` pseudo-element variants and `content` utilities ([#4461](https://github.com/tailwindlabs/tailwindcss/pull/4461))
-- Add new `transform` and `extract` APIs to simplify PurgeCSS/JIT customization ([#4469](https://github.com/tailwindlabs/tailwindcss/pull/4469))
-- JIT: Add exhaustive pseudo-class and pseudo-element variant support ([#4482](https://github.com/tailwindlabs/tailwindcss/pull/4482))
-- JIT: Add `caret-color` utilities ([#4499](https://github.com/tailwindlabs/tailwindcss/pull/4499))
-- Rename `lightBlue` to `sky`, emit console warning when using deprecated name ([#4513](https://github.com/tailwindlabs/tailwindcss/pull/4513))
-- New CLI with improved JIT support, `--watch` mode, and more ([#4526](https://github.com/tailwindlabs/tailwindcss/pull/4526), [4558](https://github.com/tailwindlabs/tailwindcss/pull/4558))
-- JIT: Add new `peer-*` variants for styling based on sibling state ([#4556](https://github.com/tailwindlabs/tailwindcss/pull/4556))
-- Expose `safelist` as a top-level option under `purge` for both JIT and classic engines ([#4580](https://github.com/tailwindlabs/tailwindcss/pull/4580))
-- JIT: Remove need for `transform` class when using classes like `scale-*`, `rotate-*`, etc. ([#4604](https://github.com/tailwindlabs/tailwindcss/pull/4604))
-- JIT: Remove need for `filter` and `backdrop-filter` classes when using classes like `contrast-*`, `backdrop-blur-*`, etc. ([#4614](https://github.com/tailwindlabs/tailwindcss/pull/4614))
-- Support passing a custom path for your PostCSS configuration in the Tailwind CLI ([#4607](https://github.com/tailwindlabs/tailwindcss/pull/4607))
-- Add `blur-none` by default with intent to deprecate `blur-0` ([#4614](https://github.com/tailwindlabs/tailwindcss/pull/4614))
+### feat
 
-### Fixed
+- add props filterNull to `Tooltip`, null values will not be filtered when filterNull = false
 
-- JIT: Improve support for Svelte class bindings ([#4187](https://github.com/tailwindlabs/tailwindcss/pull/4187))
-- JIT: Improve support for `calc` and `var` in arbitrary values ([#4147](https://github.com/tailwindlabs/tailwindcss/pull/4147))
-- Convert `hsl` colors to `hsla` when transforming for opacity support instead of `rgba` ([#3850](https://github.com/tailwindlabs/tailwindcss/pull/3850))
-- Fix `backdropBlur` variants not being generated ([#4188](https://github.com/tailwindlabs/tailwindcss/pull/4188))
-- Improve animation value parsing ([#4250](https://github.com/tailwindlabs/tailwindcss/pull/4250))
-- Ignore unknown object types when hashing config ([82f4eaa](https://github.com/tailwindlabs/tailwindcss/commit/82f4eaa6832ef8a4e3fd90869e7068efdf6e34f2))
-- Ensure variants are grouped properly for plugins with order-dependent utilities ([#4273](https://github.com/tailwindlabs/tailwindcss/pull/4273))
-- JIT: Fix temp file storage when node temp directories are kept on a different drive than the project itself ([#4044](https://github.com/tailwindlabs/tailwindcss/pull/4044))
-- Support border-opacity utilities alongside default `border` utility ([#4277](https://github.com/tailwindlabs/tailwindcss/pull/4277))
-- JIT: Fix source maps for expanded `@tailwind` directives ([2f15411](https://github.com/tailwindlabs/tailwindcss/commit/2f1541123dea29d8a2ab0f1411bf60c79eeb96b4))
-- JIT: Ignore whitespace when collapsing adjacent rules ([15642fb](https://github.com/tailwindlabs/tailwindcss/commit/15642fbcc885eba9cc50b7678a922b09c90d6b51))
-- JIT: Generate group parent classes correctly when using custom separator ([#4508](https://github.com/tailwindlabs/tailwindcss/pull/4508))
-- JIT: Fix incorrect stacking of multiple `group` variants ([#4551](https://github.com/tailwindlabs/tailwindcss/pull/4551))
-- JIT: Fix memory leak due to holding on to unused contexts ([#4571](https://github.com/tailwindlabs/tailwindcss/pull/4571))
+### refactor
 
-### Internals
+- Allowing length in different unit in ResponsiveContainer
+  By allowing type: String on 'minHeight', 'minWidth', 'maxHeight' property, developers can use length in different units like em, pt etc.
+- Render curve with fill first in Area
 
-- Add integration tests for popular build runners ([#4354](https://github.com/tailwindlabs/tailwindcss/pull/4354))
 
-## [2.1.4] - 2021-06-02
+### dep
 
-### Fixed
+- remove react-transition-group in peer dependencies
+- Updates resize-detector to 0.6, close #705, fix the problem with strange scrollbars appearing over the charts
 
-- Skip `raw` PurgeCSS sources when registering template dependencies ([#4542](https://github.com/tailwindlabs/tailwindcss/pull/4542))
+## 1.0.0-alpha.4(Aug 21, 2017)
 
-## [2.1.3] - 2021-06-01
+### fix
 
-### Fixed
+- Fix error 'Cannot read property 'map' of undefined' in Pie
+- Fix bug of parsing the width of Brush
+- Don't render any path when width === 0 || height === 0 in Rectangle
+### refactor
 
-- Register PurgeCSS paths as PostCSS dependencies to guarantee proper cache-busting in webpack 5 ([#4530](https://github.com/tailwindlabs/tailwindcss/pull/4530))
+- Avoid calculating ticks if tick is set to false
+- Update the order of parsing data in mixed components
 
-## [2.1.2] - 2021-04-23
+### feat
 
-### Fixed
+- Render unit when the props unit of XAxis, YAxis is specified
+- Add default nameKey to "name" property in Pie
+- Add props className and id to ResponsiveContainer
 
-- Fix issue where JIT engine would generate the wrong CSS when using PostCSS 7 ([#4078](https://github.com/tailwindlabs/tailwindcss/pull/4078))
+### dep
 
-## [2.1.1] - 2021-04-05
+- Update recharts-scale to fix bug of ticks
 
-### Fixed
+## 1.0.0-alpha.3(Aug 12, 2017)
 
-- Fix issue where JIT engine would fail to compile when a source path isn't provided by the build runner for the current input file ([#3978](https://github.com/tailwindlabs/tailwindcss/pull/3978))
+### fix
 
-## [2.1.0] - 2021-04-05
+- fix bug of isChildrenEqual
+- fix "hide" props of YAxis
 
-### Added
+## 1.0.0-alpha.2(Jul 10, 2017)
 
-- Add alternate JIT engine (in preview) ([#3905](https://github.com/tailwindlabs/tailwindcss/pull/3905))
-- Add new `mix-blend-mode` and `background-blend-mode` utilities ([#3920](https://github.com/tailwindlabs/tailwindcss/pull/3920))
-- Add new `box-decoration-break` utilities ([#3911](https://github.com/tailwindlabs/tailwindcss/pull/3911))
-- Add new `isolation` utilities ([#3914](https://github.com/tailwindlabs/tailwindcss/pull/3914))
-- Add `inline-table` display utility ([#3563](https://github.com/tailwindlabs/tailwindcss/pull/3563))
-- Add `list-item` display utility ([#3929](https://github.com/tailwindlabs/tailwindcss/pull/3929))
-- Add new `filter` and `backdrop-filter` utilities ([#3923](https://github.com/tailwindlabs/tailwindcss/pull/3923))
+### feat
 
-## [2.0.4] - 2021-03-17
+- Add props className to ReferenceLine, ReferenceDot, ReferenceArea
+- Specify the contents of LabelList by `dataKey`
 
-### Fixed
+### fix
 
-- Pass full `var(--bg-opacity)` value as `opacityValue` when defining colors as functions
+- Fix faulty logic check in inRange function
+- onTouchMove event call method that handle tooltip and active dot draw
+- Show tooltip on drag movement on touch devices
+- Fix viewBox of Label when render implicit label
+- Fix label of Pie
+- Fix events of Pie and PieChart
+- Fix bug of interplateNumber
+- Fix the bug of parsing "dataMin - 0.05" like domain
 
-## [2.0.3] - 2021-02-07
+## 1.0.0-alpha.1(Jun 11, 2017)
 
-### Fixed
+### fix
 
-- Ensure sourcemap input is deterministic when using `@apply` in Vue components ([#3356](https://github.com/tailwindlabs/tailwindcss/pull/3356))
-- Ensure placeholder opacity is consistent across browsers ([#3308](https://github.com/tailwindlabs/tailwindcss/pull/3308))
-- Fix issue where `theme()` didn't work with colors defined as functions ([#2919](https://github.com/tailwindlabs/tailwindcss/pull/2919))
-- Enable `dark` variants by default for color opacity utilities ([#2975](https://github.com/tailwindlabs/tailwindcss/pull/2975))
+- update the propType of the props data or Bar
+- fix the type of Curve
+- fix connectNulls of `Line`
+- update version of recharts-scale to fix #713
+- fix valueKey of Pie temporarily and add logs when use deprecated "valueKey"
+- bind events to Radar
+- fix animation of active-dot
 
-### Added
+## 1.0.0-alpha.0(May 24, 2017)
 
-- Add support for a `tailwind.config.cjs` file in Node ESM projects ([#3181](https://github.com/tailwindlabs/tailwindcss/pull/3181))
-- Add version comment to Preflight ([#3255](https://github.com/tailwindlabs/tailwindcss/pull/3255))
-- Add `cursor-help` by default ([#3199](https://github.com/tailwindlabs/tailwindcss/pull/3199))
+### refactor
 
-## [2.0.2] - 2020-12-11
+- refactor PolarCharts
+- refactor Animation
+- refactor Label and LabelLis
 
-### Fixed
+### fix
 
-- Fix issue with `@apply` not working as expected with `!important` inside an at-rule ([#2824](https://github.com/tailwindlabs/tailwindcss/pull/2824))
-- Fix issue with `@apply` not working as expected with defined classes ([#2832](https://github.com/tailwindlabs/tailwindcss/pull/2832))
-- Fix memory leak, and broken `@apply` when splitting up files ([#3032](https://github.com/tailwindlabs/tailwindcss/pull/3032))
+- fix scale of ErrorBar
 
-### Added
+## 0.22.4 (Apr 26, 2017)
 
-- Add default values for the `ring` utility ([#2951](https://github.com/tailwindlabs/tailwindcss/pull/2951))
+### fix
 
-## [2.0.1] - 2020-11-18
+- fix dot customized className
 
-- Nothing, just the only thing I could do when I found out npm won't let me publish the same version under two tags.
+### dep
 
-## [2.0.0] - 2020-11-18
+- update react-smooth, and react-transition-group
 
-### Added
+## 0.22.3 (Apr 19, 2017)
 
-- Add redesigned color palette ([#2623](https://github.com/tailwindlabs/tailwindcss/pull/2623), [700866c](https://github.com/tailwindlabs/tailwindcss/commit/700866ce5e0c0b8d140be161c4d07fc6f31242bc), [#2633](https://github.com/tailwindlabs/tailwindcss/pull/2633))
-- Add dark mode support ([#2279](https://github.com/tailwindlabs/tailwindcss/pull/2279), [#2631](https://github.com/tailwindlabs/tailwindcss/pull/2631))
-- Add `overflow-ellipsis` and `overflow-clip` utilities ([#1289](https://github.com/tailwindlabs/tailwindcss/pull/1289))
-- Add `transform-gpu` to force hardware acceleration on transforms when desired ([#1380](https://github.com/tailwindlabs/tailwindcss/pull/1380))
-- Extend default spacing scale ([#2630](https://github.com/tailwindlabs/tailwindcss/pull/2630), [7f05204](https://github.com/tailwindlabs/tailwindcss/commit/7f05204ce7a5581b6845591448265c3c21afde86))
-- Add spacing scale to `inset` plugin ([#2630](https://github.com/tailwindlabs/tailwindcss/pull/2630))
-- Add percentage sizes to `translate`, `inset`, and `height` plugins ([#2630](https://github.com/tailwindlabs/tailwindcss/pull/2630), [5259560](https://github.com/tailwindlabs/tailwindcss/commit/525956065272dc53e8f8395f55f9ad13077a38d1))
-- Extend default font size scale ([#2609](https://github.com/tailwindlabs/tailwindcss/pull/2609), [#2619](https://github.com/tailwindlabs/tailwindcss/pull/2619))
-- Support using `@apply` with complex classes, including variants like `lg:hover:bg-blue-500` ([#2159](https://github.com/tailwindlabs/tailwindcss/pull/2159))
-- Add new `2xl` breakpoint at 1536px by default ([#2609](https://github.com/tailwindlabs/tailwindcss/pull/2609))
-- Add default line-height values for font-size utilities ([#2609](https://github.com/tailwindlabs/tailwindcss/pull/2609))
-- Support defining theme values using arrays for CSS properties that support comma separated values ([e13f083c4](https://github.com/tailwindlabs/tailwindcss/commit/e13f083c4bc48bf9870d27c966136a9584943127))
-- Enable `group-hover` for color plugins, `boxShadow`, and `textDecoration` by default ([28985b6](https://github.com/tailwindlabs/tailwindcss/commit/28985b6cd592e72d4849fdb9ce97eb045744e09c), [f6923b1](https://github.com/tailwindlabs/tailwindcss/commit/f6923b1))
-- Enable `focus` for z-index utilities by default ([ae5b3d3](https://github.com/tailwindlabs/tailwindcss/commit/ae5b3d312d5000ae9c2065001f3df7add72dc365))
-- Support `extend` in `variants` configuration ([#2651](https://github.com/tailwindlabs/tailwindcss/pull/2651))
-- Add `max-w-prose` class by default ([#2574](https://github.com/tailwindlabs/tailwindcss/pull/2574))
-- Support flattening deeply nested color objects ([#2148](https://github.com/tailwindlabs/tailwindcss/pull/2148))
-- Support defining presets as functions ([#2680](https://github.com/tailwindlabs/tailwindcss/pull/2680))
-- Support deep merging of objects under `extend` ([#2679](https://github.com/tailwindlabs/tailwindcss/pull/2679), [#2700](https://github.com/tailwindlabs/tailwindcss/pull/2700))
-- Enable `focus-within` for all plugins that have `focus` enabled by default ([1a21f072](https://github.com/tailwindlabs/tailwindcss/commit/1a21f0721c7368d61fa3feef33d616de3f78c7d7), [f6923b1](https://github.com/tailwindlabs/tailwindcss/commit/f6923b1))
-- Added new `ring` utilities for creating outline/focus rings using box shadows ([#2747](https://github.com/tailwindlabs/tailwindcss/pull/2747), [879f088](https://github.com/tailwindlabs/tailwindcss/commit/879f088), [e0788ef](https://github.com/tailwindlabs/tailwindcss/commit/879f088))
-- Added `5` and `95` to opacity scale ([#2747](https://github.com/tailwindlabs/tailwindcss/pull/2747))
-- Add support for default duration and timing function values whenever enabling transitions ([#2755](https://github.com/tailwindlabs/tailwindcss/pull/2755))
+### refactor
 
-### Changed
+- add mathSign in DataUtils to replace Math.sign
 
-- Completely redesign color palette ([#2623](https://github.com/tailwindlabs/tailwindcss/pull/2623), [700866c](https://github.com/tailwindlabs/tailwindcss/commit/700866ce5e0c0b8d140be161c4d07fc6f31242bc), [#2633](https://github.com/tailwindlabs/tailwindcss/pull/2633))
-- Drop support for Node 8 and 10 ([#2582](https://github.com/tailwindlabs/tailwindcss/pull/2582))
-- Removed `target` feature and dropped any compatibility with IE 11 ([#2571](https://github.com/tailwindlabs/tailwindcss/pull/2571))
-- Upgrade to PostCSS 8 (but include PostCSS 7 compatibility build) ([729b400](https://github.com/tailwindlabs/tailwindcss/commit/729b400a685973f46af73c8a68b364f20f7c5e1e), [1d8679d](https://github.com/tailwindlabs/tailwindcss/commit/1d8679d37e0eb1ba8281b2076bade5fc754f47dd), [c238ed1](https://github.com/tailwindlabs/tailwindcss/commit/c238ed15b5c02ff51978965511312018f2bc2cae))
-- Removed `shadow-outline`, `shadow-solid`, and `shadow-xs` by default in favor of new `ring` API ([#2747](https://github.com/tailwindlabs/tailwindcss/pull/2747))
-- Switch `normalize.css` to `modern-normalize` ([#2572](https://github.com/tailwindlabs/tailwindcss/pull/2572))
-- Rename `whitespace-no-wrap` to `whitespace-nowrap` ([#2664](https://github.com/tailwindlabs/tailwindcss/pull/2664))
-- Rename `flex-no-wrap` to `flex-nowrap` ([#2676](https://github.com/tailwindlabs/tailwindcss/pull/2676))
-- Remove `clearfix` utility, recommend `flow-root` instead ([#2766](https://github.com/tailwindlabs/tailwindcss/pull/2766))
-- Disable `hover` and `focus` for `fontWeight` utilities by default ([f6923b1](https://github.com/tailwindlabs/tailwindcss/commit/f6923b1))
-- Remove `grid-gap` fallbacks needed for old versions of Safari ([5ec45fa](https://github.com/tailwindlabs/tailwindcss/commit/5ec45fa))
-- Change special use of 'default' in config to 'DEFAULT' ([#2580](https://github.com/tailwindlabs/tailwindcss/pull/2580))
-- New `@apply` implementation, slight backwards incompatibilities with previous behavior ([#2159](https://github.com/tailwindlabs/tailwindcss/pull/2159))
-- Make `theme` retrieve the expected resolved value when theme value is complex ([e13f083c4](https://github.com/tailwindlabs/tailwindcss/commit/e13f083c4bc48bf9870d27c966136a9584943127))
-- Move `truncate` class to `textOverflow` core plugin ([#2562](https://github.com/tailwindlabs/tailwindcss/pull/2562))
-- Remove `scrolling-touch` and `scrolling-auto` utilities ([#2573](https://github.com/tailwindlabs/tailwindcss/pull/2573))
-- Modernize default system font stacks ([#1711](https://github.com/tailwindlabs/tailwindcss/pull/1711))
-- Upgrade to PurgeCSS 3.0 ([8e4e0a0](https://github.com/tailwindlabs/tailwindcss/commit/8e4e0a0eb8dcbf84347c7562988b4f9afd344081))
-- Change default `text-6xl` font-size to 3.75rem instead of 4rem ([#2619](https://github.com/tailwindlabs/tailwindcss/pull/2619))
-- Ignore `[hidden]` elements within `space` and `divide` utilities instead of `template` elements ([#2642](https://github.com/tailwindlabs/tailwindcss/pull/2642))
-- Automatically prefix keyframes and animation names when a prefix is configured ([#2621](https://github.com/tailwindlabs/tailwindcss/pull/2621), [#2641](https://github.com/tailwindlabs/tailwindcss/pull/2641))
-- Merge `extend` objects deeply by default ([#2679](https://github.com/tailwindlabs/tailwindcss/pull/2679))
-- Respect `preserveHtmlElements` option even when using custom PurgeCSS extractor ([#2704](https://github.com/tailwindlabs/tailwindcss/pull/2704))
-- Namespace all internal custom properties under `tw-` to avoid collisions with end-user custom properties ([#2771](https://github.com/tailwindlabs/tailwindcss/pull/2771))
+## 0.22.2 (Apr 18, 2017)
 
-## [2.0.0-alpha.25] - 2020-11-17
+### fix
 
-### Fixed
+- fix spelling error of fillOpacity
+- fix bug of axis when has duplicated ticks
 
-- Fix issue where `ring-offset-0` didn't work due to unitless `0` in `calc` function ([3de0c48](https://github.com/tailwindlabs/tailwindcss/commit/3de0c48))
 
-## [2.0.0-alpha.24] - 2020-11-16
+## 0.22.1 (Apr 13, 2017)
 
-### Changed
+### feat
 
-- Don't override ring color when overriding ring width with a variant ([e40079a](https://github.com/tailwindlabs/tailwindcss/commit/e40079a))
+- Add legendType: ‘none’ to not render coresponding legend item
+- use prop-types instead of React.PropTypes
 
-### Fixed
+### fix
 
-- Prevent shadow/ring styles from cascading to children ([e40079a](https://github.com/tailwindlabs/tailwindcss/commit/e40079a))
-- Ensure rings have a default color even if `colors.blue.500` is not present in config ([e40079a](https://github.com/tailwindlabs/tailwindcss/commit/e40079a))
+- Fix re-rendering element bug when adding new elements
+- Fix circular dependence of Brush.js and LineChart.js
 
-## [2.0.0-alpha.23] - 2020-11-16
+## 0.22.0 (Apr 05, 2017)
 
-### Added
+### feat
 
-- Add scripts for generating a PostCSS 7 compatible build alongside PostCSS 8 version ([#2773](https://github.com/tailwindlabs/tailwindcss/pull/2773))
+- Add event handlers to component  Dot
+- Support embedded chart as a panoram in Brush
+- Add props reversed to `XAxis` and `YAxis` to reverse the range of axis
 
-### Changed
+### fix
 
-- All custom properties have been internally namespaced under `tw-` to avoid collisions with end-user custom properties ([#2771](https://github.com/tailwindlabs/tailwindcss/pull/2771))
+- Fix error or time scale
 
-## [2.0.0-alpha.22] - 2020-11-16
+## 0.21.2 (Mar 01, 2017)
 
-### Changed
+### fix
 
-- ~~All custom properties have been internally namespaced under `tw-` to avoid collisions with end-user custom properties ([#2771](https://github.com/tailwindlabs/tailwindcss/pull/2771))~~ I made a git boo-boo, check alpha.23 instead
+- fix ticks for specified domain
 
-## [2.0.0-alpha.21] - 2020-11-15
+## 0.21.1 (Feb 28, 2017)
 
-### Changed
+### fix
 
-- Upgrade to PostCSS 8, Autoprefixer 10, move `postcss` and `autoprefixer` to peerDependencies ([729b400](https://github.com/tailwindlabs/tailwindcss/commit/729b400))
+- Update recharts-scale to fix bug of ticks
 
-## [2.0.0-alpha.20] - 2020-11-13
+## 0.21.0 (Feb 28, 2017)
 
-### Changed
+### feat
 
-- Remove `clearfix` utility, recommend `flow-root` instead ([#2766](https://github.com/tailwindlabs/tailwindcss/pull/2766))
+- Support band area and band bar
+- support customized horizontal line and vertical line in CartesianGrid
+- support customized events in ReferenceArea, ReferenceLine
+- add formatter in `Legend`
 
-## [2.0.0-alpha.19] - 2020-11-13
+### fix
 
-### Fixed
+- Fix empty tick when category axis has nil values
+- fix the propTypes of fontSize
+- support props dx and dy in Text
+- fix bug of stacked bar when spcify domain of axis
+- fix the barSize of bars in `<Bar />` when too many bars
 
-- Don't crash when color palette is empty ([278c203](https://github.com/tailwindlabs/tailwindcss/commit/278c203))
+## 0.20.8 (Feb 15, 2017)
 
-## [2.0.0-alpha.18] - 2020-11-13
+### fix
 
-### Changed
+- Fix bug when onBBoxUpdate of Legend is null
 
-- `black` and `white` have been added to `colors.js` ([b3ed724](https://github.com/tailwindlabs/tailwindcss/commit/b3ed724))
+## 0.20.7 (Feb 15, 2017)
 
-### Fixed
+### fix
 
-- Add support for colors as closures to `ringColor` and `ringOffsetColor`, previously would crash build ([62a47f9](https://github.com/tailwindlabs/tailwindcss/commit/62a47f9))
+- Fix stack chart when only have one stacked element
+- Fix the offset when the boundary box update
+- Fix position of XAxis in ScatterChart when the orientation is right
+- Use DataUtils.uniqueId to replace lodash.uniqueId
 
-## [2.0.0-alpha.17] - 2020-11-13
+### feat
 
-### Changed
+- Add props `mirror` in XAxis and YAxis, support mirror ticks
+- Add props iconType to the props of Legend which can specify the icon type of legend
 
-- Remove `grid-gap` fallbacks needed for old versions of Safari ([5ec45fa](https://github.com/tailwindlabs/tailwindcss/commit/5ec45fa))
+## 0.20.6 (Feb 08, 2017)
 
-## [2.0.0-alpha.16] - 2020-11-12
+### fix
 
-### Added
+- Fix `dataStartIndex` and `dataEndIndex` of synchronized chart
+- Use lodash.uniqueId to produce the id of Pie
 
-- Enable `focus`, `focus-within`, and `dark` variants (when enabled) for all ring utilities by default ([e0788ef](https://github.com/tailwindlabs/tailwindcss/commit/879f088))
+## 0.20.5 (Jan 17, 2017)
 
-## [2.0.0-alpha.15] - 2020-11-11
+### fix
 
-### Added
+- fix "Maximum call stack size exceeded error" caused by Tooltip update
 
-- Added `ring-inset` utility for rendering rings as inset shadows ([879f088](https://github.com/tailwindlabs/tailwindcss/commit/879f088))
+## 0.20.4 (Jan 17, 2017)
 
-### Changed
+### fix
+- Animate of Tooltip may crash browser sometimes, use style transition to do the animation of tooltip
 
-- `ringWidth` utilities always reset ring styles to ensure no accidental variable inheritance through the cascade ([879f088](https://github.com/tailwindlabs/tailwindcss/commit/879f088))
+## 0.20.3 (Jan 17, 2017)
 
-## [2.0.0-alpha.14] - 2020-11-11
+### fix
 
-### Added
+- Fix Tooltip in ScatterChart
+- Fix radius of Rectangle when height < 0
 
-- Enable `focus-within` for `outline` utilities by default ([f6923b1](https://github.com/tailwindlabs/tailwindcss/commit/f6923b1))
-- Enable `focus-within` for `ringWidth` utilities by default ([f6923b1](https://github.com/tailwindlabs/tailwindcss/commit/f6923b1))
-- Enable `group-hover` for `boxShadow` utilities by default ([f6923b1](https://github.com/tailwindlabs/tailwindcss/commit/f6923b1))
-- Enable `group-hover` and `focus-within` for `textDecoration` utilities by default ([f6923b1](https://github.com/tailwindlabs/tailwindcss/commit/f6923b1))
+### feat
 
-### Changed
+- Add clip path in Area, Bar and Scatter
+- Add onMouseDown and onMouseUp hooks in generateCategoricalChart
 
-- Disable `hover` and `focus` for `fontWeight` utilities by default ([f6923b1](https://github.com/tailwindlabs/tailwindcss/commit/f6923b1))
+### chore
 
-## [2.0.0-alpha.13] - 2020-11-11
+- Disable babel transform es2015 modules to commonjs for es6 build
+- Use cross-env to support windows builds, likewise downgrade linebreak-style to warning
+- Update release.sh
 
-### Added
+## 0.20.2 (Jan 05, 2017)
 
-- Add support for default duration and timing function values whenever enabling transitions ([#2755](https://github.com/tailwindlabs/tailwindcss/pull/2755))
+### fix
 
-## [2.0.0-alpha.12] - 2020-11-10
+- remove opacity in ErrorBar
+- fix `Tooltip` when `coordinate` is null
 
-### Fixed
+### feat
 
-- Prevent `boxShadow` utilities from overriding ring shadows added by components like in the custom forms plugin ([c3dd3b6](https://github.com/tailwindlabs/tailwindcss/commit/c3dd3b68454ad418833a9edf7f3409cad66fb5b0))
+- add props `basevalue` in `AreaChart`
+- add clipPath when xAxis or yAxis of `Line` allow data overflow
+- allow dataKey to be a map function
+- support Tooltip in Sankey and Tooltip
+- Allow Brush to set default startIndex and endIndex
 
-## [2.0.0-alpha.11] - 2020-11-09
+## 0.20.1 (Dec 27, 2016)
 
-### Fixed
+### fix
 
-- Convert `none` to `0 0 #0000` when used for shadows to ensure compatibility with `ring` utilities ([4eecc27](https://github.com/tailwindlabs/tailwindcss/commit/4eecc2751ca0c461e8da5bd5772ae650197a2e5d))
+- Fix bug of `isChildrenEqual`  when component has child `null`
+- Adjust `barGap` when `bandSize` is too small to display bars
 
-## [2.0.0-alpha.10] - 2020-11-09
 
-### Added
+### feat
 
-- Added new `ring` utilities ([#2747](https://github.com/tailwindlabs/tailwindcss/pull/2747))
-- Added `5` and `95` to opacity scale ([#2747](https://github.com/tailwindlabs/tailwindcss/pull/2747))
+- Add props `payload` and `value`, update props `index` in `activeDot` of `Line`, `Area`
 
-### Changed
+### refactor
 
-- Removed `shadow-outline`, `shadow-solid`, and `shadow-xs` in favor of new `ring` API ([#2747](https://github.com/tailwindlabs/tailwindcss/pull/2747))
+- Move polyfill of `Math.sign` to polyfill.js
 
-## [2.0.0-alpha.9] - 2020-11-07
+## 0.20.0 (Dec 26, 2016)
 
-### Added
+### feat
 
-- Added `shadow-solid` utility, a 2px solid shadow that uses the current text color ([369cfae](https://github.com/tailwindlabs/tailwindcss/commit/369cfae2905a577033529c46a5e8ca58c69f5623))
-- Enable `focus-within` where useful by default ([1a21f072](https://github.com/tailwindlabs/tailwindcss/commit/1a21f0721c7368d61fa3feef33d616de3f78c7d7))
+- Support `ErrorBar` in `Line`, `Area`, `Bar`, `Scatter`
+- Support touch event in `LineChart`, `AreaChart`, `BarChart`
+- Add props `throttleDelay` in `LineChart`, `AreaChart`, `BarChart` for performance
+- Support cornerRadius in Sector, RadialBar and Pie
+- Support events in CartesianAxis, PolarAngleAxis, PolarRadiusAxis
+- Support touch events in Brush
 
-### Changed
+### refactor
 
-- Update `shadow-outline` to use the new blue ([b078238](https://github.com/tailwindlabs/tailwindcss/commit/b0782385c9832d35a10929b38b4fcaf27e055d6b))
+- Use `getStringSize` to calculate the width of `Text`
+- Refactor children comparsion in `generateCategoricalChart`, and add updateId to force Brush update when children update
+- Refactor `getMouseInfo` to remove some duplicated codes in `generateCategoricalChart`
+- Refactor Tooltip and Legend, remove react-dom-server
 
-## [2.0.0-alpha.8] - 2020-11-06
+### fix
 
-### Added
+- Fix the `chartId` in `handleReceiveSyncEvent` of `generateCategoricalChart`
 
-- Add `11` to spacing scale ([7f05204](https://github.com/tailwindlabs/tailwindcss/commit/7f05204ce7a5581b6845591448265c3c21afde86))
-- Add percentage-based height values ([5259560](https://github.com/tailwindlabs/tailwindcss/commit/525956065272dc53e8f8395f55f9ad13077a38d1))
-- Add indigo to the color palette by default ([700866c](https://github.com/tailwindlabs/tailwindcss/commit/700866ce5e0c0b8d140be161c4d07fc6f31242bc))
+## 0.19.1(Dec 15, 2016)
 
-### Changed
+### fix
 
-- Use `coolGray` as the default gray ([700866c](https://github.com/tailwindlabs/tailwindcss/commit/700866ce5e0c0b8d140be161c4d07fc6f31242bc))
+-  Adding missing event propTypes
+- support x, y of `Text` are number or text
+- fix proptypes of Scatter to allow that the props `data` can be a array of array
+- fix server side render check `isSsr`
+- remove duplicated "square" in legendType
+- fix `getStringSize` when server side rendering check fails
+- fix animation error when update Line which has props stroke-dasharray
+- fix bug of BarChart when add stackId in only one Bar and update test cases
 
-## [2.0.0-alpha.7] - 2020-11-05
+## 0.19.0 (Nov 23, 2016)
 
-### Changed
+### refactor
 
-- Revert upgrading to PostCSS 8 lol
+- remove unneed `Animate` in `Bar` and `Rectangle`
+- refactor interval of `CartesianAxis`, support "preserveStart", "preserveEnd", "preserveStartEnd"
+- add payload in the `Tooltip` and `Scatter` of `ScatterChart`, and unify the payload of Components
 
-## [2.0.0-alpha.6] - 2020-11-04
+### feat
 
-### Changed
+- `RadialBar` support events triggered on the entire bar
+- support customized lable in `RadialBar`
+- support `maxHeight` in `ResponsiveContianer`
 
-- Respect `preserveHtmlElements` option even when using custom PurgeCSS extractor ([#2704](https://github.com/tailwindlabs/tailwindcss/pull/2704))
-- Set font-family and line-height to `inherit` on `body` to behave more like v1.x ([#2729](https://github.com/tailwindlabs/tailwindcss/pull/2729))
+### fix
 
-## [2.0.0-alpha.5] - 2020-10-30
+- fix multiple y-axes breaks chart when plotting only single datum
+- Relax propTypes.ticks in CartesianAxis
 
-### Changed
+## 0.18.0 (Nov 15, 2016)
 
-- Upgrade to PostCSS 8 ([59aa484](https://github.com/tailwindlabs/tailwindcss/commit/59aa484dfea0607d96bff6ef41b1150c78576c37))
+### feat
 
-## [2.0.0-alpha.4] - 2020-10-29
+- support customized scale function of categorical charts
+- support customized events in Legend
 
-### Added
+### refactor
 
-- Support deep merging of arrays of objects under `extend` ([#2700](https://github.com/tailwindlabs/tailwindcss/pull/2700))
+- refactor ResponsiveContainer with ReactResizeDetector
+- change the default value of isAnimationActive
+- remove some unneed default attributes of Components
 
-## [2.0.0-alpha.3] - 2020-10-27
+### fix
 
-### Added
+- fix wrong written default props
+- fix twice triggered event in Bar
+- fix treemap stroke pollution cause by defaultProps
 
-- Support flattening deeply nested color objects ([#2148](https://github.com/tailwindlabs/tailwindcss/pull/2148))
-- Support defining presets as functions ([#2680](https://github.com/tailwindlabs/tailwindcss/pull/2680))
+## 0.17.0 | 0.17.1 (Nov 08, 2016)
 
-### Changed
+### fix
 
-- Merge `extend` objects deeply by default ([#2679](https://github.com/tailwindlabs/tailwindcss/pull/2679))
-- Rename `flex-no-wrap` to `flex-nowrap` ([#2676](https://github.com/tailwindlabs/tailwindcss/pull/2676))
+- fix strokeDasharray of Line
+- add payload in Legend payload item
+- fix position of vertical Legend
+- Recalculate points after width or height change
 
-## [2.0.0-alpha.2] - 2020-10-25
+### refactor
 
-### Added
+- refactor ticks filter algorithm of CartesianAxis
+- change order of stacked BarChart and AreaChart
+- refactor event handlers of PieChart, RadarChart, Brush, RadialBarChart
+- support onMouseEnter, onMouseLeave, onMouseMove, onClick in categorical chart
 
-- Support `extend` in `variants` configuration ([#2651](https://github.com/tailwindlabs/tailwindcss/pull/2651))
-- Add `max-w-prose` class by default ([#2574](https://github.com/tailwindlabs/tailwindcss/pull/2574))
+## 0.16.2 (Nov 04, 2016)
 
-### Changed
+### fix
 
-- Revert use of logical properties for `space` and `divide` utilities ([#2644](https://github.com/tailwindlabs/tailwindcss/pull/2644))
-- `space` and `divide` utilities ignore elements with `[hidden]` now instead of only ignoring `template` elements ([#2642](https://github.com/tailwindlabs/tailwindcss/pull/2642))
-- Set default font on `body`, not just `html` ([#2643](https://github.com/tailwindlabs/tailwindcss/pull/2643))
-- Automatically prefix keyframes and animation names when a prefix is configured ([#2621](https://github.com/tailwindlabs/tailwindcss/pull/2621), [#2641](https://github.com/tailwindlabs/tailwindcss/pull/2641))
-- Rename `whitespace-no-wrap` to `whitespace-nowrap` ([#2664](https://github.com/tailwindlabs/tailwindcss/pull/2664))
+- fix dash line animation
+- fix the bug when the children of categorical chart change
 
-## [1.9.6] - 2020-10-23
+### feat
 
-### Changed
+- support shape in ReferenceLine
 
-- The `presets` feature had unexpected behavior where a preset config without its own `presets` key would not extend the default config. ([#2662](https://github.com/tailwindlabs/tailwindcss/pull/2662))
+### refactor
 
-  If you were depending on this unexpected behavior, just add `presets: []` to your own preset to exclude the default configuration.
+- render Bar, Area, Line according to the order of Bar, Area, Line in ComposedChart
 
-## [2.0.0-alpha.1] - 2020-10-20
+## 0.16.1 (Nov 03, 2016)
 
-### Added
+### fix
 
-- Added dark mode support ([#2279](https://github.com/tailwindlabs/tailwindcss/pull/2279), [#2631](https://github.com/tailwindlabs/tailwindcss/pull/2631))
-- Added `overflow-ellipsis` and `overflow-clip` utilities ([#1289](https://github.com/tailwindlabs/tailwindcss/pull/1289))
-- Add `transform-gpu` to force hardware acceleration on transforms when beneficial ([#1380](https://github.com/tailwindlabs/tailwindcss/pull/1380))
-- Extended spacing scale ([#2630](https://github.com/tailwindlabs/tailwindcss/pull/2630))
-- Add spacing scale to `inset` plugin ([#2630](https://github.com/tailwindlabs/tailwindcss/pull/2630))
-- Enable useful relative sizes for more plugins ([#2630](https://github.com/tailwindlabs/tailwindcss/pull/2630))
-- Extend font size scale ([#2609](https://github.com/tailwindlabs/tailwindcss/pull/2609), [#2619](https://github.com/tailwindlabs/tailwindcss/pull/2619))
-- Support using `@apply` with complex classes ([#2159](https://github.com/tailwindlabs/tailwindcss/pull/2159))
-- Add new `2xl` breakpoint ([#2609](https://github.com/tailwindlabs/tailwindcss/pull/2609))
-- Add default line-height values for font-size utilities ([#2609](https://github.com/tailwindlabs/tailwindcss/pull/2609))
-- Support defining theme values using arrays wherever it makes sense (box-shadow, transition-property, etc.) ([e13f083c4](https://github.com/tailwindlabs/tailwindcss/commit/e13f083c4bc48bf9870d27c966136a9584943127))
-- Enable `group-hover` for color utilities by default ([28985b6](https://github.com/tailwindlabs/tailwindcss/commit/28985b6cd592e72d4849fdb9ce97eb045744e09c))
-- Enable `focus` for z-index utilities by default ([ae5b3d3](https://github.com/tailwindlabs/tailwindcss/commit/ae5b3d312d5000ae9c2065001f3df7add72dc365))
+- refactor to treat NaN like undefined or null, fix #303
+- fix tranform origin of Bar, fix #292
 
-### Changed
+### feat
 
-- New `@apply` implementation, slight backwards incompatibilities with previous behavior ([#2159](https://github.com/tailwindlabs/tailwindcss/pull/2159))
-- Move `truncate` class to `textOverflow` core plugin ([#2562](https://github.com/tailwindlabs/tailwindcss/pull/2562))
-- Removed `target` feature and dropped any compatibility with IE 11 ([#2571](https://github.com/tailwindlabs/tailwindcss/pull/2571))
-- Switch `normalize.css` to `modern-normalize` ([#2572](https://github.com/tailwindlabs/tailwindcss/pull/2572))
-- Remove `scrolling-touch` and `scrolling-auto` utilities ([#2573](https://github.com/tailwindlabs/tailwindcss/pull/2573))
-- Change special use of 'default' in config to 'DEFAULT' ([#2580](https://github.com/tailwindlabs/tailwindcss/pull/2580))
-- Drop support for Node 8 and 10 ([#2582](https://github.com/tailwindlabs/tailwindcss/pull/2582))
-- Modernize default system font stacks ([#1711](https://github.com/tailwindlabs/tailwindcss/pull/1711))
-- Upgrade to PurgeCSS 3.0
-- ~~Upgrade to PostCSS 8.0~~ Reverted for now
-- Use logical properties for `space` and `divide` utilities ([#1883](https://github.com/tailwindlabs/tailwindcss/pull/1883))
-- Make `theme` retrieve the expected resolved value when theme value is complex ([e13f083c4](https://github.com/tailwindlabs/tailwindcss/commit/e13f083c4bc48bf9870d27c966136a9584943127))
-- Adjust default font-size scale to include 60px instead of 64px ([#2619](https://github.com/tailwindlabs/tailwindcss/pull/2619))
-- Update default colors in Preflight to match new color palette ([#2633](https://github.com/tailwindlabs/tailwindcss/pull/2633))
+- support customized position of Tooltip, fix #31
 
-## [1.9.5] - 2020-10-19
+### docs
 
-### Fixed
+- fix LodashModuleReplacementPlugin
 
-- Fix issue where using `theme` with default line-heights did not resolve correctly
+## 0.16.0 (Nov 03, 2016)
 
-## [1.9.4] - 2020-10-17
+### refactor
 
-### Fixed
+- Major Performance Change - Re-Use Expensive To Generate Data
 
-- Fix issue changing plugins defined using the `withOptions` API would not trigger rebuilds in watch processes
+### feat
 
-## [1.9.3] - 2020-10-16
+- support both x-axis and y-axis are numerical axis, fix #183
+- add animation events in `Line`, `Area`, `Bar`
 
-### Fixed
+### fix
 
-- Fix issue where `tailwindcss init --full` scaffolded a corrupt config file (https://github.com/tailwindlabs/tailwindcss/issues/2556)
+- fix angle of PolorRadiusAxis
 
-### Changed
+## 0.15.3 (Oct 28, 2016)
 
-- Remove console warnings about upcoming breaking changes
+### feat
 
-## [1.9.2] - 2020-10-14
+- Add angle property to PRESENTATION_ATTRIBUTES (#307)
 
-### Fixed
+### Dev
+- chore: update istanbul plugin and add yarn.lock
 
-- Merge plugins when merging config with preset ([#2561](https://github.com/tailwindlabs/tailwindcss/pulls/#2561)
-- Use `word-wrap` and `overflow-wrap` together, not one or the other since `word-wrap` is IE-only
+## 0.15.2 (Oct 13, 2016)
 
-## [1.9.1] - 2020-10-14
+### Fix
 
-### Fixed
+- support empty margin in generateCategoricalChart
+- fix the label of RadialBarChart
+- fix the bug of `<Text>{0}</Text>`
+- fix the bug of ScatterChart when margin lose some attributes
 
-- Don't import `corePlugins` in `resolveConfig` to avoid bundling browser-incompatible code ([#2548](https://github.com/tailwindlabs/tailwindcss/pull/2548))
+### Feat
 
-## [1.9.0] - 2020-10-12
+- support maxBarSize in BarChart and Bar
+- support fill in CartesianGrid
 
-### Added
+### Refactor
 
-- Add new `presets` config option ([#2474](https://github.com/tailwindlabs/tailwindcss/pull/2474))
-- Scaffold new `tailwind.config.js` files with available `future` flags commented out ([#2379](https://github.com/tailwindlabs/tailwindcss/pull/2379))
-- Add `col-span-full` and `row-span-full` ([#2471](https://github.com/tailwindlabs/tailwindcss/pull/2471))
-- Make `outline` configurable, `outline-none` more accessible by default, and add `outline-black` and `outline-white` ([#2460](https://github.com/tailwindlabs/tailwindcss/pull/2460))
-- Add additional small `rotate` and `skew` values ([#2528](https://github.com/tailwindlabs/tailwindcss/pull/2528))
-- Add `xl`, `2xl`, and `3xl` border radius values ([#2529](https://github.com/tailwindlabs/tailwindcss/pull/2529))
-- Add new utilities for `grid-auto-columns` and `grid-auto-rows` ([#2531](https://github.com/tailwindlabs/tailwindcss/pull/2531))
-- Promote `defaultLineHeights` and `standardFontWeights` from experimental to future
+- simplify the calculation of width and height when specified aspect
 
-### Fixed
+## 0.15.1 (Sep 26, 2016)
 
-- Don't escape keyframe values ([#2432](https://github.com/tailwindlabs/tailwindcss/pull/2432))
-- Use `word-wrap` instead of `overflow-wrap` in `ie11` target mode ([#2391](https://github.com/tailwindlabs/tailwindcss/pull/2391))
+### fix
 
-### Experimental
+- Fix label/tick vertical alignment of Text
 
-- Add experimental `2xl` breakpoint ([#2468](https://github.com/tailwindlabs/tailwindcss/pull/2468))
-- Rename `{u}-max-content` and `{u}-min-content` utilities to `{u}-max` and `{u}-min` in experimental extended spacing scale ([#2532](https://github.com/tailwindlabs/tailwindcss/pull/2532))
-- Support disabling dark mode variants globally ([#2530](https://github.com/tailwindlabs/tailwindcss/pull/2530))
+## 0.15.0 (Sep 23, 2016)
 
-## [1.8.13] - 2020-10-09
+### feat
 
-### Fixed
+- New Component `Text`
 
-- Support defining colors as closures even when opacity variables are not supported ([#2536](https://github.com/tailwindlabs/tailwindcss/pull/2515))
+### refactor
 
-## [1.8.12] - 2020-10-07
+- Fix possible memory leak warning of events
 
-### Fixed
+### fix
 
-- Reset color opacity variable in utilities generated using closure colors ([#2515](https://github.com/tailwindlabs/tailwindcss/pull/2515))
+- minPointSize working when value is 0
+- Restored support for discrete values in Line and Area charts
+- Allowed for strings to be used as axis id in the ScatterChart
 
-## [1.8.11] - 2020-10-06
+## 0.14.2 (Sep 19, 2016)
 
-- Make `tailwindcss.plugin` work in ESM environments for reasons
+### Fix
 
-## [1.8.10] - 2020-09-14
+- Stop caching span in memory of getStringSize
+- Fix the bug of LineChart and ScaterChart when some data is null or undefined
 
-### Fixed
+### feat
 
-- Prevent new `dark` experiment from causing third-party `dark` variants to inherit stacking behavior ([#2382](https://github.com/tailwindlabs/tailwindcss/pull/2382))
+- ScatterChart support for attributes using data and Cell
 
-## [1.8.9] - 2020-09-13
+## 0.14.1 (Sep 12, 2016)
 
-### Fixed
+- Fix webpack.config.js
 
-- Add negative spacing values to inset plugin in the `extendedSpacingScale` experiment ([#2358](https://github.com/tailwindlabs/tailwindcss/pull/2358))
-- Fix issue where `!important` was stripped from declarations within rules that used `@apply` with `applyComplexClasses` ([#2376](https://github.com/tailwindlabs/tailwindcss/pull/2376))
+## 0.14.0 (Sep 12, 2016)
 
-### Changed
+### Feat
 
-- Add `future` section to config stubs ([#2372](https://github.com/tailwindlabs/tailwindcss/pull/2372), [3090b98](https://github.com/tailwindlabs/tailwindcss/commit/3090b98ece766b1046abe5bbaa94204e811f7fac))
+- allow label function to return a string
+- Pass entry to formatter function
+- Support labels in ScatterChart axis
+- Add dataKey in the payload of Legend
+- support allowDataOverflow in XAxis, YAxis, PolarRadiusAxis
 
-## [1.8.8] - 2020-09-11
+### Refactor
 
-### Fixed
+- Refactor the received props of Surface
 
-- Register dark mode plugin outside of `resolveConfig` code path ([#2368](https://github.com/tailwindlabs/tailwindcss/pull/2368))
+### Fix
 
-## [1.8.7] - 2020-09-10
+- Fixed up handling of nulls for domain creation
+- Stopped domain calculation reverting to 0 for missing data points
+- Fix the bug of stacked areas which have yAxisId different from "0"
+- Fix the spelling error of AniamtionDecorator
 
-### Fixed
+### Docs
 
-- Fix issue where classes in escaped strings (like `class=\"block\"`) weren't extracted properly for purging ([#2364](https://github.com/tailwindlabs/tailwindcss/pull/2364))
+- Update webpack.config.js, to support AMD
 
-## [1.8.6] - 2020-09-09
+## 0.13.4 (Aug 24, 2016)
 
-### Fixed
+### Feat
 
-- Fix issue where container padding not applied when using object syntax ([#2353](https://github.com/tailwindlabs/tailwindcss/pull/2353))
+- Add cartesian Component ReferenceArea
 
-## [1.8.5] - 2020-09-07
+### Refactor
 
-### Fixed
+- Refactor ResponsiveContainer and support minHeight, minWidth, aspect in ResponsiveContainer
 
-- Fix issue where `resolveConfig` didn't take into account configs added by feature flags ([#2347](https://github.com/tailwindlabs/tailwindcss/pull/2347))
+### Fix
 
-## [1.8.4] - 2020-09-06
+- Fix the position of Bar for charts which have multiple y-axes
 
-### Fixed
+## 0.13.3 (Aug 17, 2016)
 
-- Fix [issue](https://github.com/tailwindlabs/tailwindcss/issues/2258) where inserting extra PurgeCSS control comments could break integrated PurgeCSS support
-- Fix issue where dark variant in 'class' mode was incompatible with 'group-hover' variant ([#2337](https://github.com/tailwindlabs/tailwindcss/pull/2337))
-- Support basic nesting structure with `@apply` when using the `applyComplexClasses` experiment ([#2271](https://github.com/tailwindlabs/tailwindcss/pull/2271))
+### Feat
 
-### Changed
+- Support the functionality that syncs multiple categorical charts when mouse enter, move, leave a chart, or when change the brush of one chart
 
-- Rename `font-hairline` and `font-thin` to `font-thin` and `font-extralight` behind `standardFontWeights` flag (experimental until v1.9.0) ([#2333](https://github.com/tailwindlabs/tailwindcss/pull/2333))
+### Fix
 
-## [1.8.3] - 2020-09-05
+- Fix the bug of stack offset function - "sign"
+- Fix the propTypes or legendType
 
-### Fixed
+## 0.13.2 (Aug 15, 2016)
 
-- Fix issue where `font-variant-numeric` utilities would break in combination with most CSS minifier configurations ([f3660ce](https://github.com/tailwindlabs/tailwindcss/commit/f3660ceed391cfc9390ca4ea1a729a955e64b895))
-- Only warn about `conservative` purge mode being deprecated once per process ([58781b5](https://github.com/tailwindlabs/tailwindcss/commit/58781b517daffbaf80fc5c0791d311f53b2d67d8))
+### Feat
 
-## [1.8.2] - 2020-09-04
+- Add an option "sign" to the props stackOffset in BarChart and AreaChart which allows the bars and areas to be stacked according to the sign of value.
 
-### Fixed
+### Fix
 
-- Fix bug where dark mode variants would cause an error if you had a `plugins` array in your config ([#2322](https://github.com/tailwindlabs/tailwindcss/pull/2322))
+- Fix the the bug of legend in ScatterChart and refactor symbols.
 
-## [1.8.1] - 2020-09-04
+## 0.13.1 (Aug 08, 2016)
 
-### Fixed
+### Fix
 
-- Fix bug in the new font-variant-numeric utilities which broke the whole rule ([#2318](https://github.com/tailwindlabs/tailwindcss/pull/2318))
-- Fix bug while purging ([#2320](https://github.com/tailwindlabs/tailwindcss/pull/2320))
+- Fix the bug that tooltip did not show up for pie chart while using nameKey and valueKey
 
-## [1.8.0] - 2020-09-04
+### Refactor
 
-### Added
+- Refactor Brush as controlled component
 
-- Dark mode variant (experimental) ([#2279](https://github.com/tailwindlabs/tailwindcss/pull/2279))
-- New `preserveHtmlElements` option for `purge` ([#2283](https://github.com/tailwindlabs/tailwindcss/pull/2283))
-- New `layers` mode for `purge` ([#2288](https://github.com/tailwindlabs/tailwindcss/pull/2288))
-- New `font-variant-numeric` utilities ([#2305](https://github.com/tailwindlabs/tailwindcss/pull/2305))
-- New `place-items`, `place-content`, `place-self`, `justify-items`, and `justify-self` utilities ([#2306](https://github.com/tailwindlabs/tailwindcss/pull/2306))
-- Support configuring variants as functions ([#2309](https://github.com/tailwindlabs/tailwindcss/pull/2309))
+## 0.13.0 (Aug 03, 2016)
 
-### Changed
+### Fix
 
-- CSS within `@layer` at-rules are now grouped with the corresponding `@tailwind` at-rule ([#2312](https://github.com/tailwindlabs/tailwindcss/pull/2312))
+- Ensured all tooltip-related state gets reset upon receiving new data for all the charts
 
-### Deprecated
+### feat
 
-- `conservative` purge mode, deprecated in favor of `layers`
+- Support smooth curve in Scatter
+- Support props connectNulls in Area, Line, and Curve,
 
-## [1.7.6] - 2020-08-29
+### refactor
 
-### Fixed
+- Refactor animation of Area
 
-- Fix bug where the new experimental `@apply` implementation broke when applying a variant class with the important option globally enabled
+## 0.12.8 (Aug 01, 2016)
 
-## [1.7.5] - 2020-08-28
+### fix
 
-### Changed
+- Fix the bug of getTicksOfScale
+- Fix the bug of radius of ClipPath is so small that some texts of Pie is covered
 
-- Update lodash to latest to silence security warnings
+## 0.12.7 (July 25, 2016)
 
-## [1.7.4] - 2020-08-26
+### feat
 
-### Added
+- Add itemSorter to tooltips
+- add props allowDecimals in XAxis and YAxis
 
-- Add new -p flag to CLI to quickly scaffold a `postcss.config.js` file
+## 0.12.6 (July 21, 2016)
 
-### Changed
+### feat
 
-- Make `@apply` insensitive to whitespace in the new `applyComplexClasses` experiment
+- Support Tooltip  of RadarChart
 
-### Fixed
+### fix
 
-- Fix bug where the new `applyComplexClasses` experiment didn't behave as expected with rules with multiple selectors, like `.foo, .bar { color: red }`
+- Fix the initial value of state isAnimationFinished in Line and Area
+- Fix the spelling error, pressentation => presentation (CartesianAxis)
+- Tweak text in RadarSpec
 
-## [1.7.3] - 2020-08-20
+## 0.12.5 (July 12, 2016)
 
-### Changed
+### feat
 
-- Log feature flag notices to stderr instead of stdout to preserve compatibility with pipe-based build systems
-- Add missing bg-none utility for disabling background images
+- Add paddingAngle in Pie, fix #142
 
-### Fixed
+### deps
 
-- Fix bug that prevented defining colors as closures when the `gradientColorStops` plugin was enabled
+- update version of react, fix #138, fix #103
 
-## [1.7.2] - 2020-08-19
+## 0.12.4 (July 8, 2016)
 
-### Added
+### fix
 
-- Reuse generated CSS as much as possible in long-running processes instead of needlessly recalculating
+- Fix the bug of calculation accuracy in IE(Sector)
+- Remove unneed props "formatter" in Area and Bar
+- Fix props which can be supported by html tags and svg tags
 
-## [1.7.1] - 2020-08-28
+### refactor
 
-### Changed
+- Support multiple activeIndex in Pie
 
-- Don't issue duplicate flag notices in long-running build processes
+### deps
 
-## [1.7.0] - 2020-08-28
+- Update d3-scale and d3-shape to the latest version
+- Update version of react-smooth and recharts-scale
+- Restrict the version of react to '~15.1.0'
 
-### Added
+## 0.12.3 (June 30, 2016)
 
-- Gradients
-- New background-clip utilities
-- New `contents` display utility
-- Default letter-spacing per font-size
-- Divide border styles
-- Access entire config object from plugins
-- Define colors as closures
-- Use `@apply` with variants and other complex classes (experimental)
-- New additional color-palette (experimental)
-- Extended spacing scale (experimental)
-- Default line-heights per font-size by default (experimental)
-- Extended font size scale (experimental)
+### fix
 
-### Deprecated
+- Fix the bug that no animation when data change, but points of Line are the same
 
-- Deprecated gap utilities
+### refactor
 
-## [1.6.3] - 2020-08-18
+- Remove xAxisMap and yAxisMap in ReferenceDot and ReferenceLine
 
-### Fixed
+## 0.12.2 (June 29, 2016)
 
-- Fixes issue where motion-safe and motion-reduce variants didn't stack correctly with group-hover variants
+### feat
 
-## [1.6.2] - 2020-08-03
+- Add margin props in Sankey to avoid outer-clip
+- Add shape props in ReferenceDot
 
-### Fixed
+### fix
 
-- Fixes issue where `@keyframes` respecting the important option would break animations in Chrome
+- Fix the width and height of wrapper
 
-## [1.6.1] - 2020-08-02
+## 0.12.1 (June 24, 2016)
 
-### Fixed
+### fix
 
-- Fixes an issue where animation keyframes weren't included in the build without @tailwind base (#2108)
+- Fix the bug with a hack method that global css will affect the width and height of Legend, Tooltip
 
-## [1.6.0] - 2020-07-28
+## 0.12.0 (June 23, 2016)
 
-### Added
+### feat
 
-- Animation support
-- New `prefers-reduced-motion` variants
-- New `overscroll-behaviour` utilities
-- Generate CSS without an input file
+- Add padding in XAxis and YAxis
+- Support minPointSize in Bar
+- Support "dataMin - 110" and "dataMax + 100" in the domain of numeric axis
 
-## [1.5.2] - 2020-07-21
+### refactor
 
-### Fixed
+- Refactor Treemap, change ratio to aspectRatio
 
-- Fixes issue where you could no longer use `@apply` with unprefixed class names if you had configured a prefix
+### fix
 
-## [1.5.1] - 2020-07-15
+- Fix the bug of axisId in BarChart
+- Fix the bug of tooltip's position in BarChart
+- Fix PropTypes of `type` in `Area`
 
-### Fixed
+## 0.11.0 (June 17, 2016)
 
-- Fixes accidental breaking change where adding component variants using the old manual syntax (as recommended in the docs) stopped working
+### feat
 
-## [1.5.0] - 2020-07-15
+- Add Sankey
 
-### Added
+### fix
 
-- Component `variants` support
-- Responsive `container` variants
-- New `focus-visible` variant
-- New `checked` variant
+- Fix the bug of Area when the data break off in some points
+- Fix the bug of ticks when 0 in ticks
 
-## v0.0.0-658250a96 - 2020-07-12 [YANKED]
+### refactor
 
-No release notes
+- Refactor the payload of tooltip, and the props of activeDot in AreaChart
 
-## [1.4.6] - 2020-05-08
+## 0.10.10 (June 13, 2016)
 
-### Changed
+### fix
 
-- Explicitly error when using a class as the important config option instead of just generating the wrong CSS
+- Fix the position of labels in Bar
 
-## [1.4.5] - 2020-05-06
+## 0.10.9 (June 12, 2016)
 
-### Fixed
+### refactor
 
-- Fix bug where the `divideColor` plugin was using the wrong '' in IE11 target mode
+- Use react-container-dimensions to refactor ResponsiveContainer, close #104, close #105
 
-## [1.4.4] - 2020-05-01
+## 0.10.8 (June 2, 2016)
 
-### Fixed
+### feat
 
-- Fix bug where target: 'browserslist' didn't work, only `target: ['browserslist', {...}]` did
+- Support any svg elements in the charts, such as defs, linearGradient
 
-## [1.4.3] - 2020-05-01
+## 0.10.7 (May 30, 2016)
 
-### Changed
+### fix
 
-- Don't generate unnecessary CSS in color plugins when color opacity utilities are disabled
+- Fix the bug of Brush when data or the size of container changes.
 
-## [1.4.2] - 2020-05-01
+## 0.10.6 (May 25, 2016)
 
-### Fixed
+### feat
 
-- Fix issue where `purge: { enabled: false }` was ignored, add `purge: false` shorthand
+- Add customized event handlers in BarChart
+- Add curveMonotoneX and curveMonotoneY in Curve and Line
+- Pass stackOffset type as an optional parameter for categorical chart
+- Add `isFront` in ReferenceLine and ReferenceDot to support auxiliary information at differents z-index
 
-## [1.4.1] - 2020-04-30
+### fix
 
-### Changed
+- Fix legend position with margin
 
-- Improve built-in PurgeCSS extractor to better support Haml and Slim templates
+## 0.10.5 (May 9, 2016)
 
-## [1.4.0] - 2020-04-29
+### feat
 
-### Added
+- Support more interpolations in Curve, Line
+- Allow to set custom tick formatter function for Brush start/end index
 
-- New color opacity utilities
-- Built-in PurgeCSS
-- IE 11 target mode (experimental)
+## 0.10.4 (May 5, 2016)
 
-## [1.3.5] - 2020-04-23
+### feat
 
-### Removed
+- support animation when data update
 
-- Drop `fs-extra` dependency to `^8.0.0` to preserve Node 8 compatibility until Tailwind 2.0
+### refactor
 
-### Fixed
+- refactor event handlers in charts
 
-- Fix missing unit in calc bug in space plugin (`space-x-0` didn't work for example)
+### fix
 
-## [1.3.4] - 2020-04-21
+- fix tooltip position in BarChart
 
-### Fixed
+## 0.10.3 (May 4, 2016)
 
-- Fix bug where `divide-{x/y}-0` utilities didn't work due to missing unit in `calc` call
+### fix
 
-## [1.3.3] - 2020-04-21
+- fix bug of ReactUtils in Firefox 31
 
-### Added
+## 0.10.2 (May 4, 2016)
 
-- Add forgotten responsive variants for `space`, `divideWidth`, and `divideColor` utilities
+### refactor
 
-## [1.3.1] - 2020-04-21
+- refactor data in Pie which was modified internally
 
-### Fixed
+## 0.10.1 (April 27, 2016)
 
-- Fix bug where the `space-x` utilities were not being applied correctly due to referencing `--space-y-reverse` instead of `--space-x-reverse`
+### feat
 
-## [1.3.0] - 2020-04-21
+- Support Tooltip in Treemap
 
-### Added
+### fix
 
-- New `space` and `divide` layout utilities
-- New `transition-delay` utilities
-- New `group-focus` variant
-- Support for specifying a default line-height for each font-size utility
-- Support for breakpoint-specific padding for `container` class
-- Added `current` to the default color palette
-- New `inline-grid` utility
-- New `flow-root` display utility
-- New `clear-none` utility
+- Rename `Symbol` to `Symbols`
+- Fix the key of `activeDot` in `AreaChart`
 
-## [1.2.0] - 2020-02-05
+## 0.10.0 (April 21, 2016)
 
-### Added
+### refactor
 
-- CSS Transition support
-- CSS Transform support
-- CSS Grid support
-- Added `max-w-{screen}` utilities
-- Added `max-w-none` utility
-- Added `rounded-md` utility
-- Added `shadow-sm` utility
-- Added `shadow-xs` utility
-- Added `stroke-width` utilities
-- Added fixed line-height utilities
-- Added additional display utilities for table elements
-- Added box-sizing utilities
-- Added clear utilities
-- Config file dependencies are now watchable
-- Added new `plugin` and `plugin.withOptions` APIs
+- Refactor *ticks* specified in `XAxis`, `YAxis`
+- Use area of `Symbol` to show the size of number in ScatterChart
+- Refactor the `activeShape` in `Scatter`
 
-### Changed
+### feat
 
-- Allow plugins to extend the user's config
+- Add `Symbol` and support different `Symbol` in ScatterChart
 
-## [1.2.0-canary.8] - 2020-02-05
+### fix
 
-### Added
+- Fix the content of legend in `PieChart`
+- Fix the crush bug when categorical axis has duplicate labels
+- Fix the bug of calculating tick width
 
-- Add additional fixed-size line-height utilities
+## 0.9.3 (April 12, 2016)
 
-## [1.2.0-canary.7] - 2020-02-04
+### deps
 
-### Removed
+- Update react-smooth to 0.1.4
 
-- Remove Inter from font-sans, plan to add later under new class
+## 0.9.2 (April 12, 2016)
 
-## [1.2.0-canary.6] - 2020-02-03
+### deps
 
-### Added
+- Update react to 15.0.0
 
-- Add system-ui to default font stack
-- Add shadow-xs, increase shadow-sm alpha to 0.05
-- Support import syntax even without postcss-import
-- Alias tailwind bin to tailwindcss
-- Add fill/stroke to transition-colors
-- Add transition-shadow, add box-shadow to default transition
-- Combine gap/columnGap/rowGap
-- Add grid row utilities
-- Add skew utilities
+## 0.9.1 (April 8, 2016)
 
-### Changed
+### fix
 
-- Use font-sans as default font
+- Fix the bug of bar animation
 
-## [1.2.0-canary.5] - 2020-01-08
+### deps
 
-### Added
+- update version of rechats-scale, and babel-eslint
 
-- Adds missing dependency `resolve` which is required for making config dependencies watchable
+## 0.9.0 (April 7, 2016)
 
-## [1.2.0-canary.4] - 2020-01-08
+### refactor
 
-### Added
+- Remove default event handler in Pie, and add `activeIndex` to let user control the active sector
+- Remove detectElementResize
+- Add activeDot in Line and Area
 
-- CSS Transition support
-- CSS Transform support
-- CSS Grid support
-- New `max-w-{screen}` utilities
-- Added `max-w-none` utility
-- Added "Inter" to the default sans-serif font stack
-- Add `rounded-md` utility
-- Add `shadow-sm` utility
-- Added stroke-width utilities
-- Added additional display utilities for table elements
-- Added box-sizing utilities
-- Added clear utilities
-- Config file dependencies are now watchable
-- Allow plugins to extend the user's config
-- Add new `plugin` and `plugin.withOptions` APIs
+### fix
 
-## [v1.2.0-canary.3] - 2020-01-08 [YANKED]
+- Fix the bug of updating line when the length of line is zero at first
+- Fix the base value of AreaChart which was set to be 0 before
 
-No release notes
+## 0.8.8 (March 25, 2016)
 
-## [1.1.4] - 2019-11-25
+### refactor
 
-### Changed
+- Support fixed value of width or height in ResponsiveContainer
 
-- Note: Although this is a bugfix it could affect your site if you were working around the bug in your own code by not prefixing the `.group` class. I'm sorry 😞
+## 0.8.7 (March 21, 2016)
 
-### Fixed
+### refactor
 
-- Fixes a bug where the `.group` class was not receiving the user's configured prefix when using the `prefix` option
+- Don't overwrite payload in Legend when customized payload has been setted
 
-## [1.2.0-canary.1] - 2019-10-22
+## 0.8.6 (March 09, 2016)
 
-### Changed
+### refactor
 
-- Don't watch `node_modules` files for changes
+- Use detectElementResize in react-virtualized to refactor ResponsiveContainer
 
-### Fixed
+### fix
 
-- Fixes significant build performance regression in `v1.2.0-canary.0`
+- Fix ssr render bug of CartesianAxis
 
-## [1.1.3] - 2019-10-22
+## 0.8.5 (March 08, 2016)
 
-### Fixed
+### feat
 
-- Fixes an issue where in some cases function properties in the user's `theme` config didn't receive the second utils argument
+- Add support of function type customized element
 
-## [1.2.0-canary.0] - 2019-10-14
+### fix
 
-### Added
+- fix the props labelLine in Pie
+- fix the bug of PureRender
 
-- Automatically watch all config file dependencies (plugins, design tokens imported from other files, etc.) for changes when build watcher is running
-- Add `justify-evenly` utility
+### test
 
-### Changed
+- Add more test cases
 
-- Allow plugins to add their own config file to be resolved with the user's custom config
+## 0.8.4 (March 02, 2016)
 
-## [1.1.2] - 2019-08-14
+### refactor
 
-### Fixed
+- Refactor the implementation type of renderPolygon in `Radar`
+- Refactor code in `Treemap`
+- Remove `invariant` and add `LogUtils`
 
-- Fixes a bug with horizontal rules where they were displayed with a 2px border instead of a 1px border
-- Fixes a bug with horizontal rules where they were rendered with default top/bottom margin
+### feat
 
-## [1.1.1] - 2019-08-09
+- Add animation of Area, Radar, RadialBar, Scatter
+- Add label formatter to default tooltip
+- Add props labelLine in `Pie`
+- Add Cell of `Pie` to set different options for each sector
+- Add Cell support in `Bar`, `RadialBar`
 
-### Fixed
+### fix
 
-- Fixes issue where values like `auto` would fail to make it through the default negative margin config
+- Fix Pie chart Label position, When using custom label It was not rendering as part of the curve group.
+- Fix `isAnimationActive` props in `Area`
 
-## [1.1.0] - 2019-08-06
+## 0.8.3 (February 25, 2016)
 
-### Added
+### refactor
+- refactor CartesianChart to a high order component, move some function to /util/CartesianUtils which can be used in ScatterChart.
+- Simplify ComposedChart, remove duplicated code
+- use `filterEventAttributes` to add events props
+- cancel selecting line and area in LineChart, AreaChart, ComposedChart
 
-- Added utilities for screenreader visibility
-- Added utilities for placeholder color
-- First, last, even, and odd child variants
-- Disabled variant
-- Visited variant
-- Increase utility specificity using a scope instead of !important
-- Add hover/focus variants for opacity by default
-- Added `border-double` utility
-- Support negative prefix for boxShadow and letterSpacing plugins
-- Support passing config path via object
+## 0.8.2 (February 24, 2016)
 
-### Fixed
+### fix
+- rollback last fix of Line animation from value
 
-- Placeholders no longer have a default opacity
-- Make horizontal rules visible by default
-- Generate correct negative margins when using calc
+## 0.8.1 (February 24, 2016)
 
-## [1.0.6] - 2019-08-01
+### fix
+- fix the bug of Line animation from value
 
-### Fixed
+## 0.8.0 (February 22, 2016)
 
-- Fixes issue where modifiers would mutate nested rules
+### feat
+- implement ReferenceDot in cartesian charts
+- support alwaysShow of ReferenceLine and ReferenceDot
 
-## [1.0.5] - 2019-07-11
+### refactor
+- refactor domain of CartesianAxis and PolarRadiusAxis
+- refactor this props name in ReferenceLine
 
-### Added
+### fix
+- fix the bug of calculate extent in RadarChart
+- fix some bugs of server side rendering when document is called
 
-- Support built-in variants for utilities that include pseudo-elements
 
-### Changed
+## 0.7.0 (February 17, 2016)
 
-- Update several dependencies, including postcss-js which fixes an issue with using `!important` directly in Tailwind utility plugins
+### UI
+- feat: support dasharray line animation
+- refactor(CartesianAxis, PolarAngleAxis, PolarRadiusAxis):rename label to tick
+- feat(label): add label of CartesianAxis, PolarRadiusAxis, ReferenceLine
+- feat: Implement tooltip for PieChart
+- feat:Implement tooltip for RadialBarChart
+- deps(d3-scale,d3-shape,oui-dom-util): 1.update version of d3-scale, d3-shape, oui-dom-util 2.update some api of d3-scale
 
-## [1.0.4] - 2019-06-11
+## 0.6.3 (February 10, 2016)
 
-### Changed
+### UI
+- refactor(Legend): refactor the location of legend
+- fix(CartesianChart,CartesianAxis): 1. fix the bug of dataStartIndex && dataEndIndex when the length of data was changed 2. fix the default value of tickFormatter
+- fix(cartesian/Line.js): fix Line animation bug
 
-- Increase precision of percentage width values to avoid 1px rounding issues in grid layouts
+## 0.6.2 (February 9, 2016)
 
-## [1.0.3] - 2019-06-01
+### UI
+- feat: use lodash `isEqual` write new pureRender
 
-### Changed
+## 0.6.1 (February 5, 2016)
 
-- Throws an error when someone tries to use `@tailwind preflight` instead of `@tailwind base`, this is the source of many support requests
+### UI
+- fix(Pie, RadialBarChart): fix the default value of cx, cy, innerRadius, outerRadius
 
-## [1.0.2] - 2019-05-27
+## 0.6.0 (February 5, 2016)
 
-### Fixed
+### UI
+- refactor: rename AdaptionWrapper to ResponsiveContainer
+- refactor: delete some repeated codes, and use polarToCartesian in PolarUtils
+- fix: update the defaultProps of cx, cy, innerRadius, outerRadius
+- fix(Sector, AdaptionWrapper):1. fix the bug of Sector when innerRadius is 0 2. fix the bug of unbind event when component is unmounted
+- feat(util): use lodash replace utils
 
-- Fixes a bug where `@screen` rules weren't bubbled properly when nested in plugins
+## 0.5.2 (February 4, 2016)
 
-## [1.0.1] - 2019-05-13
+### UI
+- fix(RadarChart): fix the bug of unreasonable default value for radius in PolarAngleAxis
 
-### Fixed
+### Docs
+- chore: change main and jsnext:main in package.json
 
-- Fixes a bug where global variants weren't properly merged
+## 0.5.1 (February 4, 2016)
 
-## [1.0.0] - 2019-05-13
+### UI
+- feat: support percentage string in the props(cx, cy, innerRadius, outerRadius) of RadarChart, PieChart, RadialChart
+- fix(PolarRadiusAxis): add props domain
+- refactor(CartesianAxis): remove unneeded props domain
 
-No release notes
+### Docs
+- chore: optimize npm script commands
+- chore: update pkg
 
-## [1.0.0-beta.10] - 2019-05-12
+## 0.5.0 (February 3, 2016)
 
-### Changed
+### UI
+- feat(AdaptionWrapper): add AdaptionWrapper to make charts adapt to the size of parent dom
+- refactor: directory structure adjustment
+- fix(LineChart, CartesianChart): 1.fix the bug of margin when only part of the attributes are specified 2.fix the bug of number axis when domain is specified 3.fix the bug of category number when no dataKey is specified 4.format the code in README.md
+- refactor(treemap): support tree structure data; changed props that pass to shape
 
-- Use `9999` and `-9999` for `order-last` and `order-first` utilities respectively
+### Test
+- test: 1.rename some test files 2.add test case of LodashUtil
+- test(treemap): modified treemap test
 
-## [1.0.0-beta.9] - 2019-05-12
+### Docs
+- deps: add dependence oui-dom-utils
+- chore(README.md): add syntax highlighting to the readme
+- chore(package.json): add keyword react-component
 
-### Added
+## 0.4.9 (February 2, 2016)
 
-- Add `bg-repeat-round` and `bg-repeat-space` utilities
-- Add `select-all` and `select-auto` utilities
+### UI
+- refactor(CartesianAxis, PolarAngleAxis): change props name "orient" to "orientation"
+- refactor(Line, Bar, Pie): refactor animation using new react-smooth
+- refactor(Pie, RidalBar): remove the props clockWise, and add the props endAngle
+### Test
+- test(Line, Bar, Radar, Scatter): add test case
 
-### Changed
+## 0.4.7 (February 1, 2016)
 
-- Make all utilities responsive by default
+### UI
+- refactor(RadarChart, Radar, PolarAngleAxis, PolarRadiusAxis): refactor the components of Radar
+- refactor(classNames): refactor the method of package a className
+- refactor(Pie): add nameKey in Pie
 
-## [1.0.0-beta.8] - 2019-04-28
+## 0.4.6 (January 29, 2016)
 
-### Added
+### UI
+- refactor(Legend): refactor the legend in all the charts, change the location method of legend
+- feat(radar): add new RadarChart with the new component used in Chart, like PolarAngleAxis PolarRadiusAxis PolarGrid Polygon ex
 
-- Adds `responsive` variants for the new order utilities by default, should have been there all along
+### Test
+- feat(test): add test for charts, chartWrappers, components, and shapes
 
-## [1.0.0-beta.7] - 2019-04-27
+## 0.4.5 (January 29, 2016)
 
-### Fixed
+### UI
+- fix(Curve): fix the bug of curve defined function
+- fix(ComposedChart): fix the bug of bar position when a line and a bar display a same group of data.
+- chore(webpack.config.js): add react, react-dom, react-dom-server to external
+- deps(react, react-dom): update version to v0.14.7
 
-- Fixes a bug where you couldn't extend the margin config
+## 0.4.4 (January 28, 2016)
 
-## [1.0.0-beta.6] - 2019-04-27
+### Dev
+- chore(webpack.config.js): add build command
 
-### Added
+## 0.4.3 (January 28, 2016)
 
-- Added support for negative inset (`-top-6`, `-right-4`) and z-index (`-z-10`) utilities, using the same negative key syntax supported by the margin plugin
-- Add missing fractions as well as x/12 fractions to width scale
-- Add `order` utilities
-- Add `cursor-text` class by default
+### UI
+- deps(recharts-scale, react-smooth): update version of recharts-scale and react-smooth
+- refactor(Bar, RadialBar, TreemapChart, Tooltip): rename the props customContent
 
-### Changed
+## 0.4.2 (January 28, 2016)
 
-- Make it possible to access your fully merged config file in JS
+### UI
+- Add support of stack value in BarChart, AreaChart, ComposedChart
 
-### Removed
+## 0.4.1 (January 27, 2016)
 
-- Removed `negativeMargin` plugin, now the regular `margin` plugin supports generating negative classes (like `-mx-6`) by using negative keys in the config, like `-6`
+### UI
+- Change name of the props in Tooltip, Legend
+- Fix the bug of customized label element in CartesianAxis
+- Remove repeated, meaningless constructor functions
 
-## [1.0.0-beta.5] - 2019-04-18
+## 0.4.0 (January 26, 2016)
 
-### Changed
+### UI
+- Refactor some components, include CartesianAxis, Legend, Tooltip etc, to unify some props name.
 
-- Make it possible to disable all core plugins using `corePlugins: false`
-- Make it possible to configure a single list of variants that applies to all utility plugins
-- Make it possible to safelist which core plugins should be enabled
-
-### Fixed
-
-- Fix a bug where stroke and fill plugins didn't properly handle the next object syntax for color definitions
-- Fix a bug where you couldn't have comments near `@apply` directives
-
-## [1.0.0-beta.4] - 2019-03-29
-
-### Added
-
-- Add the `container` key to the scaffolded config file when generated with `--full`
-
-### Changed
-
-- Bumps node dependency to 8.9.0 so we can keep our default config file clean, 6.9.0 is EOL next month anyways
-
-### Removed
-
-- Removes `SFMono-Regular` from the beginning of the default monospace font stack, it has no italic support and Menlo looks better anyways
-
-### Fixed
-
-- Fixes an issue where the user's config object was being mutated during processing (only affects @bradlc 😅)
-- Fixes an issue where you couldn't use a closure to define theme sections under `extend`
-
-## [1.0.0-beta.3] - 2019-03-18
-
-### Added
-
-- Support lazy evaluation in `theme.extend`
-
-### Changed
-
-- Use lighter default border color
-- Revert #745 and use `bolder` for strong tags by default instead of `fontWeight.bold`
-
-## [1.0.0-beta.2] - 2019-03-17
-
-### Changed
-
-- Closures in the `theme` section of the config file are now passed a `theme` function instead of an object
-
-### Fixed
-
-- Fix issue where `@screen` didn't work at all 🙃
-
-## [1.0.0-beta.1] - 2019-03-17
-
-### Added
-
-- New config file structure
-- New expanded default color palette
-- New default `maxWidth` scale
-- Added utilities for `list-style-type` and `list-style-position`
-- Added `break-all` utility
-
-### Changed
-
-- `object-position` utilities are now customizable under `theme.objectPosition`
-- `cursor` utilities are now customizable under `theme.cursors`
-- `flex-grow/shrink` utilities are now customizable under `theme.flexGrow/flexShrink`
-- Default variant output position can be customized
-- Extended default line-height scale
-- Extended default letter-spacing scale
-
-## [0.7.4] - 2019-01-23
-
-### Changed
-
-- Update our PostCSS related dependencies
-
-### Fixed
-
-- Fix bug where class names containing a `.`character had the responsive prefix added in the wrong place
-
-## [0.7.3] - 2018-12-03
-
-### Changed
-
-- Update Normalize to v8.0.1
-
-## [0.7.2] - 2018-11-05
-
-### Added
-
-- Add `--no-autoprefixer` option to CLI `build` command
-
-## [0.7.1] - 2018-11-05
-
-### Changed
-
-- Update autoprefixer dependency
-
-## [0.7.0] - 2018-10-31
-
-### Added
-
-- Registering new variants from plugins
-- Variant order can be customized per module
-- Added focus-within variant
-- Fancy CLI updates
-- Option to generate config without comments
-- Make configured prefix optional when using @apply
-- Improve Flexbox behavior in IE 10/11
-
-### Changed
-
-- Variant order in modules is now significant
-- Normalize.css updated to v8.0.0
-- Removed CSS fix for Chrome 62 button border radius change
-
-## [0.6.6] - 2018-09-21
-
-### Changed
-
-- Promote `shadowLookup` from experiment to official feature
-
-## [0.6.5] - 2018-08-18
-
-### Fixed
-
-- Fixes an issue where units were stripped from zero value properties
-
-## [0.6.4] - 2018-07-16
-
-### Fixed
-
-- Fixes an issue where changes to your configuration file were ignored when using `webpack --watch`
-
-## [0.6.3] - 2018-07-11
-
-### Fixed
-
-- Fixes an issue where `@tailwind utilities` generated no output
-
-## [0.6.2] - 2018-03-11
-
-### Added
-
-- Added table layout utilities for styling tables
-- Configuration can now be passed as an object
-- Registering new variants from plugins (experimental)
-- Allow `@apply`-ing classes that aren't defined but would be generated (experimental)
-
-### Changed
-
-- Default config file changes
-
-## [0.6.1] - 2018-06-22
-
-### Fixed
-
-- Fix incorrect box-shadow syntax for the `.shadow-outline` utility 🤦‍♂️
-
-## [0.6.0] - 2018-06-21
-
-### Added
-
-- Added border collapse utilities for styling tables
-- Added more axis-specific overflow utilities
-- Added `.outline-none` utility for suppressing focus styles
-- Added `.shadow-outline` utility as an alternative to default browser focus styles
-- Extended default padding, margin, negative margin, width, and height scales
-- Enable focus and hover variants for more modules by default
-
-### Changed
-
-- Removed default `outline: none !important` styles from focusable but keyboard-inaccessible elements
-- Moved screen prefix for responsive `group-hover` variants
-- Default config file changes
-
-## [0.5.3] - 2018-05-07
-
-### Changed
-
-- Improve sourcemaps for replaced styles like `preflight`
-
-### Fixed
-
-- Fix bug where informational messages were being logged to stdout during build, preventing the ability to use Tailwind's output in Unix pipelines
-
-## [0.5.2] - 2018-03-29
-
-### Fixed
-
-- Fixes an issue with a dependency that had a security vulnerability
-
-## [0.5.1] - 2018-03-13
-
-### Removed
-
-- Reverts a change that renamed the `.roman` class to `.not-italic` due to the fact that it breaks compatibility with cssnext: [postcss/postcss-selector-not#10](https://github.com/postcss/postcss-selector-not/issues/10). We'll stick with `.roman` for now with a plan to switch to `.not-italic` in another breaking version should that issue get resolved in postcss-selector-not.
-
-## [0.5.0] - 2018-03-13
-
-### Added
-
-- Plugin system
-- Added `.sticky position` utility
-- Added `.cursor-wait` and `.cursor-move` utilities
-- Added `.bg-auto` background size utility
-- Background sizes are now customizable
-- Support for active variants
-- Better postcss-import support
-- Configuration options for the `.container` component
-
-### Changed
-
-- The `.container` component is now a built-in plugin
-- State variant precedence changes
-- New config file keys
-- `.overflow-x/y-scroll` now set `overflow: scroll` instead of `overflow: auto`
-- `.roman` renamed to `.not-italic`
-
-## [0.4.3] - 2018-03-13
-
-### Changed
-
-- Use `global.Object` to avoid issues with polyfills when importing the Tailwind config into other JS
-
-## [0.4.2] - 2018-03-01
-
-### Added
-
-- Add support for using a function to define class prefixes in addition to a simple string
-
-### Changed
-
-- Improve the performance of @apply by using a lookup table instead of searching
-
-### Fixed
-
-- Fix an issue where borders couldn't be applied to `img` tags without specifying a border style
-
-## [0.4.1] - 2018-01-22
-
-### Changed
-
-- Make default sans-serif font stack more future proof and safe to use with CSS `font` shorthand
-- Replace stylefmt with Perfectionist to avoid weird stylelint conflicts
-
-## [0.4.0] - 2017-12-15
-
-### Added
-
-- `@apply`'d classes can now be made `!important` explicitly
-
-### Changed
-
-- `@apply` now strips `!important` from any mixed in classes
-- Default color palette tweaks
-
-## [0.3.0] - 2017-12-01
-
-### Added
-
-- Enable/disable modules and control which variants are generated for each
-- Focus variants
-- Group hover variants
-- New `@variants` at-rule
-- Customize the separator character
-- Missing config keys now fallback to their default values
-- New utilities
-
-### Changed
-
-- Lists now have no margins by default
-- `.pin` no longer sets width and height to 100%
-- SVG `fill` no longer defaults to currentColor
-
-## [0.2.2] - 2017-11-19
-
-### Fixed
-
-- Fix issue with dist files not being published due to bug in latest npm
-
-## [0.2.1] - 2017-11-18
-
-### Fixed
-
-- Fix overly specific border-radius reset for Chrome 62 button styles
-
-## [0.2.0] - 2017-11-17
-
-### Added
-
-- Add a custom prefix to all utilities
-- Optionally make all utilities `!important`
-- Round element corners independently
-- Cascading border colors and styles
-
-### Changed
-
-- `auto` is no longer a hard-coded margin value
-- The `defaultConfig` function is now a separate module
-- Rounded utilities now combine position and radius size
-- Border width utilities no longer affect border color/style
-- `@apply` is now very strict about what classes can be applied
-- Add `options` key to your config
-- Spacing, radius, and border width utility declaration order changes
-
-## [0.1.6] - 2017-11-09
-
-### Fixed
-
-- Fix CDN files not being published to npm
-
-## [0.1.5] - 2017-11-08
-
-### Changed
-
-- Apply the same default placeholder styling that's applied to inputs to textareas
-
-### Fixed
-
-- Fix CLI tool not loading config files properly
-
-## [0.1.4] - 2017-11-06
-
-### Added
-
-- Autoprefix dist assets for quick hacking and prototyping
-- Add `my-auto`, `mt-auto`, and `mb-auto` margin utilities
-- Add `sans-serif` to end of default `sans` font stack
-
-### Changed
-
-- If using Webpack, it will now watch your config file changes
-- When running `tailwind init [filename]`, automatically append `.js` to filename if not present
-- Support default fallback value in `config(...)` function, ie. `config('colors.blue', #0000ff)`
-- Don't output empty media queries if Tailwind processes a file that doesn't use Tailwind
-
-### Fixed
-
-- Move list utilities earlier in stylesheet to allow overriding with spacing utilities
-
-## [0.1.3] - 2017-11-02
-
-### Added
-
-- Add new `.scrolling-touch` and `.scrolling-auto` utilities for controlling inertial scroll behavior on WebKit touch devices
-- Generate separate dist files for preflight, utilities, and tailwind for CDN usage
-
-## [0.1.2] - 2017-11-01
-
-### Changed
-
-- Target Node 6.9.0 explicitly (instead of 8.6 implicitly) to support more users
-
-### Fixed
-
-- Fix issue with config option not being respected in `tailwind build`
-
-## [0.1.1] - 2017-11-01
-
-### Fixed
-
-- Fix `tailwind build` CLI command not writing output files
-
-## [0.1.0] - 2017-11-01
-
-### Added
-
-- Everything!
-
-[unreleased]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.17...HEAD
-[3.4.17]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.16...v3.4.17
-[3.4.16]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.15...v3.4.16
-[3.4.15]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.14...v3.4.15
-[3.4.14]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.13...v3.4.14
-[3.4.13]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.12...v3.4.13
-[3.4.12]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.11...v3.4.12
-[3.4.11]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.10...v3.4.11
-[3.4.10]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.9...v3.4.10
-[3.4.9]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.8...v3.4.9
-[3.4.8]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.7...v3.4.8
-[3.4.7]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.6...v3.4.7
-[3.4.6]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.5...v3.4.6
-[3.4.5]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.4...v3.4.5
-[3.4.4]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.3...v3.4.4
-[3.4.3]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.2...v3.4.3
-[3.4.2]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.1...v3.4.2
-[3.4.1]: https://github.com/tailwindlabs/tailwindcss/compare/v3.4.0...v3.4.1
-[3.4.0]: https://github.com/tailwindlabs/tailwindcss/compare/v3.3.7...v3.4.0
-[3.3.7]: https://github.com/tailwindlabs/tailwindcss/compare/v3.3.6...v3.3.7
-[3.3.6]: https://github.com/tailwindlabs/tailwindcss/compare/v3.3.5...v3.3.6
-[3.3.5]: https://github.com/tailwindlabs/tailwindcss/compare/v3.3.4...v3.3.5
-[3.3.4]: https://github.com/tailwindlabs/tailwindcss/compare/v3.3.3...v3.3.4
-[3.3.3]: https://github.com/tailwindlabs/tailwindcss/compare/v3.3.2...v3.3.3
-[3.3.2]: https://github.com/tailwindlabs/tailwindcss/compare/v3.3.1...v3.3.2
-[3.3.1]: https://github.com/tailwindlabs/tailwindcss/compare/v3.3.0...v3.3.1
-[3.3.0]: https://github.com/tailwindlabs/tailwindcss/compare/v3.2.7...v3.3.0
-[3.2.7]: https://github.com/tailwindlabs/tailwindcss/compare/v3.2.6...v3.2.7
-[3.2.6]: https://github.com/tailwindlabs/tailwindcss/compare/v3.2.5...v3.2.6
-[3.2.5]: https://github.com/tailwindlabs/tailwindcss/compare/v3.2.4...v3.2.5
-[3.2.4]: https://github.com/tailwindlabs/tailwindcss/compare/v3.2.3...v3.2.4
-[3.2.3]: https://github.com/tailwindlabs/tailwindcss/compare/v3.2.2...v3.2.3
-[3.2.2]: https://github.com/tailwindlabs/tailwindcss/compare/v3.2.1...v3.2.2
-[3.2.1]: https://github.com/tailwindlabs/tailwindcss/compare/v3.2.0...v3.2.1
-[3.2.0]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.8...v3.2.0
-[3.1.8]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.7...v3.1.8
-[3.1.7]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.6...v3.1.7
-[3.1.6]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.5...v3.1.6
-[3.1.5]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.4...v3.1.5
-[3.1.4]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.3...v3.1.4
-[3.1.3]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.2...v3.1.3
-[3.1.2]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.1...v3.1.2
-[3.1.1]: https://github.com/tailwindlabs/tailwindcss/compare/v3.1.0...v3.1.1
-[3.1.0]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.24...v3.1.0
-[3.0.24]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.23...v3.0.24
-[3.0.23]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.22...v3.0.23
-[3.0.22]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.21...v3.0.22
-[3.0.21]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.20...v3.0.21
-[3.0.20]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.19...v3.0.20
-[3.0.19]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.18...v3.0.19
-[3.0.18]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.17...v3.0.18
-[3.0.17]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.16...v3.0.17
-[3.0.16]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.15...v3.0.16
-[3.0.15]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.14...v3.0.15
-[3.0.14]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.13...v3.0.14
-[3.0.13]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.12...v3.0.13
-[3.0.12]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.11...v3.0.12
-[3.0.11]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.10...v3.0.11
-[3.0.10]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.9...v3.0.10
-[3.0.9]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.8...v3.0.9
-[3.0.8]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.7...v3.0.8
-[3.0.7]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.6...v3.0.7
-[3.0.6]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.5...v3.0.6
-[3.0.5]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.4...v3.0.5
-[3.0.4]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.3...v3.0.4
-[3.0.3]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.2...v3.0.3
-[3.0.2]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.1...v3.0.2
-[3.0.1]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.0...v3.0.1
-[3.0.0]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.0-alpha.2...v3.0.0
-[3.0.0-alpha.2]: https://github.com/tailwindlabs/tailwindcss/compare/v3.0.0-alpha.1...v3.0.0-alpha.2
-[3.0.0-alpha.1]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.19...v3.0.0-alpha.1
-[2.2.19]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.18...v2.2.19
-[2.2.18]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.17...v2.2.18
-[2.2.17]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.16...v2.2.17
-[2.2.16]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.15...v2.2.16
-[2.2.15]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.14...v2.2.15
-[2.2.14]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.13...v2.2.14
-[2.2.13]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.12...v2.2.13
-[2.2.12]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.11...v2.2.12
-[2.2.11]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.10...v2.2.11
-[2.2.10]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.9...v2.2.10
-[2.2.9]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.8...v2.2.9
-[2.2.8]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.7...v2.2.8
-[2.2.7]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.6...v2.2.7
-[2.2.6]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.5...v2.2.6
-[2.2.5]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.4...v2.2.5
-[2.2.4]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.3...v2.2.4
-[2.2.3]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.2...v2.2.3
-[2.2.2]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.1...v2.2.2
-[2.2.1]: https://github.com/tailwindlabs/tailwindcss/compare/v2.2.0...v2.2.1
-[2.2.0]: https://github.com/tailwindlabs/tailwindcss/compare/v2.1.4...v2.2.0
-[2.1.4]: https://github.com/tailwindlabs/tailwindcss/compare/v2.1.3...v2.1.4
-[2.1.3]: https://github.com/tailwindlabs/tailwindcss/compare/v2.1.2...v2.1.3
-[2.1.2]: https://github.com/tailwindlabs/tailwindcss/compare/v2.1.1...v2.1.2
-[2.1.1]: https://github.com/tailwindlabs/tailwindcss/compare/v2.1.0...v2.1.1
-[2.1.0]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.4...v2.1.0
-[2.0.4]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.3...v2.0.4
-[2.0.3]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.2...v2.0.3
-[2.0.2]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.1...v2.0.2
-[2.0.1]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0...v2.0.1
-[2.0.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.9.6...v2.0.0
-[2.0.0-alpha.25]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.24...v2.0.0-alpha.25
-[2.0.0-alpha.24]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.23...v2.0.0-alpha.24
-[2.0.0-alpha.23]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.22...v2.0.0-alpha.23
-[2.0.0-alpha.22]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.21...v2.0.0-alpha.22
-[2.0.0-alpha.21]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.20...v2.0.0-alpha.21
-[2.0.0-alpha.20]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.19...v2.0.0-alpha.20
-[2.0.0-alpha.19]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.18...v2.0.0-alpha.19
-[2.0.0-alpha.18]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.17...v2.0.0-alpha.18
-[2.0.0-alpha.17]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.16...v2.0.0-alpha.17
-[2.0.0-alpha.16]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.15...v2.0.0-alpha.16
-[2.0.0-alpha.15]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.14...v2.0.0-alpha.15
-[2.0.0-alpha.14]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.13...v2.0.0-alpha.14
-[2.0.0-alpha.13]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.12...v2.0.0-alpha.13
-[2.0.0-alpha.12]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.11...v2.0.0-alpha.12
-[2.0.0-alpha.11]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.10...v2.0.0-alpha.11
-[2.0.0-alpha.10]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.9...v2.0.0-alpha.10
-[2.0.0-alpha.9]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.8...v2.0.0-alpha.9
-[2.0.0-alpha.8]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.7...v2.0.0-alpha.8
-[2.0.0-alpha.7]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.6...v2.0.0-alpha.7
-[2.0.0-alpha.6]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.5...v2.0.0-alpha.6
-[2.0.0-alpha.5]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.4...v2.0.0-alpha.5
-[2.0.0-alpha.4]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.3...v2.0.0-alpha.4
-[2.0.0-alpha.3]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.2...v2.0.0-alpha.3
-[2.0.0-alpha.2]: https://github.com/tailwindlabs/tailwindcss/compare/v2.0.0-alpha.1...v2.0.0-alpha.2
-[1.9.6]: https://github.com/tailwindlabs/tailwindcss/compare/v1.9.5...v1.9.6
-[2.0.0-alpha.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.9.5...v2.0.0-alpha.1
-[1.9.5]: https://github.com/tailwindlabs/tailwindcss/compare/v1.9.4...v1.9.5
-[1.9.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.9.3...v1.9.4
-[1.9.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.9.2...v1.9.3
-[1.9.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.9.1...v1.9.2
-[1.9.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.9.0...v1.9.1
-[1.9.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.13...v1.9.0
-[1.8.13]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.12...v1.8.13
-[1.8.12]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.11...v1.8.12
-[1.8.11]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.10...v1.8.11
-[1.8.10]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.9...v1.8.10
-[1.8.9]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.8...v1.8.9
-[1.8.8]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.7...v1.8.8
-[1.8.7]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.6...v1.8.7
-[1.8.6]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.5...v1.8.6
-[1.8.5]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.4...v1.8.5
-[1.8.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.3...v1.8.4
-[1.8.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.2...v1.8.3
-[1.8.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.1...v1.8.2
-[1.8.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.8.0...v1.8.1
-[1.8.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.7.6...v1.8.0
-[1.7.6]: https://github.com/tailwindlabs/tailwindcss/compare/v1.7.5...v1.7.6
-[1.7.5]: https://github.com/tailwindlabs/tailwindcss/compare/v1.7.4...v1.7.5
-[1.7.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.7.3...v1.7.4
-[1.7.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.7.2...v1.7.3
-[1.7.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.7.1...v1.7.2
-[1.7.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.7.0...v1.7.1
-[1.7.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.6.3...v1.7.0
-[1.6.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.6.2...v1.6.3
-[1.6.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.6.1...v1.6.2
-[1.6.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.6.0...v1.6.1
-[1.6.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.5.2...v1.6.0
-[1.5.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.5.1...v1.5.2
-[1.5.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.5.0...v1.5.1
-[1.5.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.4.6...v1.5.0
-[1.4.6]: https://github.com/tailwindlabs/tailwindcss/compare/v1.4.5...v1.4.6
-[1.4.5]: https://github.com/tailwindlabs/tailwindcss/compare/v1.4.4...v1.4.5
-[1.4.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.4.3...v1.4.4
-[1.4.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.4.2...v1.4.3
-[1.4.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.4.1...v1.4.2
-[1.4.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.4.0...v1.4.1
-[1.4.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.3.5...v1.4.0
-[1.3.5]: https://github.com/tailwindlabs/tailwindcss/compare/v1.3.4...v1.3.5
-[1.3.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.3.3...v1.3.4
-[1.3.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.3.1...v1.3.3
-[1.3.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.3.0...v1.3.1
-[1.3.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.2.0...v1.3.0
-[1.2.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.1.4...v1.2.0
-[1.2.0-canary.8]: https://github.com/tailwindlabs/tailwindcss/compare/v1.2.0-canary.7...v1.2.0-canary.8
-[1.2.0-canary.7]: https://github.com/tailwindlabs/tailwindcss/compare/v1.2.0-canary.6...v1.2.0-canary.7
-[1.2.0-canary.6]: https://github.com/tailwindlabs/tailwindcss/compare/v1.2.0-canary.5...v1.2.0-canary.6
-[1.2.0-canary.5]: https://github.com/tailwindlabs/tailwindcss/compare/v1.2.0-canary.4...v1.2.0-canary.5
-[1.2.0-canary.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.2.0-canary.3...v1.2.0-canary.4
-[1.1.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.1.3...v1.1.4
-[1.2.0-canary.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.2.0-canary.0...v1.2.0-canary.1
-[1.1.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.1.2...v1.1.3
-[1.2.0-canary.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.1.2...v1.2.0-canary.0
-[1.1.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.1.1...v1.1.2
-[1.1.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.1.0...v1.1.1
-[1.1.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.6...v1.1.0
-[1.0.6]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.5...v1.0.6
-[1.0.5]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.4...v1.0.5
-[1.0.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.3...v1.0.4
-[1.0.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.2...v1.0.3
-[1.0.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.10...v1.0.0
-[1.0.0-beta.10]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.9...v1.0.0-beta.10
-[1.0.0-beta.9]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.8...v1.0.0-beta.9
-[1.0.0-beta.8]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.7...v1.0.0-beta.8
-[1.0.0-beta.7]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.6...v1.0.0-beta.7
-[1.0.0-beta.6]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.5...v1.0.0-beta.6
-[1.0.0-beta.5]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.4...v1.0.0-beta.5
-[1.0.0-beta.4]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.3...v1.0.0-beta.4
-[1.0.0-beta.3]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.2...v1.0.0-beta.3
-[1.0.0-beta.2]: https://github.com/tailwindlabs/tailwindcss/compare/v1.0.0-beta.1...v1.0.0-beta.2
-[1.0.0-beta.1]: https://github.com/tailwindlabs/tailwindcss/compare/v0.7.4...v1.0.0-beta.1
-[0.7.4]: https://github.com/tailwindlabs/tailwindcss/compare/v0.7.3...v0.7.4
-[0.7.3]: https://github.com/tailwindlabs/tailwindcss/compare/v0.7.2...v0.7.3
-[0.7.2]: https://github.com/tailwindlabs/tailwindcss/compare/v0.7.1...v0.7.2
-[0.7.1]: https://github.com/tailwindlabs/tailwindcss/compare/v0.7.0...v0.7.1
-[0.7.0]: https://github.com/tailwindlabs/tailwindcss/compare/v0.6.6...v0.7.0
-[0.6.6]: https://github.com/tailwindlabs/tailwindcss/compare/v0.6.5...v0.6.6
-[0.6.5]: https://github.com/tailwindlabs/tailwindcss/compare/v0.6.4...v0.6.5
-[0.6.4]: https://github.com/tailwindlabs/tailwindcss/compare/v0.6.3...v0.6.4
-[0.6.3]: https://github.com/tailwindlabs/tailwindcss/compare/v0.6.2...v0.6.3
-[0.6.2]: https://github.com/tailwindlabs/tailwindcss/compare/v0.6.1...v0.6.2
-[0.6.1]: https://github.com/tailwindlabs/tailwindcss/compare/v0.6.0...v0.6.1
-[0.6.0]: https://github.com/tailwindlabs/tailwindcss/compare/v0.5.3...v0.6.0
-[0.5.3]: https://github.com/tailwindlabs/tailwindcss/compare/v0.5.2...v0.5.3
-[0.5.2]: https://github.com/tailwindlabs/tailwindcss/compare/v0.5.1...v0.5.2
-[0.5.1]: https://github.com/tailwindlabs/tailwindcss/compare/v0.5.0...v0.5.1
-[0.5.0]: https://github.com/tailwindlabs/tailwindcss/compare/v0.4.3...v0.5.0
-[0.4.3]: https://github.com/tailwindlabs/tailwindcss/compare/v0.4.2...v0.4.3
-[0.4.2]: https://github.com/tailwindlabs/tailwindcss/compare/v0.4.1...v0.4.2
-[0.4.1]: https://github.com/tailwindlabs/tailwindcss/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/tailwindlabs/tailwindcss/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/tailwindlabs/tailwindcss/compare/v0.2.2...v0.3.0
-[0.2.2]: https://github.com/tailwindlabs/tailwindcss/compare/v0.2.1...v0.2.2
-[0.2.1]: https://github.com/tailwindlabs/tailwindcss/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/tailwindlabs/tailwindcss/compare/v0.1.6...v0.2.0
-[0.1.6]: https://github.com/tailwindlabs/tailwindcss/compare/v0.1.5...v0.1.6
-[0.1.5]: https://github.com/tailwindlabs/tailwindcss/compare/v0.1.4...v0.1.5
-[0.1.4]: https://github.com/tailwindlabs/tailwindcss/compare/v0.1.3...v0.1.4
-[0.1.3]: https://github.com/tailwindlabs/tailwindcss/compare/v0.1.2...v0.1.3
-[0.1.2]: https://github.com/tailwindlabs/tailwindcss/compare/v0.1.1...v0.1.2
-[0.1.1]: https://github.com/tailwindlabs/tailwindcss/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/tailwindlabs/tailwindcss/releases/tag/v0.1.0
